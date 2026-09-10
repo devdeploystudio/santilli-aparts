@@ -1,0 +1,35 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Av. Callao 930",
+  "zona": "Recoleta",
+  "direccion": "Av. Callao 930, CABA",
+  "coords": {
+    "lat": -34.5977,
+    "lng": -58.393
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece calefacción central y heladera bajo mesada. Se completa con baño completo c/bañera y doble anafe eléctrico. Incluye también seguridad las 24 hs y pileta en el edificio.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "aire",
+    "calefaccion",
+    "cocina",
+    "amenities",
+    "seguridad"
+  ],
+  "fotos": [
+    "/departamentos/depto-15-callao-930/01.jpg",
+    "/departamentos/depto-15-callao-930/02.jpg",
+    "/departamentos/depto-15-callao-930/03.jpg",
+    "/departamentos/depto-15-callao-930/04.jpg",
+    "/departamentos/depto-15-callao-930/05.jpg",
+    "/departamentos/depto-15-callao-930/06.jpg",
+    "/departamentos/depto-15-callao-930/07.jpg",
+    "/departamentos/depto-15-callao-930/08.jpg",
+    "/departamentos/depto-15-callao-930/09.jpg",
+    "/departamentos/depto-15-callao-930/10.jpg"
+  ],
+  "esPlaceholder": false
+}

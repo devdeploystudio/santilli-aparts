@@ -1,0 +1,302 @@
+---
+import MarginLines from "./MarginLines.astro";
+
+// Reseñas de ejemplo — reemplazar por reseñas reales de huéspedes antes de
+// producción (punto 24 del estándar Deploy: no presentar testimonios
+// inventados como reales). Por eso no llevan nombre ni foto de una persona
+// real, y se lo aclara explícitamente debajo.
+//
+// Carrusel: misma estructura y script que ApartmentCarousel (portados de
+// estudio-3s_santino) — transform: translateX vía JS en vez de scroll
+// nativo, para evitar los bugs de iOS Safari con scrollLeft. Clases propias
+// (reviews-carousel__*) para no chocar con las del carrusel de deptos que
+// vive en la misma página.
+const reseñas = [
+  {
+    zona: "Huésped en Recoleta",
+    texto: "Ingreso simple, sin vueltas, y nos resolvieron una consulta a último momento por WhatsApp enseguida.",
+  },
+  {
+    zona: "Huésped en Palermo",
+    texto: "Departamento cómodo y bien ubicado, cerca de todo. Nos gustó que siempre hablamos con la misma persona.",
+  },
+  {
+    zona: "Huésped familiar",
+    texto: "Vinimos con nuestro hijo y nos ayudaron a elegir el depto según lo que necesitábamos. Muy buena atención.",
+  },
+  {
+    zona: "Huésped en Balvanera",
+    texto: "Muy bien ubicado para movernos en subte por toda la ciudad. El check-in fue rápido y sin complicaciones.",
+  },
+  {
+    zona: "Huésped en Recoleta",
+    texto: "Pedimos cambiar la fecha de salida a último momento y no tuvimos ningún problema. Nos atendieron siempre ellos mismos.",
+  },
+  {
+    zona: "Huésped de paso por trabajo",
+    texto: "Vine por unos días de trabajo y el depto tenía todo lo que necesitaba. Volvería a alquilar sin dudarlo.",
+  },
+];
+---
+
+<section class="relative border-y border-hairline bg-canvas">
+  <MarginLines side="right" variant="b" />
+  <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
+    <h2 class="font-display text-3xl text-ink sm:text-4xl">Lo que cuentan quienes se hospedaron</h2>
+
+    <div class="reviews-carousel mt-10">
+      <div class="reviews-carousel__viewport">
+        <div class="reviews-carousel__track">
+          {
+            reseñas.map((r) => (
+              <div class="reviews-carousel__item">
+                <figure class="relative flex h-full flex-col rounded-2xl border border-hairline bg-surface p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
+                  <span aria-hidden="true" class="font-display text-5xl leading-none text-gold">“</span>
+                  <div class="mt-2 flex gap-0.5 text-gold" aria-hidden="true">
+                    {Array.from({ length: 5 }).map(() => (
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7-5.4-4.7 7.1-.6z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <blockquote class="mt-4 flex-1 font-body text-sm leading-relaxed text-ink">{r.texto}</blockquote>
+                  <figcaption class="mt-5 border-t border-hairline pt-4 font-body text-xs font-semibold uppercase tracking-wide text-muted">
+                    {r.zona}
+                  </figcaption>
+                </figure>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="reviews-carousel__nav">
+        <button type="button" class="reviews-carousel__nav-btn reviews-carousel__nav-btn--prev" aria-label="Reseña anterior">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button type="button" class="reviews-carousel__nav-btn reviews-carousel__nav-btn--next" aria-label="Siguiente reseña">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-carousel {
+    position: relative;
+  }
+
+  .reviews-carousel__viewport {
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .reviews-carousel__viewport.is-dragging {
+    cursor: grabbing;
+  }
+
+  .reviews-carousel__track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    will-change: transform;
+    gap: 1.5rem;
+  }
+
+  .reviews-carousel__item {
+    flex: 0 0 85%;
+  }
+
+  @media (min-width: 640px) {
+    .reviews-carousel__item {
+      flex-basis: calc(50% - 0.75rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .reviews-carousel__item {
+      flex-basis: calc(100% / 3 - 1rem);
+    }
+  }
+
+  .reviews-carousel__nav {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .reviews-carousel__nav-btn {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-hairline);
+    color: var(--color-ink);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .reviews-carousel__nav-btn:hover {
+    border-color: var(--color-gold-active);
+    color: var(--color-gold-active);
+  }
+</style>
+
+<script>
+  // Mismo script que ApartmentCarousel (ver ese archivo para las notas
+  // completas sobre por qué transform: translateX en vez de scroll nativo).
+  function initReviewsCarousel() {
+    const viewport = document.querySelector<HTMLElement>(".reviews-carousel__viewport");
+    const track = document.querySelector<HTMLElement>(".reviews-carousel__track");
+    const container = document.querySelector<HTMLElement>(".reviews-carousel");
+    if (!viewport || !track || !container) return;
+    if (track.dataset.cloned === "true") return;
+
+    const originales = Array.from(track.children) as HTMLElement[];
+    if (originales.length <= 1) return;
+
+    track.dataset.cloned = "true";
+    originales.forEach((item) => {
+      const clon = item.cloneNode(true) as HTMLElement;
+      clon.setAttribute("aria-hidden", "true");
+      clon.querySelectorAll("a, button").forEach((el) => el.setAttribute("tabindex", "-1"));
+      track.appendChild(clon);
+    });
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const VELOCIDAD = 20; // px/s
+
+    let setW = 0;
+    let paso = 0;
+    let pos = 0;
+    let encima = false;
+    let aLaVista = true;
+
+    function medir() {
+      const gap = parseFloat(getComputedStyle(track!).columnGap) || 0;
+      paso = originales[0].getBoundingClientRect().width + gap;
+      setW = originales.reduce((sum, item) => sum + item.getBoundingClientRect().width + gap, 0);
+    }
+    medir();
+    window.addEventListener("resize", medir);
+
+    function mover() {
+      track!.style.transform = `translateX(${-pos}px)`;
+    }
+
+    new IntersectionObserver(
+      ([e]) => {
+        aLaVista = e.isIntersecting;
+      },
+      { threshold: 0.1 },
+    ).observe(viewport);
+
+    (["pointerenter", "focusin"] as const).forEach((ev) => viewport!.addEventListener(ev, () => (encima = true)));
+    (["pointerleave", "focusout"] as const).forEach((ev) => viewport!.addEventListener(ev, () => (encima = false)));
+
+    const clampPos = (p: number) => ((p % setW) + setW) % setW;
+
+    container.querySelector(".reviews-carousel__nav-btn--prev")?.addEventListener("click", () => {
+      pos = clampPos(pos - paso);
+      mover();
+    });
+    container.querySelector(".reviews-carousel__nav-btn--next")?.addEventListener("click", () => {
+      pos = clampPos(pos + paso);
+      mover();
+    });
+
+    let arrastrando = false;
+    let startX = 0;
+    let startPos = 0;
+    let velX = 0;
+    let lastMoveX = 0;
+    let lastMoveT = 0;
+
+    viewport.addEventListener("pointerdown", (e) => {
+      arrastrando = true;
+      encima = true;
+      startX = e.clientX;
+      startPos = pos;
+      lastMoveX = e.clientX;
+      lastMoveT = performance.now();
+      velX = 0;
+      viewport!.setPointerCapture(e.pointerId);
+      viewport!.classList.add("is-dragging");
+    });
+
+    let dragRaf: number | undefined;
+    let pendingX = 0;
+    viewport.addEventListener("pointermove", (e) => {
+      if (!arrastrando) return;
+      pendingX = e.clientX;
+      if (dragRaf !== undefined) return;
+      dragRaf = requestAnimationFrame(() => {
+        dragRaf = undefined;
+        const now = performance.now();
+        const dt = now - lastMoveT;
+        if (dt > 0) velX = (lastMoveX - pendingX) / dt;
+        lastMoveX = pendingX;
+        lastMoveT = now;
+        pos = clampPos(startPos + (startX - pendingX));
+        mover();
+      });
+    });
+
+    function inercia() {
+      let v = velX;
+      let last = performance.now();
+      function coast(now: number) {
+        const dt = now - last;
+        last = now;
+        v *= Math.pow(0.94, dt / 16);
+        if (Math.abs(v) < 0.02) {
+          encima = false;
+          return;
+        }
+        pos = clampPos(pos + v * dt);
+        mover();
+        requestAnimationFrame(coast);
+      }
+      coast(last);
+    }
+    function soltar() {
+      if (!arrastrando) return;
+      arrastrando = false;
+      if (dragRaf !== undefined) {
+        cancelAnimationFrame(dragRaf);
+        dragRaf = undefined;
+      }
+      viewport!.classList.remove("is-dragging");
+      if (Math.abs(velX) > 0.02) inercia();
+      else encima = false;
+    }
+    viewport.addEventListener("pointerup", soltar);
+    viewport.addEventListener("pointercancel", soltar);
+
+    if (reduceMotion) return;
+
+    let last = performance.now();
+    requestAnimationFrame(function tick(now) {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (!encima && aLaVista) {
+        pos = (pos + VELOCIDAD * dt) % setW;
+        mover();
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  initReviewsCarousel();
+  document.addEventListener("astro:page-load", initReviewsCarousel);
+</script>

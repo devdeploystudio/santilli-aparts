@@ -1,0 +1,87 @@
+---
+import { NAV_LINKS, SITE } from "../config/site";
+import { buildConsultaGeneralLink } from "../lib/whatsapp";
+
+const waLink = buildConsultaGeneralLink();
+---
+
+<header class="sticky top-0 z-40 border-b border-hairline bg-surface/90 backdrop-blur">
+  <div class="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <a href="/" class="flex items-center gap-2.5">
+      <img src="/icon-192.png" alt="" width="34" height="34" draggable="false" class="h-8 w-8 rounded-md sm:h-9 sm:w-9" />
+      <span class="font-display text-lg leading-none text-ink sm:text-xl">
+        Santilli <span class="text-gold-active">Aparts</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-8 md:flex" aria-label="Principal">
+      {
+        NAV_LINKS.map((link) => (
+          <a
+            href={link.href}
+            class="nav-link font-body text-sm font-medium text-ink transition-colors hover:text-gold-active"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a
+      href={waLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-press hidden rounded-full bg-gold px-5 py-2.5 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active md:inline-block"
+    >
+      Consultar por WhatsApp
+    </a>
+
+    <button
+      id="menu-toggle"
+      type="button"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline md:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="sr-only">Abrir menú</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line class="menu-toggle__line menu-toggle__line--top" x1="3" y1="6" x2="21" y2="6"></line>
+        <line class="menu-toggle__line menu-toggle__line--middle" x1="3" y1="12" x2="21" y2="12"></line>
+        <line class="menu-toggle__line menu-toggle__line--bottom" x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Principal (mobile)"
+    class="mobile-menu flex flex-col gap-1 border-t border-hairline bg-surface px-4 py-3 md:hidden"
+  >
+    {
+      NAV_LINKS.map((link) => (
+        <a href={link.href} class="rounded-lg px-3 py-2.5 font-body text-sm font-medium text-ink hover:bg-canvas">
+          {link.label}
+        </a>
+      ))
+    }
+    <a
+      href={waLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-press mt-1 rounded-full bg-gold px-5 py-2.5 text-center font-body text-sm font-semibold text-ink"
+    >
+      Consultar por WhatsApp
+    </a>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = menu?.classList.toggle("is-open");
+    toggle.classList.toggle("is-open", isOpen);
+    toggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+  });
+</script>

@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { buildConsultaGeneralLink } from "../lib/whatsapp";
+
+const waLink = buildConsultaGeneralLink();
+---
+
+<Layout title="Página no encontrada" description="La página que buscás no existe.">
+  <section class="mx-auto flex max-w-xl flex-col items-center px-4 py-24 text-center sm:px-6">
+    <p class="font-display text-6xl text-gold">404</p>
+    <h1 class="mt-4 font-display text-3xl text-ink">No encontramos esta página</h1>
+    <p class="mt-3 font-body text-base text-muted">
+      Puede que el link esté vencido o que la página se haya movido. Volvé al
+      inicio o escribinos si estabas buscando un departamento en particular.
+    </p>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-4">
+      <a href="/" class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink hover:bg-gold-active">
+        Volver al inicio
+      </a>
+      <a
+        href={waLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-press rounded-full border border-hairline px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
+      >
+        Escribirnos por WhatsApp
+      </a>
+    </div>
+  </section>
+</Layout>

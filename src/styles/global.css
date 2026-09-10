@@ -1,0 +1,542 @@
+@import "tailwindcss";
+
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/manrope";
+
+@theme {
+  /* Paleta muestreada directo del logo (logo.jpeg) — no aproximada a ojo. */
+  --color-gold: #cca038;
+  --color-gold-active: #ad8830;
+  --color-ink: #434242;
+  --color-muted: #7a7876;
+  --color-hairline: #e7e3dc;
+  --color-canvas: #faf7f2;
+  --color-surface: #ffffff;
+
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-body: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-active);
+    outline-offset: 2px;
+  }
+
+  /* Momento de autor: el skyline de marca se dibuja al entrar al home.
+     Un único gesto (no un patrón repetido por sección) — ver hero. */
+  @keyframes skyline-draw {
+    from {
+      stroke-dashoffset: 700;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* El horizonte es más largo que 480 (el valor que sí alcanza para cada
+     edificio individual): con dasharray/dashoffset en 480 el patrón se
+     repetía a los 960px de recorrido, y al offset=480 el tramo "visible"
+     quedaba corrido hacia la cola del trazo en vez del inicio — se veía un
+     flash de una línea recta (la cola) que desaparecía apenas arrancaba el
+     dibujo real desde el principio. Keyframe aparte con un valor de sobra. */
+  @keyframes skyline-draw-horizon {
+    from {
+      stroke-dashoffset: 900;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes skyline-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scaleY(0);
+      transform-origin: bottom;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
+  }
+
+  @keyframes skyline-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Estado base (oculto) siempre presente; el `animation` que lo dibuja
+     solo se agrega bajo `.hero-in-view` (ver Hero.astro: un observer propio
+     saca y vuelve a poner esta clase para poder RE-jugar el gesto cada vez
+     que el hero vuelve a entrar en pantalla, no solo la primera vez). */
+  .skyline-buildings path {
+    stroke-dasharray: 700;
+    stroke-dashoffset: 700;
+  }
+
+  .skyline-spine {
+    transform-origin: bottom;
+    opacity: 0;
+  }
+
+  .skyline-horizon {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+  }
+
+  .hero-in-view .skyline-buildings path {
+    animation: skyline-draw 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 135ms + 225ms);
+  }
+
+  .hero-in-view .skyline-spine {
+    animation: skyline-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 1425ms;
+  }
+
+  .hero-in-view .skyline-horizon {
+    animation: skyline-draw-horizon 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 1575ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skyline-buildings path,
+    .skyline-spine,
+    .skyline-horizon {
+      animation: skyline-fade-in 0.4s ease-out forwards;
+      animation-delay: 0ms;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Subrayado dorado que se dibuja bajo un énfasis del copy del hero —
+     reemplaza la fila de stats genérica y llega junto al resto del gesto
+     de entrada (el skyline) en vez de sumar una animación aparte. Mismo
+     patrón base-oculto + `.hero-in-view` que el skyline, para poder
+     rejugarlo al volver a entrar en pantalla. */
+  @keyframes ink-underline-grow {
+    from {
+      background-size: 0% 0.32em;
+    }
+    to {
+      background-size: 100% 0.32em;
+    }
+  }
+
+  .ink-underline {
+    background-image: linear-gradient(
+      color-mix(in srgb, var(--color-gold) 55%, transparent),
+      color-mix(in srgb, var(--color-gold) 55%, transparent)
+    );
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 0.32em;
+  }
+
+  .hero-in-view .ink-underline {
+    animation: ink-underline-grow 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 500ms);
+  }
+
+  /* Subrayado con recorrido en los links de navegación. */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: -3px;
+    height: 1.5px;
+    background: var(--color-gold-active);
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    right: 0;
+  }
+
+  /* Hamburguesa → X: cada línea rota/se corre sobre su propio centro, no el
+     del SVG entero (por eso el transform-box: fill-box). */
+  .menu-toggle__line {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.2s ease;
+  }
+
+  #menu-toggle.is-open .menu-toggle__line--top {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  #menu-toggle.is-open .menu-toggle__line--middle {
+    opacity: 0;
+  }
+
+  #menu-toggle.is-open .menu-toggle__line--bottom {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* Menú mobile: en vez de aparecer/desaparecer de golpe con hidden/flex,
+     se despliega. max-height (no height) porque el contenido es de alto
+     variable y no hace falta conocerlo de antemano. */
+  .mobile-menu {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .mobile-menu.is-open {
+    max-height: 28rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-toggle__line,
+    .mobile-menu {
+      transition-duration: 0.01ms;
+    }
+  }
+
+  /* Detalles de superficie del navegador — lo que no se "dibuja" a mano
+     pero igual lleva la marca (selección de texto, scrollbar, cursor). */
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* Sobre fondos oscuros (footer, banner con foto) el texto seleccionado
+     con color ink por defecto queda invisible: se fuerza a canvas ahí. */
+  footer ::selection,
+  .cta-banner ::selection {
+    color: var(--color-canvas);
+  }
+
+  html {
+    scrollbar-color: var(--color-gold-active) var(--color-canvas);
+  }
+
+  /* Botones: feedback de presión real, no solo cambio de color. */
+  .btn-press {
+    transition:
+      transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.2s ease;
+  }
+
+  .btn-press:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-press:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  /* Card de departamento: acento dorado que aparece al pie en hover, y la
+     flecha que empuja hacia la derecha — feedback de "hay más" al pasar. */
+  .depto-card .depto-card__accent {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .depto-card:hover .depto-card__accent,
+  .depto-card:focus-visible .depto-card__accent {
+    transform: scaleX(1);
+  }
+
+  .depto-card .depto-card__arrow {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .depto-card:hover .depto-card__arrow,
+  .depto-card:focus-visible .depto-card__arrow {
+    transform: translateX(4px);
+  }
+
+  /* Línea de progreso de "Cómo trabajamos": se completa con el scroll
+     porque acá el recorrido de la línea SÍ representa algo (el proceso en
+     cuatro pasos), no es una animación decorativa repetida por sección. */
+  @property --progress {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+  }
+
+  .timeline-track {
+    background: linear-gradient(
+        to right,
+        var(--color-gold) 0 var(--progress),
+        var(--color-hairline) var(--progress) 100%
+      )
+      no-repeat;
+    transition: --progress 0.1s linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-track {
+      --progress: 100% !important;
+      transition: none;
+    }
+  }
+
+  @keyframes review-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .review-fade {
+    animation: review-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Cursor de marca: una llave dorada que sigue al mouse, solo en
+     dispositivos con mouse real (no toca nada en touch).
+
+     CLAVE: `position: fixed` acá es obligatorio. Sin esto el div queda en el
+     flujo normal del documento, y el `transform: translate3d(x, y, 0)` que
+     le aplica el script en cada `pointermove` infla el scrollable overflow
+     del documento en cualquier dirección hacia donde se mueva el mouse
+     (bug real que causó "scroll infinito" en todo el sitio). */
+  @media (pointer: fine) {
+    html {
+      cursor: none;
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"] {
+      cursor: none;
+    }
+  }
+
+  #brand-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* Por encima del z-index más alto que usa Leaflet (controles en 1000):
+       si no, el popup de un pin del mapa tapaba el cursor de marca al
+       pasar el mouse por el nombre del depto adentro del popup. */
+    z-index: 1200;
+    pointer-events: none;
+    opacity: 0;
+    color: var(--color-ink);
+    transition: opacity 0.2s ease;
+  }
+
+  /* El giro/agrandado en hover vive en este hijo (con `scale`, nunca
+     `width`/`height`) para no forzar reflow en cada frame. */
+  .brand-cursor-visual {
+    display: block;
+    transform: translate(-50%, -50%) scale(1) rotate(180deg);
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.2s ease;
+  }
+
+  body.brand-cursor-active #brand-cursor {
+    opacity: 1;
+  }
+
+  body.brand-cursor-on-dark .brand-cursor-visual {
+    color: var(--color-canvas);
+  }
+
+  body.brand-cursor-hover .brand-cursor-visual {
+    transform: translate(-50%, -50%) scale(1.35) rotate(155deg);
+    color: var(--color-gold-active);
+  }
+
+  /* Sobre un botón ya dorado, la llave dorada del hover se pierde: se
+     pinta blanca en su lugar. Va después de `.brand-cursor-hover` para
+     ganar cuando las dos clases están puestas a la vez. */
+  body.brand-cursor-hover.brand-cursor-on-gold .brand-cursor-visual {
+    color: var(--color-canvas);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-cursor-visual {
+      transition-duration: 0.15s;
+    }
+  }
+
+  @media (pointer: coarse) {
+    #brand-cursor {
+      display: none;
+    }
+  }
+
+  /* Entrada suave de cada elemento al aparecer en el viewport (subir + fade),
+     de a uno con un pequeño stagger entre hermanos (--reveal-delay, seteado
+     desde ScrollReveal.astro). El hero queda afuera (`data-no-reveal`): ya
+     tiene su propio gesto de entrada con el skyline. */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  /* `transform: none` a propósito, no `translateY(0)`: cualquier valor de
+     transform (incluso "sin movimiento") convierte al elemento en el marco
+     de referencia de sus descendientes `position: fixed` — rompía el
+     lightbox de la galería, que quedaba encuadrado en la sección revelada
+     en vez de ocupar toda la pantalla. */
+  .reveal-on-scroll.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Pequeño trazo dorado que se "dibuja" bajo cada título de sección al
+     entrar en pantalla — el mismo gesto del hero (línea que se traza),
+     repetido como un detalle chico en vez de un dibujo grande por sección
+     (eso sí se sentiría empapelado; esto es apenas un acento consistente). */
+  main h2.reveal-on-scroll::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 3px;
+    margin-top: 0.85rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 250ms;
+  }
+
+  main h2.reveal-on-scroll.is-revealed::after {
+    transform: scaleX(1);
+  }
+
+  /* Los tiles estándar de OpenStreetMap vienen bastante saturados/crudos
+     (verdes y amarillos fuertes) comparados con la paleta cálida del resto
+     del sitio. Se le baja el color con un filter en vez de pagar por un
+     estilo custom (Carto Positron dejó de ser gratis de verdad — ver
+     MapView.tsx). Va sobre el tile-pane, no sobre pines/popups/controles. */
+  .leaflet-tile-pane {
+    filter: grayscale(55%) saturate(45%) brightness(1.06) contrast(0.94);
+  }
+
+  /* Nombre de barrio como texto fijo sobre el mapa general (ver MapView /
+     ZonaSection): sin fondo ni borde, solo tipografía de marca en dorado
+     oscuro con un stroke claro para que se lea sobre cualquier tile. */
+  .map-zona-label {
+    width: max-content !important;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-gold-active);
+    text-shadow:
+      0 1px 0 var(--color-canvas),
+      0 -1px 0 var(--color-canvas),
+      1px 0 0 var(--color-canvas),
+      -1px 0 0 var(--color-canvas);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Tema de Flatpickr — a propósito FUERA de `@layer base`. Tailwind v4 mete
+   todo nuestro CSS dentro de layers, y el CSS de flatpickr.css se importa
+   sin layer (Vite lo agrega tal cual). Por spec, cualquier regla sin layer
+   le gana a cualquier regla con layer sin importar especificidad ni orden
+   — por eso subir la especificidad *dentro* de `@layer base` no alcanzaba:
+   el día seleccionado seguía celeste (#569ff7, el color default de
+   flatpickr) pase lo que pase. Sacándolo del layer, listo. */
+.flatpickr-calendar {
+  font-family: var(--font-body);
+  border-radius: 1rem;
+  box-shadow: 0 12px 32px -8px rgb(67 66 66 / 0.18);
+}
+
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+/* flatpickr trae su propia regla para el HOVER de un día ya seleccionado
+   (`.flatpickr-day.selected:hover`, etc.) con la misma especificidad que
+   la de arriba — sin este bloque aparte, ese hover volvía a mostrar el
+   celeste default por encima del dorado. */
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day.startRange:hover,
+.flatpickr-calendar .flatpickr-day.endRange:hover,
+.flatpickr-calendar .flatpickr-day.selected:focus,
+.flatpickr-calendar .flatpickr-day.startRange:focus,
+.flatpickr-calendar .flatpickr-day.endRange:focus {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.flatpickr-calendar .flatpickr-day.inRange {
+  background: color-mix(in srgb, var(--color-gold) 20%, white);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.flatpickr-calendar .flatpickr-day:hover {
+  background: var(--color-canvas);
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-month,
+.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-calendar .flatpickr-weekday {
+  color: var(--color-ink);
+}

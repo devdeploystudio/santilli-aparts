@@ -1,0 +1,31 @@
+{
+  "nombre": "Depto para 3 y 4 personas, Av. Callao 966",
+  "zona": "Recoleta",
+  "direccion": "Av. Callao 966, CABA",
+  "coords": {
+    "lat": -34.5978,
+    "lng": -58.3933
+  },
+  "capacidadMin": 3,
+  "capacidadMax": 4,
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado y calefacción a gas. También ofrece doble anafe a gas y heladera bajo mesada. Se completa con utensilios de cocina.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "aire",
+    "calefaccion",
+    "cocina"
+  ],
+  "fotos": [
+    "/departamentos/depto-13-av-callao-966/01.jpg",
+    "/departamentos/depto-13-av-callao-966/02.jpg",
+    "/departamentos/depto-13-av-callao-966/03.jpg",
+    "/departamentos/depto-13-av-callao-966/04.jpg",
+    "/departamentos/depto-13-av-callao-966/05.jpg",
+    "/departamentos/depto-13-av-callao-966/06.jpg",
+    "/departamentos/depto-13-av-callao-966/07.jpg",
+    "/departamentos/depto-13-av-callao-966/08.jpg"
+  ],
+  "esPlaceholder": false
+}

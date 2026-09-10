@@ -1,0 +1,23 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Av. Santa Fe 3395",
+  "zona": "Palermo",
+  "direccion": "Av. Santa Fe 3395, CABA",
+  "coords": {
+    "lat": -34.5885,
+    "lng": -58.411
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Este departamento incluye ropa de cama, toallas y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado F/C y cocina con horno. También ofrece heladera grande y utensilios de cocina. Se completa con baño completo con bañera y balcón con vista al frente. Está a una cuadra del shopping Alto Palermo.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "aire",
+    "cocina"
+  ],
+  "fotos": [],
+  "video": "/departamentos/depto-46-av-santa-fe-3395/preview.mp4",
+  "videoPoster": "/departamentos/depto-46-av-santa-fe-3395/poster.jpg",
+  "esPlaceholder": true
+}

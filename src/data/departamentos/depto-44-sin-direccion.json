@@ -1,0 +1,26 @@
+{
+  "nombre": "Depto para 1 y 2 personas",
+  "zona": "Recoleta",
+  "direccion": "Dirección a confirmar con el cliente",
+  "coords": {
+    "lat": -34.5978,
+    "lng": -58.3933
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-44-sin-direccion/01.jpg",
+    "/departamentos/depto-44-sin-direccion/02.jpg",
+    "/departamentos/depto-44-sin-direccion/03.jpg",
+    "/departamentos/depto-44-sin-direccion/04.jpg",
+    "/departamentos/depto-44-sin-direccion/05.jpg",
+    "/departamentos/depto-44-sin-direccion/06.jpg",
+    "/departamentos/depto-44-sin-direccion/07.jpg",
+    "/departamentos/depto-44-sin-direccion/08.jpg",
+    "/departamentos/depto-44-sin-direccion/09.jpg",
+    "/departamentos/depto-44-sin-direccion/10.jpg"
+  ],
+  "esPlaceholder": false
+}

@@ -1,0 +1,26 @@
+{
+  "nombre": "Depto para 4 y 5 personas, Av. Santa Fe, Recoleta",
+  "zona": "Recoleta",
+  "direccion": "Av. Santa Fe, Recoleta, CABA",
+  "coords": {
+    "lat": -34.5885,
+    "lng": -58.3939
+  },
+  "capacidadMin": 4,
+  "capacidadMax": 5,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-09-av-santa-fe-recoleta/01.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/02.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/03.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/04.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/05.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/06.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/07.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/08.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/09.jpg",
+    "/departamentos/depto-09-av-santa-fe-recoleta/10.jpg"
+  ],
+  "esPlaceholder": false
+}

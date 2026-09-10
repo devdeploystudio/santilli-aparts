@@ -1,0 +1,55 @@
+---
+import MarginLines from "./MarginLines.astro";
+
+const pasos = [
+  { n: "01", titulo: "Nos consultás", texto: "Nos escribís por WhatsApp indicando fechas, cantidad de personas y zona de preferencia." },
+  { n: "02", titulo: "Te enviamos opciones", texto: "Revisamos disponibilidad y te mostramos departamentos que se adapten a lo que necesitás." },
+  { n: "03", titulo: "Elegís tu depto", texto: "Coordinamos horario de ingreso y toda la información necesaria para tu estadía." },
+  { n: "04", titulo: "Abonás al ingresar", texto: "No pedimos seña previa: podés abonar directamente al momento del ingreso." },
+];
+---
+
+<section class="relative border-y border-hairline bg-surface">
+  <MarginLines side="left" />
+  <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
+  <h2 class="font-display text-3xl text-ink sm:text-4xl">Cómo trabajamos</h2>
+  <p class="mt-3 max-w-2xl font-body text-base text-muted">
+    Buscamos que el proceso sea claro, directo y sin vueltas. Te acompañamos
+    desde la consulta hasta el ingreso.
+  </p>
+
+  <div id="proceso-track" class="timeline-track mt-12 h-[3px] w-full rounded-full" style="--progress: 0%"></div>
+
+  <ol class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      pasos.map((p) => (
+        <li>
+          <span class="font-display text-3xl text-gold">{p.n}</span>
+          <h3 class="mt-2 font-display text-lg text-ink">{p.titulo}</h3>
+          <p class="mt-1.5 font-body text-sm text-muted">{p.texto}</p>
+        </li>
+      ))
+    }
+  </ol>
+  </div>
+</section>
+
+<script>
+  const section = document.getElementById("proceso-track")?.closest("section");
+  const track = document.getElementById("proceso-track");
+  if (section && track) {
+    const onScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0% cuando el techo de la sección entra al 75% del viewport,
+      // 100% cuando su piso cruza el 40% del viewport.
+      const start = vh * 0.75;
+      const end = vh * 0.4;
+      const progress = Math.min(1, Math.max(0, (start - rect.top) / (rect.height + start - end)));
+      track.style.setProperty("--progress", `${progress * 100}%`);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+  }
+</script>

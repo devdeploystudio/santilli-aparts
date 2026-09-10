@@ -1,0 +1,64 @@
+---
+// Revela con un fade + subida cada elemento "de a uno" (heading, párrafo
+// intro, cada card de un grid) a medida que entra al viewport, con un
+// pequeño stagger entre hermanos — más vistoso que revelar la sección
+// entera como un solo bloque.
+//
+// Es bidireccional (se oculta de nuevo al salir del viewport, para volver a
+// jugar la animación si el usuario sube y vuelve a bajar). Ojo: esto se
+// rompe en secciones con contenido dinámico que cambia de alto por su
+// cuenta (ej. la grilla filtrable de /departamentos, donde filtrar
+// recalcula el alto y el observer "oculta" resultados que el usuario ya
+// está mirando) — esas secciones se marcan con `data-no-reveal` para
+// quedar afuera. El hero también queda afuera: ya tiene su propio gesto de
+// entrada con el skyline.
+//
+// Importante: mientras un elemento está "oculto" (pre-reveal) tiene un
+// transform aplicado (ver global.css), y cualquier transform convierte a un
+// elemento en el marco de referencia de sus `position: fixed` internos. Todo
+// modal/lightbox que viva adentro tiene que bloquear el scroll del body
+// mientras está abierto (Gallery ya lo hace) para no toparse con esto.
+---
+
+<script>
+  const SELECTOR_ITEMS = ":scope > h1, :scope > h2, :scope > p, :scope > .grid > *, :scope > div > h1, :scope > div > h2, :scope > div > p, :scope > div > .grid > *, :scope > ol > *, :scope > ul > *";
+
+  const secciones = document.querySelectorAll<HTMLElement>("main > section:not([data-no-reveal])");
+  const lista: HTMLElement[] = [];
+
+  // El stagger se reinicia en 0 por cada sección (no es un índice global de
+  // página) para que el orden visual de cada grupo de cards siempre vaya de
+  // arriba/izquierda hacia abajo/derecha, sin importar cuántos elementos ya
+  // se revelaron antes en secciones previas. Se usa Math.min (tope, no
+  // módulo) para que a partir del 9no elemento compartan el delay máximo en
+  // vez de "reiniciar" a 0 y romper el orden.
+  secciones.forEach((seccion) => {
+    const items = seccion.querySelectorAll<HTMLElement>(SELECTOR_ITEMS);
+    const grupo = items.length > 0 ? [...items] : [seccion];
+    grupo.forEach((el, i) => {
+      el.style.setProperty("--reveal-delay", `${Math.min(i, 8) * 60}ms`);
+      lista.push(el);
+    });
+  });
+
+  if (lista.length > 0) {
+    const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    lista.forEach((el) => el.classList.add("reveal-on-scroll"));
+
+    if (reducirMovimiento || !("IntersectionObserver" in window)) {
+      lista.forEach((el) => el.classList.add("is-revealed"));
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            entry.target.classList.toggle("is-revealed", entry.isIntersecting);
+          }
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
+      );
+
+      lista.forEach((el) => observer.observe(el));
+    }
+  }
+</script>

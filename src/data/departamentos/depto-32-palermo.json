@@ -1,0 +1,25 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Palermo",
+  "zona": "Palermo",
+  "direccion": "Palermo, CABA",
+  "coords": {
+    "lat": -34.5875,
+    "lng": -58.4306
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-32-palermo/01.jpg",
+    "/departamentos/depto-32-palermo/02.jpg",
+    "/departamentos/depto-32-palermo/03.jpg",
+    "/departamentos/depto-32-palermo/04.jpg",
+    "/departamentos/depto-32-palermo/05.jpg",
+    "/departamentos/depto-32-palermo/06.jpg",
+    "/departamentos/depto-32-palermo/07.jpg",
+    "/departamentos/depto-32-palermo/08.jpg",
+    "/departamentos/depto-32-palermo/09.jpg"
+  ],
+  "esPlaceholder": false
+}

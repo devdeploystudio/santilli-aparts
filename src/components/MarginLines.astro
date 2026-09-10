@@ -1,0 +1,98 @@
+---
+// Acento decorativo para el margen vacío al costado del contenido (solo hay
+// lugar real desde xl, cuando max-w-6xl deja hueco a los costados): un
+// edificio de línea simple (pared recta + techo en diagonal), MISMA
+// gramática de path que SkylineMark del hero — un solo trazo que se va
+// dibujando como si fuera un lápiz (stroke-dashoffset), no dos trazos
+// superpuestos (eso dejaba la base con un dorado más oscuro por el
+// solapamiento). Nace siempre desde ABAJO del bloque. Se re-dibuja cada vez
+// que vuelve a entrar en pantalla (mismo IntersectionObserver bidireccional
+// que el resto del sitio). Alterna de lado bloque a bloque.
+interface Props {
+  side?: "left" | "right";
+  variant?: "a" | "b";
+  class?: string;
+}
+
+const { side = "left", variant = "a", class: className = "" } = Astro.props;
+
+// Mismo patrón que SkylineMark: "M x yBase V yTecho l dx dy v dyLado" —
+// pared recta, techo (angulado o plano), pared recta, con la base (yBase)
+// pegada al fondo del viewBox para que nazca desde abajo. Dos variantes
+// distintas para alternar bloque a bloque (no siempre la misma silueta).
+const EDIFICIOS: Record<"a" | "b", { d: string; largo: number }[]> = {
+  a: [
+    { d: "M8 120V64l16-10v66", largo: 160 },
+    { d: "M26 120V36l20-14v98", largo: 200 },
+  ],
+  b: [
+    { d: "M6 120V80h14v40", largo: 100 },
+    { d: "M24 120V50l18 12v58", largo: 160 },
+    { d: "M46 120V90h10v30", largo: 80 },
+  ],
+};
+
+const edificios = EDIFICIOS[variant];
+---
+
+<div
+  class:list={[
+    "margin-lines pointer-events-none absolute bottom-0 hidden w-16 xl:block",
+    side === "left" ? "left-4 2xl:left-10" : "right-4 2xl:right-10",
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <svg viewBox="0 0 60 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+    {
+      edificios.map((e, i) => (
+        <path
+          class="margin-lines__stroke"
+          d={e.d}
+          stroke="var(--color-gold)"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style={`--i:${i}; --largo:${e.largo}`}
+        />
+      ))
+    }
+  </svg>
+</div>
+
+<style>
+  .margin-lines__stroke {
+    stroke-dasharray: var(--largo);
+    stroke-dashoffset: var(--largo);
+    transition: stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 250ms);
+  }
+
+  .margin-lines.is-in-view .margin-lines__stroke {
+    stroke-dashoffset: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .margin-lines__stroke {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reducirMovimiento && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle("is-in-view", entry.isIntersecting);
+        }
+      },
+      { threshold: 0.2 },
+    );
+    document.querySelectorAll(".margin-lines").forEach((el) => observer.observe(el));
+  } else {
+    document.querySelectorAll(".margin-lines").forEach((el) => el.classList.add("is-in-view"));
+  }
+</script>

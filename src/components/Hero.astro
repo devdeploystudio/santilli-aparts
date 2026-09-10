@@ -1,0 +1,87 @@
+---
+import { buildConsultaGeneralLink } from "../lib/whatsapp";
+import SkylineMark from "./SkylineMark.astro";
+
+const waLink = buildConsultaGeneralLink();
+---
+
+<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden" data-no-reveal>
+  {/* Desde lg: decorativo, absoluto y detrás del texto (columna propia). Antes
+     de lg no hay una columna dedicada para él, así que ahí se muestra en
+     flujo normal ARRIBA del título (ver más abajo) en vez de superpuesto:
+     superpuesto se pisaba con el h1/párrafo en el rango tablet. */}
+  <div class="pointer-events-none absolute -right-16 inset-y-0 hidden w-[38rem] items-center opacity-90 lg:flex lg:right-8 xl:right-16">
+    <SkylineMark class="w-full" />
+  </div>
+
+  <div class="relative mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_0.85fr]">
+    <div class="max-w-2xl lg:col-span-2">
+      <div class="mb-6 w-40 opacity-90 sm:w-56 lg:hidden">
+        <SkylineMark class="w-full" />
+      </div>
+
+      <h1 class="font-display text-[2.75rem] leading-[1.05] text-ink sm:text-6xl lg:text-7xl">
+        Departamentos listos para disfrutar Buenos Aires.
+      </h1>
+
+      <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-muted sm:text-xl">
+        Contamos con <span class="ink-underline font-semibold text-ink" style="--delay:825ms">más de 60 departamentos</span>{" "}
+        en Recoleta y Palermo, para <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">1 a 5 personas</span>,{" "}
+        y no pedimos seña: <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">abonás al ingresar</span>.{" "}
+        Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia.
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink shadow-[0_8px_24px_-8px_rgb(204_160_56/0.6)] hover:bg-gold-active"
+        >
+          Consultar por WhatsApp
+        </a>
+        <a
+          href="/departamentos"
+          class="btn-press rounded-full border border-hairline bg-surface px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
+        >
+          Ver departamentos
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // El gesto de entrada (skyline + subrayados) queda afuera del sistema
+  // genérico de ScrollReveal (data-no-reveal), pero igual se re-juega cada
+  // vez que el hero vuelve a estar en pantalla: se saca la clase al salir
+  // y se vuelve a poner al entrar, forzando reflow en el medio para que la
+  // animación CSS (que solo corre en su transición inicial) arranque de
+  // cero en vez de quedar "ya terminada".
+  const hero = document.getElementById("hero");
+
+  if (hero) {
+    const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducirMovimiento || !("IntersectionObserver" in window)) {
+      hero.classList.add("hero-in-view");
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              hero.classList.remove("hero-in-view");
+              void hero.offsetWidth;
+              hero.classList.add("hero-in-view");
+            } else {
+              hero.classList.remove("hero-in-view");
+            }
+          }
+        },
+        { threshold: 0.3 },
+      );
+
+      observer.observe(hero);
+    }
+  }
+</script>

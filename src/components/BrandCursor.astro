@@ -1,0 +1,78 @@
+---
+// Cursor de marca: una llave dorada (tema "entrar al depto"), no el clásico
+// punto + anillo. Solo se activa con mouse real (pointer: fine); en touch
+// queda oculto por CSS y este script no hace nada.
+---
+
+<div id="brand-cursor" aria-hidden="true">
+  <svg class="brand-cursor-visual" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="7" cy="7" r="4" />
+    <line x1="10" y1="10" x2="20" y2="20" />
+    <line x1="15.5" y1="15.5" x2="18.5" y2="12.5" />
+    <line x1="17.5" y1="17.5" x2="20.5" y2="14.5" />
+  </svg>
+</div>
+
+<script>
+  const mq = window.matchMedia("(pointer: fine)");
+  if (mq.matches) {
+    const cursor = document.getElementById("brand-cursor");
+
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        document.body.classList.add("brand-cursor-active");
+        if (cursor) cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      },
+      { passive: true },
+    );
+
+    window.addEventListener("pointerleave", () => {
+      document.body.classList.remove("brand-cursor-active");
+    });
+
+    const HOVER_SELECTOR = 'a, button, input, select, textarea, [role="button"], .depto-card';
+    // Secciones/fotos de fondo oscuro (footer, banner de cierre, la foto de
+    // la familia en Nosotros vía [data-cursor-dark]): la llave por defecto
+    // es color ink y se volvía invisible ahí. Sobre estas se pinta blanca
+    // en vez de ink (el dorado del hover ya funciona en ambos fondos).
+    const DARK_BG_SELECTOR = "footer, .cta-banner, [data-cursor-dark]";
+    // Botones dorados: el hover normal pinta la llave de dorado, pero sobre
+    // un fondo ya dorado se pierde. Ahí se pinta blanca en cambio.
+    const GOLD_BG_SELECTOR = ".bg-gold";
+
+    document.addEventListener(
+      "pointerover",
+      (e) => {
+        const target = e.target as Element | null;
+        if (target?.closest(HOVER_SELECTOR)) {
+          document.body.classList.add("brand-cursor-hover");
+        }
+        if (target?.closest(DARK_BG_SELECTOR)) {
+          document.body.classList.add("brand-cursor-on-dark");
+        }
+        if (target?.closest(GOLD_BG_SELECTOR)) {
+          document.body.classList.add("brand-cursor-on-gold");
+        }
+      },
+      { passive: true },
+    );
+
+    document.addEventListener(
+      "pointerout",
+      (e) => {
+        const target = e.target as Element | null;
+        if (target?.closest(HOVER_SELECTOR)) {
+          document.body.classList.remove("brand-cursor-hover");
+        }
+        if (target?.closest(DARK_BG_SELECTOR)) {
+          document.body.classList.remove("brand-cursor-on-dark");
+        }
+        if (target?.closest(GOLD_BG_SELECTOR)) {
+          document.body.classList.remove("brand-cursor-on-gold");
+        }
+      },
+      { passive: true },
+    );
+  }
+</script>

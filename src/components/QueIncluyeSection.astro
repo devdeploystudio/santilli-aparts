@@ -1,0 +1,44 @@
+---
+import ServiceIcon, { SERVICIO_LABELS, type ServicioKey } from "./ServiceIcon.astro";
+import MarginLines from "./MarginLines.astro";
+
+const items: { key: ServicioKey; texto: string }[] = [
+  { key: "ropaBlanca", texto: "Sábanas, toallas y toallones para que el ingreso sea simple." },
+  { key: "wifi", texto: "Conexión para trabajar, estudiar o mantenerte comunicado." },
+  { key: "tv", texto: "Departamentos equipados con TV y servicios incluidos." },
+  { key: "cocina", texto: "Vajilla y elementos básicos para resolver comidas durante el día." },
+  { key: "aire", texto: "Aire acondicionado en la mayoría de las unidades." },
+  { key: "seguridad", texto: "Opciones en edificios cuidados y preparados para recibir huéspedes." },
+  { key: "amenities", texto: "Algunas unidades cuentan con pileta, solarium u otros amenities." },
+  { key: "cochera", texto: "En algunas unidades puede haber cochera disponible." },
+];
+---
+
+<section class="relative border-y border-hairline bg-canvas">
+  <MarginLines side="right" variant="b" />
+  <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
+    <div class="max-w-2xl">
+      <h2 class="font-display text-3xl text-ink sm:text-4xl">Todo preparado para que ingreses y te sientas cómodo</h2>
+      <p class="mt-3 font-body text-base text-muted">
+        Nuestros departamentos están equipados para estadías por noche, con lo
+        esencial incluido para que no tengas que preocuparte por nada. Los
+        detalles exactos de cada unidad se confirman por WhatsApp según
+        disponibilidad.
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        items.map((item) => (
+          <div class="group rounded-2xl border border-hairline bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
+            <span class="flex h-14 w-14 items-center justify-center rounded-full bg-canvas text-gold-active shadow-sm transition-transform duration-300 group-hover:scale-110">
+              <ServiceIcon servicio={item.key} class="h-7 w-7" />
+            </span>
+            <h3 class="mt-5 font-display text-lg text-ink">{SERVICIO_LABELS[item.key]}</h3>
+            <p class="mt-2 font-body text-sm leading-relaxed text-muted">{item.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

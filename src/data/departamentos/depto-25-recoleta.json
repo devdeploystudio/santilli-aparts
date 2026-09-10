@@ -1,0 +1,26 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Recoleta",
+  "zona": "Recoleta",
+  "direccion": "Recoleta, CABA",
+  "coords": {
+    "lat": -34.5895,
+    "lng": -58.3927
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Departamento para 1 y 2 personas con patio interno, las camas se pueden unir.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-25-recoleta/01.jpg",
+    "/departamentos/depto-25-recoleta/02.jpg",
+    "/departamentos/depto-25-recoleta/03.jpg",
+    "/departamentos/depto-25-recoleta/04.jpg",
+    "/departamentos/depto-25-recoleta/05.jpg",
+    "/departamentos/depto-25-recoleta/06.jpg",
+    "/departamentos/depto-25-recoleta/07.jpg",
+    "/departamentos/depto-25-recoleta/08.jpg",
+    "/departamentos/depto-25-recoleta/09.jpg",
+    "/departamentos/depto-25-recoleta/10.jpg"
+  ],
+  "esPlaceholder": false
+}

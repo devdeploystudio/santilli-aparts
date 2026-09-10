@@ -1,0 +1,77 @@
+---
+// Portado del patrón de estudio-3s_santino (LoadingScreen.astro): como acá
+// no hay View Transitions, cada navegación es una carga de página nueva, y
+// este mismo componente (montado en el Layout compartido) vuelve a
+// aparecer solo porque el documento entero se vuelve a pintar de cero en
+// cada carga — no hace falta lógica extra por navegación, solo esconderlo
+// después de que el `load` de esa página termine.
+import { SITE } from "../config/site";
+---
+
+<div id="loading-screen" class="loading-screen" aria-hidden="true">
+  <img src="/icon-gold.png" alt="" width={64} height={64} class="loading-screen__logo" />
+  <p class="loading-screen__title">{SITE.nombre}</p>
+</div>
+
+<style>
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--color-canvas);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  .loading-screen.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .loading-screen__logo {
+    display: block;
+    width: 56px;
+    height: 56px;
+    animation: loading-pulse 1.4s ease-in-out infinite;
+  }
+
+  .loading-screen__title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-ink);
+  }
+
+  @keyframes loading-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.08);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loading-screen__logo {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  function ocultarLoading() {
+    document.getElementById("loading-screen")?.classList.add("is-hidden");
+  }
+
+  // `load` es la señal principal (ya cargaron imágenes/fuentes); el
+  // setTimeout de respaldo evita que quede trabado si algún recurso tarda
+  // de más o `load` no llega a disparar.
+  window.addEventListener("load", () => setTimeout(ocultarLoading, 250));
+  setTimeout(ocultarLoading, 1800);
+</script>

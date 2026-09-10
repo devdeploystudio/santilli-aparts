@@ -1,0 +1,26 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Viamonte",
+  "zona": "Balvanera",
+  "direccion": "Viamonte, CABA",
+  "coords": {
+    "lat": -34.6008,
+    "lng": -58.3931
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-36-viamonte/01.jpg",
+    "/departamentos/depto-36-viamonte/02.jpg",
+    "/departamentos/depto-36-viamonte/03.jpg",
+    "/departamentos/depto-36-viamonte/04.jpg",
+    "/departamentos/depto-36-viamonte/05.jpg",
+    "/departamentos/depto-36-viamonte/06.jpg",
+    "/departamentos/depto-36-viamonte/07.jpg",
+    "/departamentos/depto-36-viamonte/08.jpg",
+    "/departamentos/depto-36-viamonte/09.jpg",
+    "/departamentos/depto-36-viamonte/10.jpg"
+  ],
+  "esPlaceholder": false
+}
