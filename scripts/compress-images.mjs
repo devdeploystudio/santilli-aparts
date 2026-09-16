@@ -23,7 +23,8 @@
  */
 
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { dirname, basename, extname, join } from 'node:path/posix';
 import sharp from 'sharp';
 
 // Mismas carpetas que rename-uploads.mjs (ver ese archivo) - cualquier
@@ -62,6 +63,41 @@ function getChangedAssetFiles() {
     .filter((path) => /\.(jpe?g|png|webp)$/i.test(path));
 }
 
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// rename-uploads.mjs corre justo antes en el mismo workflow y puede haber
+// renombrado este mismo archivo a foto_v02.ext en el filesystem (si detectó
+// un reemplazo con el mismo nombre). Ese renombre todavía no está
+// commiteado, así que el "git diff contra HEAD~1" de este script no se
+// entera y sigue señalando el nombre viejo, que ya no existe -> ENOENT. Si
+// el path original desapareció, buscamos la versión más nueva con ese mismo
+// nombre base en la carpeta, seleccionandonos automaticamente al renombrado.
+function resolveRenamedPath(path) {
+  if (existsSync(path)) return path;
+
+  const dir = dirname(path);
+  const ext = extname(path);
+  const baseName = basename(path, ext);
+  const re = new RegExp(`^${escapeRegExp(baseName)}_v(\\d+)${escapeRegExp(ext)}$`, 'i');
+  const files = existsSync(dir) ? readdirSync(dir) : [];
+
+  let best = null;
+  let bestVersion = -1;
+  for (const f of files) {
+    const m = f.match(re);
+    if (m) {
+      const version = parseInt(m[1], 10);
+      if (version > bestVersion) {
+        bestVersion = version;
+        best = f;
+      }
+    }
+  }
+  return best ? join(dir, best) : null;
+}
+
 async function compressOne(path) {
   const before = readFileSync(path);
   const originalSize = before.length;
@@ -93,7 +129,12 @@ async function run() {
     return;
   }
   for (const file of files) {
-    await compressOne(file);
+    const resolved = resolveRenamedPath(file);
+    if (!resolved) {
+      console.log(`compress-images: ${file} ya no existe (probablemente eliminado en este mismo push), se salteó.`);
+      continue;
+    }
+    await compressOne(resolved);
   }
 }
 
