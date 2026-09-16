@@ -26,7 +26,9 @@ import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import sharp from 'sharp';
 
-const ASSETS_ROOT = 'public/departamentos';
+// Mismas carpetas que rename-uploads.mjs (ver ese archivo) - cualquier
+// carpeta nueva de fotos/video editables desde el panel se agrega en AMBOS.
+const ASSETS_ROOTS = ['public/departamentos', 'public/hero', 'public/inicio', 'public/nosotros', 'public/resenas'];
 const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 
 function diffBase() {
@@ -46,7 +48,7 @@ function diffBase() {
 
 function getChangedAssetFiles() {
   const base = diffBase();
-  const diff = execSync(`git diff --name-status ${base} HEAD -- ${ASSETS_ROOT}`, { encoding: 'utf8' });
+  const diff = execSync(`git diff --name-status ${base} HEAD -- ${ASSETS_ROOTS.join(' ')}`, { encoding: 'utf8' });
   return diff
     .trim()
     .split('\n')

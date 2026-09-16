@@ -1,5 +1,6 @@
 diferenciales:
   id: "diferenciales"
+  fotoFondo: "/inicio/diferenciales-fondo.jpg"
   titulo: "Sin seña. Abonás al ingresar."
   texto: "Es el diferencial que más nos preguntan: no vas a transferir nada por adelantado para reservar. Coordinamos todo por WhatsApp y pagás recién cuando llegás al departamento."
   secundario1Titulo: "Amplia disponibilidad"

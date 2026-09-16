@@ -81,6 +81,7 @@ const config = defineCollection({
   schema: z.object({
     id: z.string(),
     whatsappNumero: sinVacios(z.string()),
+    instagramUrl: sinVacios(z.string()),
   }),
 });
 
@@ -97,6 +98,16 @@ const configInicio = defineCollection({
     heroDestacado1: z.string(),
     heroDestacado2: z.string(),
     heroDestacado3: z.string(),
+    // Vidriera rotativa de fotos/video del barrio en el Hero — editable
+    // desde el panel (agregar, borrar, reordenar). "archivo" admite foto o
+    // video (se detecta por extensión al mostrarlo); "poster" solo aplica
+    // si es video (frame fijo para la miniatura mientras carga).
+    heroSlides: z.array(
+      z.object({
+        archivo: z.string(),
+        poster: sinVacios(z.string()),
+      }),
+    ),
     deptosTexto1: z.string(),
     deptosTexto2: z.string(),
     ayudaTitulo: z.string(),
@@ -138,6 +149,9 @@ const configDiferenciales = defineCollection({
   loader: file("./src/content/config/diferenciales.yaml"),
   schema: z.object({
     id: z.string(),
+    // Foto de fondo de toda la sección (path a /public, mismo criterio que
+    // ctaFoto/nosotros foto: ver comentario en configInicio).
+    fotoFondo: z.string(),
     titulo: z.string(),
     texto: z.string(),
     secundario1Titulo: z.string(),
@@ -155,6 +169,7 @@ const configQueIncluye = defineCollection({
   loader: file("./src/content/config/que-incluye.yaml"),
   schema: z.object({
     id: z.string(),
+    fotoFondo: z.string(),
     titulo: z.string(),
     texto: z.string(),
     ropaBlancaTexto: z.string(),

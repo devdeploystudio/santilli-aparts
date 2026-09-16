@@ -30,6 +30,18 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio" }
               - { label: "Título principal (portada)", name: "heroTitulo", widget: "text" }
+              - label: "Fotos y videos del Hero (van pasando solas)"
+                name: "heroSlides"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. Admite foto o video en el mismo campo (se detecta por la extensión del archivo)."
+                summary: "{{archivo}}"
+                field:
+                  label: "Elemento"
+                  name: "slide"
+                  widget: "object"
+                  fields:
+                    - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/hero", public_folder: "/hero" }
+                    - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/hero", public_folder: "/hero" }
               - label: "Frase resaltada 1 (ej: \"más de 60 departamentos\")"
                 name: "heroDestacado1"
                 widget: "string"
@@ -149,6 +161,7 @@ collections:
             widget: "object"
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "diferenciales" }
+              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
               - { label: "Título principal", name: "titulo", widget: "string" }
               - { label: "Texto principal", name: "texto", widget: "text" }
               - { label: "Título tarjeta 1", name: "secundario1Titulo", widget: "string" }
@@ -173,6 +186,7 @@ collections:
             widget: "object"
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "que-incluye" }
+              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Bajada", name: "texto", widget: "text" }
               - { label: "Texto — Ropa blanca", name: "ropaBlancaTexto", widget: "text" }
@@ -264,3 +278,4 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "site" }
               - { label: "WhatsApp (solo números, con código de país, ej: 5491122334455)", name: "whatsappNumero", widget: "string", required: false }
+              - { label: "Instagram (link completo, ej: https://www.instagram.com/usuario/)", name: "instagramUrl", widget: "string", required: false }

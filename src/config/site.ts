@@ -5,6 +5,7 @@ import { getEntry } from "astro:content";
 
 const configEntry = await getEntry("config", "site");
 export const WHATSAPP_NUMBER = configEntry!.data.whatsappNumero || "5491158299969";
+export const INSTAGRAM_URL = configEntry!.data.instagramUrl || "https://www.instagram.com/santilliaparts/";
 
 export const SITE = {
   nombre: "Santilli Aparts",

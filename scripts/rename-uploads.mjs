@@ -37,7 +37,10 @@ import { readFileSync, writeFileSync, renameSync, readdirSync, existsSync } from
 import { dirname, basename, extname, join, relative } from 'node:path/posix';
 import { globSync } from 'glob';
 
-const ASSETS_ROOT = 'public/departamentos';
+// Todas las carpetas de public/ donde el panel deja fotos/video editables
+// por el cliente (deptos + las fotos de fondo/hero sueltas de la home).
+// Cualquier carpeta nueva de este tipo se agrega acá, no como script aparte.
+const ASSETS_ROOTS = ['public/departamentos', 'public/hero', 'public/inicio', 'public/nosotros', 'public/resenas'];
 // Acá se referencian las fotos/video de cada depto (fotos[], video,
 // videoPoster). Es JSON, no YAML, a diferencia de la plantilla estándar.
 // Se deja también src/content/**/*.yaml por si en el futuro se suma algún
@@ -68,7 +71,7 @@ function diffBase() {
 
 function getChangedAssetFiles() {
   const base = diffBase();
-  const diff = execSync(`git diff --name-status ${base} HEAD -- ${ASSETS_ROOT}`, { encoding: 'utf8' });
+  const diff = execSync(`git diff --name-status ${base} HEAD -- ${ASSETS_ROOTS.join(' ')}`, { encoding: 'utf8' });
   return diff.trim().split('\n').filter(Boolean).map((line) => {
     const [status, ...pathParts] = line.trim().split('\t');
     // .trim() en el path también: en algunos entornos (visto en Windows)

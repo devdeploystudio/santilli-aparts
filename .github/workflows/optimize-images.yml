@@ -9,6 +9,10 @@ on:
     paths:
       - "public/departamentos/**"
       - "src/data/departamentos/**"
+      - "public/hero/**"
+      - "public/inicio/**"
+      - "public/nosotros/**"
+      - "public/resenas/**"
 
 # Sin esto, el GITHUB_TOKEN puede venir de solo lectura por default según
 # la configuración del repo/organización, y el "git push" del último paso
@@ -61,9 +65,9 @@ jobs:
         run: |
           git config user.name "deploy-bot"
           git config user.email "bot@deploystudio.com.ar"
-          git add public/departamentos src/data/departamentos
+          git add public/departamentos src/data/departamentos public/hero public/inicio public/nosotros public/resenas src/content
           if ! git diff --cached --quiet; then
-            git commit -m "chore: organizar y optimizar contenido de deptos subido desde el panel [skip ci]"
+            git commit -m "chore: organizar y optimizar contenido subido desde el panel [skip ci]"
             git push
           else
             echo "Sin cambios para commitear."

@@ -1,5 +1,6 @@
 que-incluye:
   id: "que-incluye"
+  fotoFondo: "/inicio/que-incluye-fondo.jpg"
   titulo: "Todo preparado para que ingreses y te sientas cómodo"
   texto: "Nuestros departamentos están equipados para estadías por noche, con lo esencial incluido para que no tengas que preocuparte por nada. Los detalles exactos de cada unidad se confirman por WhatsApp según disponibilidad."
   ropaBlancaTexto: "Sábanas, toallas y toallones para que el ingreso sea simple."

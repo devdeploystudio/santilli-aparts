@@ -160,6 +160,8 @@ const jsonLd = {
         if (href.includes("wa.me")) {
           trackEvent("click_whatsapp", params);
           if (link.dataset.generateLead === "true") trackEvent("generate_lead", params);
+        } else if (href.includes("instagram.com")) {
+          trackEvent("click_instagram", params);
         } else if (link.closest("nav")) {
           trackEvent("navigation_click", params);
         }
