@@ -4,20 +4,19 @@
 // ink con un lavado dorado para que no quede idéntico al footer (flat
 // ink), que está justo debajo. Título/texto/foto son editables desde
 // /admin (colección "config-inicio"), pasados como props desde index.astro.
-import { Image } from "astro:assets";
-import SkylineMark from "./SkylineMark.astro";
+import SkylineDecor from "./SkylineDecor.astro";
 
 interface Props {
   titulo: string;
   texto: string;
-  foto: ImageMetadata;
+  foto: string;
 }
 
 const { titulo, texto, foto } = Astro.props;
 ---
 
 <section class="cta-banner relative overflow-hidden">
-  <Image src={foto} alt="" aria-hidden="true" draggable={false} width={1600} class="h-[26rem] w-full object-cover sm:h-[30rem]" />
+  <img src={foto} alt="" aria-hidden="true" draggable="false" loading="lazy" class="h-[26rem] w-full object-cover sm:h-[30rem]" />
   {/* El texto queda centrado verticalmente (items-center más abajo), no
      pegado a un borde: por eso el scrim tiene que ser parejo en toda la
      altura (no solo un degradé de abajo hacia arriba) para que se lea bien
@@ -25,9 +24,7 @@ const { titulo, texto, foto } = Astro.props;
   <div class="absolute inset-0 bg-ink/60" />
   <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/55 to-ink/35" />
   <div class="absolute inset-0 bg-gradient-to-tr from-gold/25 via-transparent to-transparent mix-blend-overlay" />
-  <div class="skyline-static pointer-events-none absolute right-16 inset-y-0 hidden w-[28rem] items-center text-white opacity-35 lg:flex xl:right-24 xl:w-[34rem]">
-    <SkylineMark class="w-full" />
-  </div>
+  <SkylineDecor class="bottom-4 right-4 top-auto hidden h-24 w-40 items-end sm:flex lg:inset-y-0 lg:right-16 lg:h-auto lg:w-[28rem] lg:items-center xl:right-24 xl:w-[34rem]" />
   <div class="absolute inset-0 flex items-center">
     <div class="mx-auto w-full max-w-[90rem] px-4 sm:px-6">
       <div class="max-w-lg">

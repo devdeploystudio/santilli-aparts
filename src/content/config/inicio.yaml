@@ -13,4 +13,4 @@ inicio:
   ayudaBullet3: "Sin compromiso: es solo para ayudarte a elegir"
   ctaTitulo: "¿Ya sabés qué fechas necesitás?"
   ctaTexto: "Mirá los departamentos que tenemos y consultanos por el que mejor se adapte a lo que necesitás."
-  ctaFoto: "../../assets/inicio/cta.jpg"
+  ctaFoto: "/inicio/cta.jpg"

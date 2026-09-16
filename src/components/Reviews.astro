@@ -3,10 +3,11 @@ import { getCollection } from "astro:content";
 import MarginLines from "./MarginLines.astro";
 
 // Reseñas editables desde /admin (colección "resenas": agregar, borrar y
-// reordenar). Las de ejemplo cargadas hoy no llevan nombre ni foto de una
-// persona real — reemplazar por reseñas reales de huéspedes antes de
-// producción (punto 24 del estándar Deploy: no presentar testimonios
-// inventados como reales).
+// reordenar). Son capturas reales de WhatsApp con huéspedes (recortadas,
+// no retocadas en el contenido) — se muestra la imagen tal cual para que
+// se note que es real, encuadrada en una tarjeta con los colores del sitio
+// alrededor (fondo canvas + borde/estrellas doradas), no un re-tema del
+// screenshot en sí.
 //
 // Carrusel: misma estructura y script que ApartmentCarousel (portados de
 // estudio-3s_santino) — transform: translateX vía JS en vez de scroll
@@ -19,33 +20,8 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
 <section class="relative border-y border-hairline bg-canvas">
   <MarginLines side="right" variant="b" />
   <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
-    <h2 class="font-display text-3xl text-ink sm:text-4xl">Lo que cuentan quienes se hospedaron</h2>
-
-    <div class="reviews-carousel mt-10">
-      <div class="reviews-carousel__viewport">
-        <div class="reviews-carousel__track">
-          {
-            reseñas.map((r) => (
-              <div class="reviews-carousel__item">
-                <figure class="relative flex h-full flex-col rounded-2xl border border-hairline bg-surface p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
-                  <span aria-hidden="true" class="font-display text-5xl leading-none text-gold">"</span>
-                  <div class="mt-2 flex gap-0.5 text-gold" aria-hidden="true">
-                    {Array.from({ length: 5 }).map(() => (
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7-5.4-4.7 7.1-.6z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <blockquote class="mt-4 flex-1 font-body text-sm leading-relaxed text-ink">{r.data.texto}</blockquote>
-                  <figcaption class="mt-5 border-t border-hairline pt-4 font-body text-xs font-semibold uppercase tracking-wide text-muted">
-                    {r.data.zona}
-                  </figcaption>
-                </figure>
-              </div>
-            ))
-          }
-        </div>
-      </div>
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 class="font-display text-3xl text-ink sm:text-4xl">Lo que cuentan quienes se hospedaron</h2>
 
       <div class="reviews-carousel__nav">
         <button type="button" class="reviews-carousel__nav-btn reviews-carousel__nav-btn--prev" aria-label="Reseña anterior">
@@ -60,6 +36,73 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
         </button>
       </div>
     </div>
+
+    <div class="reviews-carousel mt-8">
+      <div class="reviews-carousel__viewport">
+        <div class="reviews-carousel__track">
+          {
+            reseñas.map((r) => (
+              <div class="reviews-carousel__item">
+                <figure class="relative flex h-full flex-col rounded-2xl border border-hairline bg-surface p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
+                  <button
+                    type="button"
+                    class="flex h-56 w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-xl bg-canvas p-2"
+                    data-lightbox-src={r.data.imagen}
+                    data-lightbox-alt={r.data.texto}
+                    aria-label={`Ampliar reseña de ${r.data.zona}`}
+                  >
+                    <img
+                      src={r.data.imagen}
+                      alt={r.data.texto}
+                      loading="lazy"
+                      draggable="false"
+                      class="max-h-full w-full rounded-md object-contain opacity-90 shadow-sm"
+                    />
+                  </button>
+
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex gap-0.5 text-gold" aria-hidden="true">
+                      {Array.from({ length: 5 }).map(() => (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7-5.4-4.7 7.1-.6z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="flex items-center gap-1.5 font-body text-[10px] font-semibold uppercase tracking-wide text-muted">
+                      <svg width="12" height="12" viewBox="0 0 16 16" class="shrink-0 fill-current text-[#25D366]" aria-hidden="true">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.005-.247-.005-.38-.005a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.99.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.337-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                      </svg>
+                      WhatsApp
+                    </span>
+                  </div>
+                  <figcaption class="mt-3 border-t border-hairline pt-3 font-body text-xs font-semibold uppercase tracking-wide text-muted">
+                    {r.data.zona}
+                  </figcaption>
+                </figure>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="reviews-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Reseña ampliada"
+    class="fixed inset-0 z-[1200] hidden items-center justify-center bg-ink/90 p-4"
+  >
+    <button
+      id="reviews-lightbox-close"
+      type="button"
+      aria-label="Cerrar"
+      class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface/10 text-surface hover:bg-surface/20"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <img id="reviews-lightbox-img" src="" alt="" class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl" />
   </div>
 </section>
 
@@ -105,9 +148,7 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
   }
 
   .reviews-carousel__nav {
-    margin-top: 1.5rem;
     display: flex;
-    justify-content: flex-end;
     gap: 0.75rem;
   }
 
@@ -183,16 +224,26 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
 
     const clampPos = (p: number) => ((p % setW) + setW) % setW;
 
-    container.querySelector(".reviews-carousel__nav-btn--prev")?.addEventListener("click", () => {
+    // Los botones viven en la fila del título (fuera de .reviews-carousel)
+    // desde que se movieron arriba, alineados con el h2 — no son
+    // descendientes de `container`, así que se buscan en document.
+    document.querySelector(".reviews-carousel__nav-btn--prev")?.addEventListener("click", () => {
       pos = clampPos(pos - paso);
       mover();
     });
-    container.querySelector(".reviews-carousel__nav-btn--next")?.addEventListener("click", () => {
+    document.querySelector(".reviews-carousel__nav-btn--next")?.addEventListener("click", () => {
       pos = clampPos(pos + paso);
       mover();
     });
 
+    // Umbral antes de considerar esto un drag real — ver ApartmentCarousel
+    // (mismo bug real ahí: capturar el puntero apenas en pointerdown hacía
+    // que Chrome se comiera el click si había el mínimo temblor de mouse).
+    const UMBRAL_DRAG_PX = 6;
+
     let arrastrando = false;
+    let punteroActivo = false;
+    let punteroId: number | null = null;
     let startX = 0;
     let startPos = 0;
     let velX = 0;
@@ -200,22 +251,29 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
     let lastMoveT = 0;
 
     viewport.addEventListener("pointerdown", (e) => {
-      arrastrando = true;
+      punteroActivo = true;
+      punteroId = e.pointerId;
       encima = true;
       startX = e.clientX;
       startPos = pos;
       lastMoveX = e.clientX;
       lastMoveT = performance.now();
       velX = 0;
-      viewport!.setPointerCapture(e.pointerId);
-      viewport!.classList.add("is-dragging");
     });
 
     let dragRaf: number | undefined;
     let pendingX = 0;
     viewport.addEventListener("pointermove", (e) => {
-      if (!arrastrando) return;
+      if (!punteroActivo) return;
       pendingX = e.clientX;
+
+      if (!arrastrando) {
+        if (Math.abs(pendingX - startX) < UMBRAL_DRAG_PX) return;
+        arrastrando = true;
+        if (punteroId !== null) viewport!.setPointerCapture(punteroId);
+        viewport!.classList.add("is-dragging");
+      }
+
       if (dragRaf !== undefined) return;
       dragRaf = requestAnimationFrame(() => {
         dragRaf = undefined;
@@ -247,7 +305,12 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
       coast(last);
     }
     function soltar() {
-      if (!arrastrando) return;
+      punteroActivo = false;
+      punteroId = null;
+      if (!arrastrando) {
+        encima = false;
+        return;
+      }
       arrastrando = false;
       if (dragRaf !== undefined) {
         cancelAnimationFrame(dragRaf);
@@ -276,4 +339,50 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
 
   initReviewsCarousel();
   document.addEventListener("astro:page-load", initReviewsCarousel);
+
+  // Lightbox: click en cualquier captura (incluidos los clones del loop
+  // infinito, por eso la delegación en document en vez de listeners por
+  // tarjeta) la muestra ampliada. Mismo patrón que Gallery.tsx (bloquea
+  // scroll del body, cierra con Escape/click afuera).
+  function initReviewsLightbox() {
+    const lightbox = document.getElementById("reviews-lightbox");
+    const img = document.getElementById("reviews-lightbox-img") as HTMLImageElement | null;
+    const closeBtn = document.getElementById("reviews-lightbox-close");
+    if (!lightbox || !img || !closeBtn || lightbox.dataset.bound === "true") return;
+    lightbox.dataset.bound = "true";
+
+    function abrir(src: string, alt: string) {
+      img!.src = src;
+      img!.alt = alt;
+      lightbox!.classList.remove("hidden");
+      lightbox!.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      closeBtn!.focus();
+    }
+    function cerrar() {
+      lightbox!.classList.add("hidden");
+      lightbox!.classList.remove("flex");
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("click", (e) => {
+      const trigger = (e.target as HTMLElement).closest<HTMLElement>("[data-lightbox-src]");
+      if (trigger) {
+        abrir(trigger.dataset.lightboxSrc!, trigger.dataset.lightboxAlt ?? "");
+        return;
+      }
+      if ((e.target as HTMLElement).closest("#reviews-lightbox-close")) {
+        cerrar();
+        return;
+      }
+      if (e.target === lightbox) cerrar();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !lightbox!.classList.contains("hidden")) cerrar();
+    });
+  }
+
+  initReviewsLightbox();
+  document.addEventListener("astro:page-load", initReviewsLightbox);
 </script>

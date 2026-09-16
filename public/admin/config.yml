@@ -45,7 +45,7 @@ collections:
               - { label: "Punto 3 de la lista de ayuda", name: "ayudaBullet3", widget: "string" }
               - { label: "Título del bloque final (\"¿Ya sabés qué fechas necesitás?\")", name: "ctaTitulo", widget: "string" }
               - { label: "Texto del bloque final", name: "ctaTexto", widget: "text" }
-              - { label: "Imagen de fondo del bloque final", name: "ctaFoto", widget: "image", media_folder: "/src/assets/inicio", public_folder: "../../assets/inicio" }
+              - { label: "Imagen de fondo del bloque final", name: "ctaFoto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
 
   - name: "departamentos"
     label: "🏢 Departamentos"
@@ -125,7 +125,7 @@ collections:
             widget: "object"
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "nosotros" }
-              - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/src/assets", public_folder: "../assets" }
+              - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/public/nosotros", public_folder: "/nosotros" }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Primer párrafo", name: "texto1", widget: "text" }
               - { label: "Segundo párrafo", name: "texto2", widget: "text" }
@@ -222,8 +222,9 @@ collections:
     identifier_field: zona
     reorder: { key: orden }
     fields:
+      - { label: "Captura de WhatsApp", name: "imagen", widget: "image", media_folder: "/public/resenas", public_folder: "/resenas", hint: "Recorte de la conversación real con el huésped. Se muestra tal cual (no se edita el color), enmarcada con los colores del sitio." }
       - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
-      - { label: "Reseña", name: "texto", widget: "text" }
+      - { label: "Texto (para lectores de pantalla, no se ve)", name: "texto", widget: "text", hint: "Escribí lo mismo que dice la captura: no se muestra en la tarjeta, pero lo necesitan los lectores de pantalla." }
 
   - name: "config-zonas"
     label: "📍 Zonas"

@@ -25,32 +25,30 @@ const secundarios = [
 ];
 ---
 
-<section class="relative border-y border-hairline bg-canvas">
-  <MarginLines side="right" variant="b" />
-  <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
-    <div class="relative overflow-hidden rounded-3xl">
-      <img
-        src="/hero/hero-foto-2.jpg"
-        alt=""
-        draggable="false"
-        loading="lazy"
-        class="absolute inset-0 h-full w-full object-cover"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/60 to-ink/25" />
-      <div class="relative max-w-xl px-6 py-12 sm:px-10 sm:py-16">
-        <h2 class="font-display text-4xl leading-[1.05] text-canvas sm:text-5xl">
-          {d.titulo}
-        </h2>
-        <p class="mt-5 font-body text-base text-canvas/90">
-          {d.texto}
-        </p>
-      </div>
+<section class="relative overflow-hidden border-y border-hairline">
+  <img
+    src="/hero/av-callao.jpg"
+    alt=""
+    draggable="false"
+    loading="lazy"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-ink/75" />
+  <MarginLines side="right" variant="b" tono="white" />
+  <div class="relative mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
+    <div class="max-w-xl">
+      <h2 class="font-display text-4xl leading-[1.05] text-canvas sm:text-5xl">
+        {d.titulo}
+      </h2>
+      <p class="mt-5 font-body text-base text-canvas/90">
+        {d.texto}
+      </p>
     </div>
 
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       {
         secundarios.map((d) => (
-          <div class="rounded-2xl border border-hairline bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
+          <div class="rounded-2xl border border-hairline bg-surface/90 p-6 shadow-lg shadow-ink/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:bg-surface hover:shadow-xl">
             <span class="flex h-11 w-11 items-center justify-center rounded-full bg-canvas text-gold-active">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d={d.path} />
@@ -63,7 +61,7 @@ const secundarios = [
       }
     </div>
 
-    <div class="mt-8 rounded-2xl border border-dashed border-hairline bg-surface/60 p-6">
+    <div class="mt-8 rounded-2xl border border-dashed border-hairline bg-surface/90 p-6 shadow-lg shadow-ink/20 backdrop-blur-sm">
       <p class="font-body text-sm font-semibold text-ink">{d.importanteTitulo}</p>
       <p class="mt-2 font-body text-sm leading-relaxed text-muted">
         {d.importanteTexto}

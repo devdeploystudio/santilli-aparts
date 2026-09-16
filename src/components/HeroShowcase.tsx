@@ -12,12 +12,26 @@ interface Slide {
 }
 
 const SLIDES: Slide[] = [
-  { tipo: "foto", src: "/hero/hero-foto-1.jpg" },
-  { tipo: "video", src: "/hero/hero-video-1.mp4", poster: "/hero/hero-video-1-poster.jpg" },
-  { tipo: "foto", src: "/hero/hero-foto-2.jpg" },
-  { tipo: "video", src: "/departamentos/_compartido/pileta-callao-930.mp4", poster: "/departamentos/_compartido/pileta-callao-930-poster.jpg" },
-  { tipo: "foto", src: "/hero/hero-foto-3.jpg" },
-  { tipo: "video", src: "/hero/hero-video-2.mp4", poster: "/hero/hero-video-2-poster.jpg" },
+  { tipo: "video", src: "/hero/video-av-callao.mp4", poster: "/hero/video-av-callao-poster.jpg" },
+  { tipo: "foto", src: "/hero/av-callao.jpg" },
+  { tipo: "foto", src: "/hero/rodriguez-pena-2.jpg" },
+  { tipo: "foto", src: "/hero/obelisco-1.jpg" },
+  { tipo: "foto", src: "/hero/santa-fe-callao.jpg" },
+  { tipo: "foto", src: "/hero/teatro-colon.jpg" },
+  { tipo: "foto", src: "/hero/congreso.jpg" },
+  { tipo: "foto", src: "/hero/rodriguez-pena.jpg" },
+  { tipo: "foto", src: "/hero/santa-fe.jpg" },
+  { tipo: "foto", src: "/hero/pasaje-pizzurno.jpg" },
+  { tipo: "foto", src: "/hero/obelisco-2.jpg" },
+  { tipo: "foto", src: "/hero/santa-fe-callao-2.jpg" },
+  { tipo: "foto", src: "/hero/teatro-colon-2.jpg" },
+  { tipo: "foto", src: "/hero/hospital-aleman.jpg" },
+  { tipo: "foto", src: "/hero/hospital-clinicas.jpg" },
+  { tipo: "foto", src: "/hero/hospital-rivadavia.jpg" },
+  { tipo: "foto", src: "/hero/alto-palermo.jpg" },
+  { tipo: "foto", src: "/hero/alto-palermo-2.jpg" },
+  { tipo: "foto", src: "/hero/parque-las-heras.jpg" },
+  { tipo: "foto", src: "/hero/parque-las-heras-2.jpg" },
 ];
 
 const DURACION_FOTO_MS = 4500;
@@ -46,7 +60,7 @@ export default function HeroShowcase() {
   }, [activo]);
 
   return (
-    <div class="relative h-full min-h-[26rem] w-full overflow-hidden bg-canvas">
+    <div class="relative h-full w-full overflow-hidden bg-canvas">
       {SLIDES.map((slide, i) => (
         <div
           key={slide.src}

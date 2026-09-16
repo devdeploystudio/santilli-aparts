@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { WHATSAPP_NUMBER } from "../config/site";
@@ -35,10 +34,10 @@ const puntos = [
 >
   <section class="grid lg:grid-cols-2 lg:items-stretch">
     <div data-cursor-dark class="group h-72 overflow-hidden sm:h-96 lg:h-auto lg:order-1">
-      <Image
+      <img
         src={n.foto}
         alt="La familia Santilli, dueños y responsables de Santilli Aparts"
-        width={1200}
+        loading="lazy"
         class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
       />
     </div>

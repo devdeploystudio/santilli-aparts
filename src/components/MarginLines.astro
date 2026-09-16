@@ -11,10 +11,14 @@
 interface Props {
   side?: "left" | "right";
   variant?: "a" | "b";
+  // "gold" (default) para bloques con fondo claro; "white" para bloques con
+  // foto de fondo oscura (ahí el dorado no se lee tan bien contra la foto).
+  tono?: "gold" | "white";
   class?: string;
 }
 
-const { side = "left", variant = "a", class: className = "" } = Astro.props;
+const { side = "left", variant = "a", tono = "gold", class: className = "" } = Astro.props;
+const toneClass = tono === "white" ? "text-white opacity-70" : "text-gold";
 
 // Mismo patrón que SkylineMark: "M x yBase V yTecho l dx dy v dyLado" —
 // pared recta, techo (angulado o plano), pared recta, con la base (yBase)
@@ -38,6 +42,7 @@ const edificios = EDIFICIOS[variant];
 <div
   class:list={[
     "margin-lines pointer-events-none absolute bottom-0 hidden w-16 xl:block",
+    toneClass,
     side === "left" ? "left-4 2xl:left-10" : "right-4 2xl:right-10",
     className,
   ]}
@@ -49,7 +54,7 @@ const edificios = EDIFICIOS[variant];
         <path
           class="margin-lines__stroke"
           d={e.d}
-          stroke="var(--color-gold)"
+          stroke="currentColor"
           stroke-width="3"
           stroke-linecap="round"
           stroke-linejoin="round"

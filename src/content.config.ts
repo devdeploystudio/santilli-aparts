@@ -63,6 +63,11 @@ const resenas = defineCollection({
   schema: z.object({
     orden: z.number(),
     zona: z.string(),
+    // Captura real de WhatsApp (recortada, no editada en el contenido) —
+    // se muestra la imagen tal cual para que se note que es real, dentro
+    // de una tarjeta con los colores del sitio. `texto` queda igual para
+    // el alt/lectores de pantalla.
+    imagen: z.string(),
     texto: z.string(),
   }),
 });
@@ -83,36 +88,41 @@ const config = defineCollection({
 // vive en la home, agrupado como "Inicio" en el panel.
 const configInicio = defineCollection({
   loader: file("./src/content/config/inicio.yaml"),
-  schema: ({ image }) =>
-    z.object({
-      id: z.string(),
-      heroTitulo: z.string(),
-      // Las 3 frases resaltadas del párrafo del Hero (subrayado animado).
-      // El texto que las conecta queda fijo en el componente para no
-      // romper la animación armada a mano.
-      heroDestacado1: z.string(),
-      heroDestacado2: z.string(),
-      heroDestacado3: z.string(),
-      deptosTexto1: z.string(),
-      deptosTexto2: z.string(),
-      ayudaTitulo: z.string(),
-      ayudaTexto: z.string(),
-      ayudaBullet1: z.string(),
-      ayudaBullet2: z.string(),
-      ayudaBullet3: z.string(),
-      ctaTitulo: z.string(),
-      ctaTexto: z.string(),
-      ctaFoto: image(),
-    }),
+  schema: z.object({
+    id: z.string(),
+    heroTitulo: z.string(),
+    // Las 3 frases resaltadas del párrafo del Hero (subrayado animado).
+    // El texto que las conecta queda fijo en el componente para no
+    // romper la animación armada a mano.
+    heroDestacado1: z.string(),
+    heroDestacado2: z.string(),
+    heroDestacado3: z.string(),
+    deptosTexto1: z.string(),
+    deptosTexto2: z.string(),
+    ayudaTitulo: z.string(),
+    ayudaTexto: z.string(),
+    ayudaBullet1: z.string(),
+    ayudaBullet2: z.string(),
+    ayudaBullet3: z.string(),
+    ctaTitulo: z.string(),
+    ctaTexto: z.string(),
+    // Path a /public (no astro:assets/image()): en el hosting de Cloudflare
+    // la optimización de imagen en build (sharp) generaba un endpoint
+    // /_image en vez de un archivo estático, que no funciona sin server
+    // runtime — se rompía en el deploy aunque local funcionara bien. Mismo
+    // criterio que las fotos de departamentos: archivo plano ya comprimido.
+    ctaFoto: z.string(),
+  }),
 });
 
 const configNosotros = defineCollection({
   loader: file("./src/content/config/nosotros.yaml"),
-  schema: ({ image }) =>
-    z.object({
-      id: z.string(),
-      foto: image(),
-      titulo: z.string(),
+  schema: z.object({
+    id: z.string(),
+    // Ver comentario en ctaFoto (configInicio) sobre por qué es un path a
+    // /public y no astro:assets.
+    foto: z.string(),
+    titulo: z.string(),
       texto1: z.string(),
       texto2: z.string(),
       punto1Titulo: z.string(),

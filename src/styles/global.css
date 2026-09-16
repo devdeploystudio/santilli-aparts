@@ -106,17 +106,24 @@
     stroke-dashoffset: 900;
   }
 
-  .hero-in-view .skyline-buildings path {
+  /* .hero-in-view: gesto de entrada propio del Hero (id="hero", ver su
+     <script>). .skyline-in-view: mismo gesto reutilizado en cualquier OTRA
+     sección que use el skyline como elemento decorativo (ej. CtaBanner) —
+     cada una trae su propio observer, ver el <script> de esa sección. */
+  .hero-in-view .skyline-buildings path,
+  .skyline-in-view .skyline-buildings path {
     animation: skyline-draw 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: calc(var(--i, 0) * 135ms + 225ms);
   }
 
-  .hero-in-view .skyline-spine {
+  .hero-in-view .skyline-spine,
+  .skyline-in-view .skyline-spine {
     animation: skyline-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 1425ms;
   }
 
-  .hero-in-view .skyline-horizon {
+  .hero-in-view .skyline-horizon,
+  .skyline-in-view .skyline-horizon {
     animation: skyline-draw-horizon 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 1575ms;
   }
@@ -129,18 +136,6 @@
       animation-delay: 0ms;
       stroke-dashoffset: 0;
     }
-  }
-
-  /* Fuera del hero (ej. CtaBanner) el skyline es un elemento decorativo de
-     fondo, no el gesto de entrada: se muestra ya dibujado, sin animación
-     (el estado base de arriba lo deja invisible por diseño para el hero). */
-  .skyline-static .skyline-buildings path,
-  .skyline-static .skyline-horizon {
-    stroke-dashoffset: 0;
-  }
-
-  .skyline-static .skyline-spine {
-    opacity: 1;
   }
 
   /* Subrayado dorado que se dibuja bajo un énfasis del copy del hero —
