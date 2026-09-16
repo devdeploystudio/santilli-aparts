@@ -1,0 +1,32 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Vicente López 2240",
+  "zona": "Recoleta",
+  "direccion": "Vicente López 2240, CABA",
+  "coords": {
+    "lat": -34.5895,
+    "lng": -58.3927
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable Flow y utensilios de cocina. También ofrece cocina c/horno y heladera bajo mesada. Se completa con baño completo c/bañera y aire acondicionado frío/calor. Está a media cuadra del Recoleta Mall y cerca del centro cultural de Recoleta, en una zona hermosa y segura.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "aire",
+    "cocina"
+  ],
+  "fotos": [
+    "/departamentos/depto-16-vicente-lopez-2240/01.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/02.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/03.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/04.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/05.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/06.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/07.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/08.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/09.jpg",
+    "/departamentos/depto-16-vicente-lopez-2240/10.jpg"
+  ],
+  "esPlaceholder": false
+}

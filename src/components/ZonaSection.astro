@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import MapView, { type MapPin } from "./MapView.tsx";
 import MarginLines from "./MarginLines.astro";
 
@@ -8,39 +9,41 @@ interface Props {
 
 const { pines } = Astro.props;
 
+const z = (await getEntry("configZonas", "zonas"))!.data;
+
 // Solo Recoleta y Palermo como cards destacadas (ahí trabajamos
 // principalmente); Balvanera sigue existiendo como zona real de deptos
-// puntuales (filtro, mapa), pero no se destaca acá.
+// puntuales (filtro, mapa), pero no se destaca acá. El nombre de cada
+// zona queda fijo en código (lo usa también el link de filtro de
+// /departamentos), solo subtítulo/texto se editan desde /admin.
 const zonas = [
   {
     nombre: "Recoleta",
-    subtitulo: "Clínicas, facultades y avenidas",
-    texto:
-      "Una zona cómoda, segura y muy buscada por quienes necesitan moverse rápido por la ciudad. Ideal para pacientes, familias y estadías cortas, cerca de clínicas, facultades y Av. Santa Fe.",
+    subtitulo: z.recoletaSubtitulo,
+    texto: z.recoletaTexto,
   },
   {
     nombre: "Palermo",
-    subtitulo: "Gastronomía, bares y vida urbana",
-    texto:
-      "Moderno y conectado: ideal para quienes quieren estar cerca de restaurantes, bares, transporte y puntos turísticos de la ciudad.",
+    subtitulo: z.palermoSubtitulo,
+    texto: z.palermoTexto,
   },
 ];
 
 const accesos = [
   {
-    texto: "Subte y colectivos a pocas cuadras",
+    texto: z.acceso1Texto,
     path: "M6 3h12a2 2 0 0 1 2 2v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2z M4 12h16 M8 20l-1.5 2 M17 20l1.5 2",
   },
   {
-    texto: "Hospitales y clínicas cercanas",
+    texto: z.acceso2Texto,
     path: "M4 4h16v16H4z M12 8v8 M8 12h8",
   },
   {
-    texto: "Zonas seguras y muy transitadas",
+    texto: z.acceso3Texto,
     path: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
   },
   {
-    texto: "Conexión rápida con el resto de CABA",
+    texto: z.acceso4Texto,
     path: "M12 2l7 19-7-4-7 4z",
   },
 ];
@@ -60,12 +63,9 @@ const etiquetasZona = [
 <section id="zonas" class="relative border-y border-hairline bg-surface">
   <MarginLines side="left" />
   <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:py-24">
-    <h2 class="font-display text-3xl text-ink sm:text-4xl">Trabajamos en zonas céntricas, prácticas y cercanas a todo.</h2>
+    <h2 class="font-display text-3xl text-ink sm:text-4xl">{z.titulo}</h2>
     <p class="mt-3 max-w-2xl font-body text-base text-muted">
-      Nuestra propuesta se enfoca principalmente en Recoleta y Palermo, dos
-      zonas muy elegidas de Buenos Aires por su ubicación, movimiento,
-      seguridad y cercanía con clínicas, facultades, comercios, restaurantes,
-      transporte público y avenidas principales.
+      {z.texto}
     </p>
 
     <div class="mt-10 grid gap-8 lg:grid-cols-2">

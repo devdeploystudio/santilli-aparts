@@ -1,0 +1,26 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Florida",
+  "zona": "Balvanera",
+  "direccion": "Florida, CABA",
+  "coords": {
+    "lat": -34.6008,
+    "lng": -58.3931
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [],
+  "fotos": [
+    "/departamentos/depto-49-florida/01.jpg",
+    "/departamentos/depto-49-florida/02.jpg",
+    "/departamentos/depto-49-florida/03.jpg",
+    "/departamentos/depto-49-florida/04.jpg",
+    "/departamentos/depto-49-florida/05.jpg",
+    "/departamentos/depto-49-florida/06.jpg",
+    "/departamentos/depto-49-florida/07.jpg",
+    "/departamentos/depto-49-florida/08.jpg",
+    "/departamentos/depto-49-florida/09.jpg",
+    "/departamentos/depto-49-florida/10.jpg"
+  ],
+  "esPlaceholder": false
+}

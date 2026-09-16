@@ -1,52 +1,50 @@
 ---
+import { getEntry } from "astro:content";
+import { WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
-import SkylineMark from "./SkylineMark.astro";
+import HeroShowcase from "./HeroShowcase.tsx";
 
-const waLink = buildConsultaGeneralLink();
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
+const inicio = (await getEntry("configInicio", "inicio"))!.data;
 ---
 
-<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden" data-no-reveal>
-  {/* Desde lg: decorativo, absoluto y detrás del texto (columna propia). Antes
-     de lg no hay una columna dedicada para él, así que ahí se muestra en
-     flujo normal ARRIBA del título (ver más abajo) en vez de superpuesto:
-     superpuesto se pisaba con el h1/párrafo en el rango tablet. */}
-  <div class="pointer-events-none absolute -right-16 inset-y-0 hidden w-[38rem] items-center opacity-90 lg:flex lg:right-8 xl:right-16">
-    <SkylineMark class="w-full" />
-  </div>
+<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] overflow-hidden" data-no-reveal>
+  <div class="relative mx-auto grid w-full max-w-[90rem] lg:grid-cols-[1fr_1.1fr]">
+    <div class="flex flex-col justify-center px-4 py-16 sm:px-6 sm:py-20 lg:order-2 lg:pl-12 xl:pl-20">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-[2.75rem] leading-[1.05] text-ink sm:text-6xl lg:text-7xl">
+          {inicio.heroTitulo}
+        </h1>
 
-  <div class="relative mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_0.85fr]">
-    <div class="max-w-2xl lg:col-span-2">
-      <div class="mb-6 w-40 opacity-90 sm:w-56 lg:hidden">
-        <SkylineMark class="w-full" />
+        <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-muted sm:text-xl">
+          Contamos con <span class="ink-underline font-semibold text-ink" style="--delay:825ms">{inicio.heroDestacado1}</span>{" "}
+          en Recoleta y Palermo, para <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">{inicio.heroDestacado2}</span>,{" "}
+          y no pedimos seña: <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">{inicio.heroDestacado3}</span>.{" "}
+          Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia.
+        </p>
+
+        <div class="mt-9 flex flex-wrap gap-4">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-ubicacion="hero"
+            class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink shadow-[0_8px_24px_-8px_rgb(204_160_56/0.6)] hover:bg-gold-active"
+          >
+            Consultar por WhatsApp
+          </a>
+          <a
+            href="/departamentos"
+            class="btn-press rounded-full border border-hairline bg-surface px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
+          >
+            Ver departamentos
+          </a>
+        </div>
       </div>
+    </div>
 
-      <h1 class="font-display text-[2.75rem] leading-[1.05] text-ink sm:text-6xl lg:text-7xl">
-        Departamentos listos para disfrutar Buenos Aires.
-      </h1>
-
-      <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-muted sm:text-xl">
-        Contamos con <span class="ink-underline font-semibold text-ink" style="--delay:825ms">más de 60 departamentos</span>{" "}
-        en Recoleta y Palermo, para <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">1 a 5 personas</span>,{" "}
-        y no pedimos seña: <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">abonás al ingresar</span>.{" "}
-        Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia.
-      </p>
-
-      <div class="mt-9 flex flex-wrap gap-4">
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink shadow-[0_8px_24px_-8px_rgb(204_160_56/0.6)] hover:bg-gold-active"
-        >
-          Consultar por WhatsApp
-        </a>
-        <a
-          href="/departamentos"
-          class="btn-press rounded-full border border-hairline bg-surface px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
-        >
-          Ver departamentos
-        </a>
-      </div>
+    <div class="hidden lg:order-1 lg:block lg:ml-[min(0px,calc((90rem-100vw)/2))]">
+      <HeroShowcase client:visible />
     </div>
   </div>
 </section>

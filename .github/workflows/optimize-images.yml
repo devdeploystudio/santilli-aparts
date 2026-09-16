@@ -1,0 +1,70 @@
+name: Organizar y optimizar contenido del panel
+
+# Se dispara solo con cada push a main que toque fotos/video de deptos o
+# sus fichas de datos - ya sea desde el panel (Sveltia comitea directo a
+# main vía la API de GitHub) o desde un push normal de la agencia.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/departamentos/**"
+      - "src/data/departamentos/**"
+
+# Sin esto, el GITHUB_TOKEN puede venir de solo lectura por default según
+# la configuración del repo/organización, y el "git push" del último paso
+# falla sin avisar mucho por qué. Lo declaramos acá explícito para no
+# depender de esa configuración externa.
+permissions:
+  contents: write
+
+# Evita que dos ejecuciones se pisen si llegan varios pushes seguidos
+# (ej. el cliente sube varias fotos en poco tiempo).
+concurrency:
+  group: optimize-images
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    # El propio commit que hace este bot al final tiene "[skip ci]" en el
+    # mensaje - sin este check, el workflow se dispararía a sí mismo en
+    # loop cada vez que comitea un cambio.
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # historial completo: rename-uploads.mjs necesita poder comparar contra el commit anterior al push, sea cual sea
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias de los scripts
+        run: npm install sharp glob
+
+      - name: Renombrar y versionar reemplazos
+        run: node scripts/rename-uploads.mjs
+        env:
+          DIFF_BASE: ${{ github.event.before }}
+
+      - name: Comprimir imágenes
+        run: node scripts/compress-images.mjs
+        env:
+          DIFF_BASE: ${{ github.event.before }}
+
+      - name: Numerar y renombrar deptos nuevos
+        run: node scripts/rename-new-deptos.mjs
+        env:
+          DIFF_BASE: ${{ github.event.before }}
+
+      - name: Commitear cambios (si hubo)
+        run: |
+          git config user.name "deploy-bot"
+          git config user.email "bot@deploystudio.com.ar"
+          git add public/departamentos src/data/departamentos
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: organizar y optimizar contenido de deptos subido desde el panel [skip ci]"
+            git push
+          else
+            echo "Sin cambios para commitear."
+          fi

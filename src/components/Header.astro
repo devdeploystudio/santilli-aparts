@@ -1,8 +1,8 @@
 ---
-import { NAV_LINKS, SITE } from "../config/site";
+import { NAV_LINKS, SITE, WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
 
-const waLink = buildConsultaGeneralLink();
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 ---
 
 <header class="sticky top-0 z-40 border-b border-hairline bg-surface/90 backdrop-blur">
@@ -14,12 +14,12 @@ const waLink = buildConsultaGeneralLink();
       </span>
     </a>
 
-    <nav class="hidden items-center gap-8 md:flex" aria-label="Principal">
+    <nav class="hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Principal">
       {
         NAV_LINKS.map((link) => (
           <a
             href={link.href}
-            class="nav-link font-body text-sm font-medium text-ink transition-colors hover:text-gold-active"
+            class="nav-link whitespace-nowrap font-body text-sm font-medium text-ink transition-colors hover:text-gold-active"
           >
             {link.label}
           </a>
@@ -31,7 +31,8 @@ const waLink = buildConsultaGeneralLink();
       href={waLink}
       target="_blank"
       rel="noopener noreferrer"
-      class="btn-press hidden rounded-full bg-gold px-5 py-2.5 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active md:inline-block"
+      data-ubicacion="header"
+      class="btn-press hidden rounded-full bg-gold px-5 py-2.5 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active lg:inline-block"
     >
       Consultar por WhatsApp
     </a>
@@ -39,7 +40,7 @@ const waLink = buildConsultaGeneralLink();
     <button
       id="menu-toggle"
       type="button"
-      class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline md:hidden"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline lg:hidden"
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
@@ -68,6 +69,7 @@ const waLink = buildConsultaGeneralLink();
       href={waLink}
       target="_blank"
       rel="noopener noreferrer"
+      data-ubicacion="header"
       class="btn-press mt-1 rounded-full bg-gold px-5 py-2.5 text-center font-body text-sm font-semibold text-ink"
     >
       Consultar por WhatsApp

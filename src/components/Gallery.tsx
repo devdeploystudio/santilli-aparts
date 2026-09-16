@@ -10,7 +10,17 @@ interface Props {
   videoPoster?: string;
 }
 
-function Slide({ src, placeholder, alt }: { src: string; placeholder: boolean; alt: string }) {
+function FotoSlide({
+  src,
+  placeholder,
+  alt,
+  eager = false,
+}: {
+  src: string;
+  placeholder: boolean;
+  alt: string;
+  eager?: boolean;
+}) {
   if (placeholder) {
     return (
       <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-[color-mix(in_srgb,var(--color-gold)_18%,var(--color-canvas))] to-canvas">
@@ -25,7 +35,43 @@ function Slide({ src, placeholder, alt }: { src: string; placeholder: boolean; a
       </div>
     );
   }
-  return <img src={src} alt={alt} loading="lazy" draggable={false} class="h-full w-full object-cover" />;
+  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} draggable={false} class="h-full w-full object-cover" />;
+}
+
+// Miniatura recortada con zoom (mismo trato que una foto, object-cover, no
+// letterbox) con un ícono de play encima; al clickear abre el lightbox de
+// video. Se usa tanto si el video es la ÚNICA slide (depto sin fotos
+// todavía) como si es una slide más al final del carrusel de fotos (ej.
+// video de la pileta del edificio, compartido entre varios deptos).
+function VideoSlide({
+  video,
+  videoPoster,
+  nombre,
+  eager,
+  onClick,
+}: {
+  video: string;
+  videoPoster?: string;
+  nombre: string;
+  eager: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" class="relative h-full w-full cursor-zoom-in overflow-hidden" onClick={onClick} aria-label={`Reproducir video de ${nombre}`}>
+      {videoPoster ? (
+        <img src={videoPoster} alt={`Preview de ${nombre}`} loading={eager ? "eager" : "lazy"} draggable={false} class="h-full w-full object-cover" />
+      ) : (
+        <video src={video} muted playsInline preload="metadata" class="h-full w-full object-cover" />
+      )}
+      <span class="absolute inset-0 flex items-center justify-center">
+        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-surface/90 text-ink shadow-lg">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </span>
+    </button>
+  );
 }
 
 export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPoster }: Props) {
@@ -36,6 +82,12 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
   const [videoAbierto, setVideoAbierto] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const closeVideoRef = useRef<HTMLButtonElement>(null);
+
+  // El video (si existe) siempre va como última slide del carrusel, sea
+  // el único contenido (depto sin fotos todavía) o una slide más sumada
+  // a las fotos propias del depto (ej. video de una pileta compartida por
+  // varios deptos del mismo edificio).
+  const totalSlides = fotos.length + (video ? 1 : 0);
 
   useEffect(() => {
     if (!viewportRef.current) return;
@@ -77,64 +129,6 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
     };
   }, [videoAbierto]);
 
-  // Depto sin fotos todavía pero con un video corto ya cargado: la
-  // miniatura se recorta con zoom (mismo trato que una foto, object-cover,
-  // no letterbox) con un ícono de play encima; al clickear se abre un
-  // lightbox y ahí sí se ve el video entero reproduciéndose (mismo patrón
-  // que el lightbox de fotos: cover en miniatura, contain en grande).
-  if (video && fotos.length === 0) {
-    return (
-      <div class="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[20rem]">
-        <button
-          type="button"
-          class="absolute inset-0 cursor-zoom-in overflow-hidden rounded-2xl"
-          onClick={() => setVideoAbierto(true)}
-          aria-label={`Reproducir video de ${nombre}`}
-        >
-          {videoPoster ? (
-            <img src={videoPoster} alt={`Preview de ${nombre}`} draggable={false} class="absolute inset-0 h-full w-full object-cover" />
-          ) : (
-            <video src={video} muted playsInline preload="metadata" class="absolute inset-0 h-full w-full object-cover" />
-          )}
-          <span class="absolute inset-0 flex items-center justify-center">
-            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-surface/90 text-ink shadow-lg">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </span>
-          </span>
-        </button>
-
-        {videoAbierto && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Video de ${nombre}`}
-            class="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4"
-            onClick={() => setVideoAbierto(false)}
-          >
-            <button
-              ref={closeVideoRef}
-              type="button"
-              aria-label="Cerrar"
-              onClick={() => setVideoAbierto(false)}
-              class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface/10 text-surface hover:bg-surface/20"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-            </button>
-            <video
-              src={video}
-              controls
-              autoPlay
-              onClick={(e) => e.stopPropagation()}
-              class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl"
-            />
-          </div>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div class="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[20rem]">
       <div class="absolute inset-0 overflow-hidden rounded-2xl" ref={viewportRef}>
@@ -147,13 +141,24 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
               onClick={() => setLightboxIndex(i)}
               aria-label={`Ampliar foto ${i + 1} de ${nombre}`}
             >
-              <Slide src={foto} placeholder={esPlaceholder} alt={`Foto ${i + 1} de ${nombre}`} />
+              <FotoSlide src={foto} placeholder={esPlaceholder} alt={`Foto ${i + 1} de ${nombre}`} eager={i === 0} />
             </button>
           ))}
+          {video && (
+            <div class="h-full min-w-0 shrink-0 grow-0 basis-full">
+              <VideoSlide
+                video={video}
+                videoPoster={videoPoster}
+                nombre={nombre}
+                eager={fotos.length === 0}
+                onClick={() => setVideoAbierto(true)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {fotos.length > 1 && (
+      {totalSlides > 1 && (
         <>
           <button
             type="button"
@@ -173,11 +178,8 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
           </button>
 
           <div class="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-            {fotos.map((_, i) => (
-              <span
-                key={i}
-                class={`h-1.5 w-1.5 rounded-full ${i === selected ? "bg-gold" : "bg-surface/70"}`}
-              />
+            {Array.from({ length: totalSlides }).map((_, i) => (
+              <span key={i} class={`h-1.5 w-1.5 rounded-full ${i === selected ? "bg-gold" : "bg-surface/70"}`} />
             ))}
           </div>
         </>
@@ -188,7 +190,7 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
           role="dialog"
           aria-modal="true"
           aria-label={`Foto ampliada de ${nombre}`}
-          class="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4"
+          class="fixed inset-0 z-[1200] flex items-center justify-center bg-ink/90 p-4"
           onClick={() => setLightboxIndex(null)}
         >
           <button
@@ -252,6 +254,33 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
               />
             )}
           </div>
+        </div>
+      )}
+
+      {videoAbierto && video && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Video de ${nombre}`}
+          class="fixed inset-0 z-[1200] flex items-center justify-center bg-ink/90 p-4"
+          onClick={() => setVideoAbierto(false)}
+        >
+          <button
+            ref={closeVideoRef}
+            type="button"
+            aria-label="Cerrar"
+            onClick={() => setVideoAbierto(false)}
+            class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface/10 text-surface hover:bg-surface/20"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+          <video
+            src={video}
+            controls
+            autoPlay
+            onClick={(e) => e.stopPropagation()}
+            class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl"
+          />
         </div>
       )}
     </div>

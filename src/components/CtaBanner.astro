@@ -2,12 +2,22 @@
 // Un único momento de cierre antes del footer, con una foto real (curada a
 // mano: living luminoso, no un dormitorio o un baño). El overlay mezcla
 // ink con un lavado dorado para que no quede idéntico al footer (flat
-// ink), que está justo debajo.
-const foto = "/departamentos/depto-20-callao-966/01.jpg";
+// ink), que está justo debajo. Título/texto/foto son editables desde
+// /admin (colección "config-inicio"), pasados como props desde index.astro.
+import { Image } from "astro:assets";
+import SkylineMark from "./SkylineMark.astro";
+
+interface Props {
+  titulo: string;
+  texto: string;
+  foto: ImageMetadata;
+}
+
+const { titulo, texto, foto } = Astro.props;
 ---
 
 <section class="cta-banner relative overflow-hidden">
-  <img src={foto} alt="" aria-hidden="true" draggable="false" class="h-[26rem] w-full object-cover sm:h-[30rem]" />
+  <Image src={foto} alt="" aria-hidden="true" draggable={false} width={1600} class="h-[26rem] w-full object-cover sm:h-[30rem]" />
   {/* El texto queda centrado verticalmente (items-center más abajo), no
      pegado a un borde: por eso el scrim tiene que ser parejo en toda la
      altura (no solo un degradé de abajo hacia arriba) para que se lea bien
@@ -15,15 +25,17 @@ const foto = "/departamentos/depto-20-callao-966/01.jpg";
   <div class="absolute inset-0 bg-ink/60" />
   <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/55 to-ink/35" />
   <div class="absolute inset-0 bg-gradient-to-tr from-gold/25 via-transparent to-transparent mix-blend-overlay" />
+  <div class="skyline-static pointer-events-none absolute right-16 inset-y-0 hidden w-[28rem] items-center text-white opacity-35 lg:flex xl:right-24 xl:w-[34rem]">
+    <SkylineMark class="w-full" />
+  </div>
   <div class="absolute inset-0 flex items-center">
     <div class="mx-auto w-full max-w-[90rem] px-4 sm:px-6">
       <div class="max-w-lg">
         <h2 class="font-display text-3xl leading-[1.1] text-canvas sm:text-4xl">
-          ¿Ya sabés qué fechas necesitás?
+          {titulo}
         </h2>
         <p class="mt-3 font-body text-base text-canvas">
-          Mirá los departamentos que tenemos y consultanos por el que mejor
-          se adapte a lo que necesitás.
+          {texto}
         </p>
         <a
           href="/departamentos"

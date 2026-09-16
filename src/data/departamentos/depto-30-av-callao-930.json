@@ -1,0 +1,33 @@
+{
+  "nombre": "Depto para 2 y 3 personas, Av. Callao 930",
+  "zona": "Recoleta",
+  "direccion": "Av. Callao 930, CABA",
+  "coords": {
+    "lat": -34.5977,
+    "lng": -58.393
+  },
+  "capacidadMin": 2,
+  "capacidadMax": 3,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
+  "fotos": [
+    "/departamentos/depto-30-av-callao-930/01.jpg",
+    "/departamentos/depto-30-av-callao-930/02.jpg",
+    "/departamentos/depto-30-av-callao-930/03.jpg",
+    "/departamentos/depto-30-av-callao-930/04.jpg",
+    "/departamentos/depto-30-av-callao-930/05.jpg",
+    "/departamentos/depto-30-av-callao-930/06.jpg",
+    "/departamentos/depto-30-av-callao-930/07.jpg",
+    "/departamentos/depto-30-av-callao-930/08.jpg",
+    "/departamentos/depto-30-av-callao-930/09.jpg",
+    "/departamentos/depto-30-av-callao-930/10.jpg"
+  ],
+  "esPlaceholder": false,
+  "video": "/departamentos/_compartido/pileta-callao-930.mp4",
+  "videoPoster": "/departamentos/_compartido/pileta-callao-930-poster.jpg"
+}

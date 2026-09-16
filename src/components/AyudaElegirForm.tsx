@@ -6,6 +6,9 @@ import { buildConsultaAyudaMensaje, buildWhatsAppLink } from "../lib/whatsapp";
 
 // Mismo componente y lógica que BookingForm.tsx (ficha de depto puntual),
 // pero sin nombreDepto: este es el que ayuda a ELEGIR uno, para el home.
+interface Props {
+  whatsappNumero: string;
+}
 function Stepper({
   label,
   value,
@@ -43,13 +46,22 @@ function Stepper({
   );
 }
 
-export default function AyudaElegirForm() {
+export default function AyudaElegirForm({ whatsappNumero }: Props) {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const [rango, setRango] = useState<Date[]>([]);
   const [adultos, setAdultos] = useState(2);
   const [menores, setMenores] = useState(0);
   const [tieneMascotas, setTieneMascotas] = useState(false);
   const [detalleMascotas, setDetalleMascotas] = useState("");
+
+  // form_start: ver BookingForm.tsx para el detalle (se dispara una sola
+  // vez, en la primera interacción con cualquier campo).
+  const formIniciadoRef = useRef(false);
+  function marcarInicio() {
+    if (formIniciadoRef.current) return;
+    formIniciadoRef.current = true;
+    (window as any).gtag?.("event", "form_start", { ubicacion: "form_ayuda_elegir" });
+  }
 
   useEffect(() => {
     if (!dateInputRef.current) return;
@@ -60,7 +72,10 @@ export default function AyudaElegirForm() {
       minDate: "today",
       dateFormat: "d/m/Y",
       locale: Spanish,
-      onChange: (selectedDates) => setRango([...selectedDates]),
+      onChange: (selectedDates) => {
+        marcarInicio();
+        setRango([...selectedDates]);
+      },
     });
     return () => fp.destroy();
   }, []);
@@ -80,6 +95,7 @@ export default function AyudaElegirForm() {
           tieneMascotas,
           detalleMascotas,
         }),
+        whatsappNumero,
       )
     : undefined;
 
@@ -100,8 +116,8 @@ export default function AyudaElegirForm() {
       </div>
 
       <div class="mt-5 flex flex-wrap gap-8">
-        <Stepper label="Adultos" value={adultos} min={1} onChange={setAdultos} />
-        <Stepper label="Menores" value={menores} min={0} onChange={setMenores} />
+        <Stepper label="Adultos" value={adultos} min={1} onChange={(v) => { marcarInicio(); setAdultos(v); }} />
+        <Stepper label="Menores" value={menores} min={0} onChange={(v) => { marcarInicio(); setMenores(v); }} />
       </div>
 
       <div class="mt-5">
@@ -109,7 +125,7 @@ export default function AyudaElegirForm() {
         <div class="mt-2 flex gap-2">
           <button
             type="button"
-            onClick={() => setTieneMascotas(false)}
+            onClick={() => { marcarInicio(); setTieneMascotas(false); }}
             class={`rounded-full border px-3.5 py-1.5 font-body text-sm transition-colors ${
               !tieneMascotas ? "border-gold bg-gold text-ink" : "border-hairline text-ink hover:border-gold-active"
             }`}
@@ -118,7 +134,7 @@ export default function AyudaElegirForm() {
           </button>
           <button
             type="button"
-            onClick={() => setTieneMascotas(true)}
+            onClick={() => { marcarInicio(); setTieneMascotas(true); }}
             class={`rounded-full border px-3.5 py-1.5 font-body text-sm transition-colors ${
               tieneMascotas ? "border-gold bg-gold text-ink" : "border-hairline text-ink hover:border-gold-active"
             }`}
@@ -133,6 +149,7 @@ export default function AyudaElegirForm() {
             value={detalleMascotas}
             onInput={(e) => setDetalleMascotas((e.target as HTMLInputElement).value)}
             placeholder="Contanos cuál (ej: un perro pequeño)"
+            aria-label="Detalle de la mascota"
             required
             aria-required="true"
             class="mt-3 w-full rounded-xl border border-hairline px-4 py-2.5 font-body text-sm text-ink"
@@ -144,6 +161,8 @@ export default function AyudaElegirForm() {
         href={link}
         target="_blank"
         rel="noopener noreferrer"
+        data-ubicacion="form_ayuda_elegir"
+        data-generate-lead="true"
         aria-disabled={!puedeConsultar}
         onClick={(e) => {
           if (!puedeConsultar) e.preventDefault();

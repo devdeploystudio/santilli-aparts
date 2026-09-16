@@ -30,5 +30,7 @@
     "/departamentos/depto-18-av-callao-930/09.jpg",
     "/departamentos/depto-18-av-callao-930/10.jpg"
   ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "video": "/departamentos/_compartido/pileta-callao-930.mp4",
+  "videoPoster": "/departamentos/_compartido/pileta-callao-930-poster.jpg"
 }

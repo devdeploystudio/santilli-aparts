@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
 
-const waLink = buildConsultaGeneralLink();
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 ---
 
 <Layout title="Página no encontrada" description="La página que buscás no existe.">
@@ -22,6 +23,7 @@ const waLink = buildConsultaGeneralLink();
         href={waLink}
         target="_blank"
         rel="noopener noreferrer"
+        data-ubicacion="pagina_404"
         class="btn-press rounded-full border border-hairline px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
       >
         Escribirnos por WhatsApp

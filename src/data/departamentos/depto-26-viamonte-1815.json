@@ -9,7 +9,12 @@
   "capacidadMin": 1,
   "capacidadMax": 2,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
-  "servicios": [],
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
   "fotos": [
     "/departamentos/depto-26-viamonte-1815/01.jpg",
     "/departamentos/depto-26-viamonte-1815/02.jpg",

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import DiferencialesSection from "../components/DiferencialesSection.astro";
@@ -11,8 +11,11 @@ import CtaBanner from "../components/CtaBanner.astro";
 import ApartmentCarousel from "../components/ApartmentCarousel.astro";
 import MarginLines from "../components/MarginLines.astro";
 import AyudaElegirForm from "../components/AyudaElegirForm.tsx";
+import { WHATSAPP_NUMBER } from "../config/site";
+import { resolverPortada } from "../lib/portada";
 
 const departamentos = await getCollection("departamentos");
+const inicio = (await getEntry("configInicio", "inicio"))!.data;
 
 const pines = departamentos.map((d) => ({
   nombre: d.data.nombre,
@@ -28,9 +31,7 @@ const muestra = departamentos.slice(0, 12).map((d) => ({
   nombre: d.data.nombre,
   zona: d.data.zona,
   esPlaceholder: d.data.esPlaceholder,
-  foto: d.data.fotos[0] ?? "",
-  video: d.data.video,
-  videoPoster: d.data.videoPoster,
+  ...resolverPortada(d.data),
 }));
 ---
 
@@ -40,38 +41,18 @@ const muestra = departamentos.slice(0, 12).map((d) => ({
   <section class="relative border-t border-hairline bg-surface">
     <MarginLines side="left" />
     <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6">
-    <h2 class="font-display text-3xl text-ink sm:text-4xl">Nuestros departamentos</h2>
-    <p class="mt-3 max-w-2xl font-body text-base text-muted">
-      Tenemos opciones para parejas, personas solas, familias, pacientes del
-      interior, viajes laborales y grupos chicos que buscan una estadía
-      cómoda en zonas estratégicas de CABA.
-    </p>
-    <p class="mt-3 max-w-2xl font-body text-base text-muted">
-      Una muestra de lo que tenemos disponible en Recoleta y Palermo. Se van
-      sumando departamentos todo el tiempo, consultanos por el que más te
-      interese.
-    </p>
-
-    <div class="mt-8">
-      <ApartmentCarousel deptos={muestra} />
-    </div>
+    <ApartmentCarousel deptos={muestra} titulo="Nuestros departamentos" texto1={inicio.deptosTexto1} texto2={inicio.deptosTexto2} />
 
     <div class="mt-14 grid gap-10 rounded-2xl border border-hairline bg-canvas p-6 sm:p-10 lg:grid-cols-2 lg:items-center">
       <div class="lg:pl-6">
-        <h3 class="font-display text-2xl text-ink sm:text-3xl">¿Ya sabés cuándo necesitás alojamiento?</h3>
+        <h3 class="font-display text-2xl text-ink sm:text-3xl">{inicio.ayudaTitulo}</h3>
         <p class="mt-3 max-w-md font-body text-base text-muted">
-          Contanos las fechas, cuántos son y si tenés mascota. Con eso te
-          ayudamos a elegir el departamento que mejor se adapte, sin tener
-          que revisar los 60 vos mismo.
+          {inicio.ayudaTexto}
         </p>
 
         <ul class="mt-6 space-y-3">
           {
-            [
-              "Respuesta rápida por WhatsApp",
-              "Te asesora la misma familia, no un call center",
-              "Sin compromiso: es solo para ayudarte a elegir",
-            ].map((item) => (
+            [inicio.ayudaBullet1, inicio.ayudaBullet2, inicio.ayudaBullet3].map((item) => (
               <li class="flex items-center gap-2.5 font-body text-sm text-ink">
                 <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/20 text-gold-active">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -84,7 +65,7 @@ const muestra = departamentos.slice(0, 12).map((d) => ({
           }
         </ul>
       </div>
-      <AyudaElegirForm client:visible />
+      <AyudaElegirForm client:visible whatsappNumero={WHATSAPP_NUMBER} />
     </div>
     </div>
   </section>
@@ -94,5 +75,5 @@ const muestra = departamentos.slice(0, 12).map((d) => ({
   <QueIncluyeSection />
   <ComoTrabajamos />
   <Reviews />
-  <CtaBanner />
+  <CtaBanner titulo={inicio.ctaTitulo} texto={inicio.ctaTexto} foto={inicio.ctaFoto} />
 </Layout>

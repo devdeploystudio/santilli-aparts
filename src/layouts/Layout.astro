@@ -5,7 +5,17 @@ import Footer from "../components/Footer.astro";
 import BrandCursor from "../components/BrandCursor.astro";
 import ScrollReveal from "../components/ScrollReveal.astro";
 import LoadingScreen from "../components/LoadingScreen.astro";
-import { SITE } from "../config/site";
+import WhatsappFloat from "../components/WhatsappFloat.astro";
+import { SITE, WHATSAPP_NUMBER } from "../config/site";
+import { GA_MEASUREMENT_ID } from "../config/analytics";
+
+// Precarga de las fuentes variables (subsets latin + latin-ext, necesarios
+// para tildes/ñ en español) para que el título del Hero y el resto del
+// texto arriba del pliegue no esperen a que el CSS descubra el @font-face.
+import fraunces from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
+import frauncesExt from "@fontsource-variable/fraunces/files/fraunces-latin-ext-wght-normal.woff2?url";
+import manrope from "@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url";
+import manropeExt from "@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -17,6 +27,49 @@ const { title, description = SITE.descripcion, image = "/departamentos/depto-20-
 const pageTitle = `${SITE.nombre} - ${title}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image, Astro.site).href;
+
+// Algunas descripciones (fichas de depto) vienen como párrafo largo, pensado
+// para leerse en la página, no para un <meta description> (recomendado
+// hasta ~160 caracteres). Se arma SOLO acá, sin tocar el texto que ve la
+// persona en la página: toma oraciones completas (separadas por ". ")
+// hasta llenar el límite, para que quede una idea entera y no un corte a
+// mitad de frase. Si ni la primera oración entra, recién ahí recorta por
+// palabra con puntos suspensivos, como último recurso.
+function armarMetaDescription(texto: string): string {
+  if (texto.length <= 160) return texto;
+
+  const oraciones = texto.match(/[^.!?]+[.!?]+(\s+|$)/g) ?? [texto];
+  let acumulado = "";
+  for (const oracion of oraciones) {
+    if ((acumulado + oracion).trim().length > 160) break;
+    acumulado += oracion;
+  }
+  acumulado = acumulado.trim();
+
+  return acumulado || `${texto.slice(0, 157).replace(/\s+\S*$/, "")}…`;
+}
+
+const metaDescription = armarMetaDescription(description);
+
+// Datos estructurados (JSON-LD), mismos en todas las páginas: describen el
+// negocio en sí (nombre, contacto, zonas de cobertura), no el contenido
+// puntual de cada página. LodgingBusiness es el tipo de schema.org
+// pensado para alojamiento temporario/hospedaje.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  name: SITE.nombre,
+  description: SITE.descripcion,
+  url: Astro.site?.href,
+  telephone: `+${WHATSAPP_NUMBER}`,
+  areaServed: ["Recoleta", "Palermo", "Balvanera", "Buenos Aires"],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Buenos Aires",
+    addressRegion: "CABA",
+    addressCountry: "AR",
+  },
+};
 ---
 
 <!doctype html>
@@ -24,13 +77,17 @@ const imageUrl = new URL(image, Astro.site).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="font" type="font/woff2" href={fraunces} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={frauncesExt} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={manrope} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={manropeExt} crossorigin />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#cca038" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonicalUrl} />
 
     <meta property="og:site_name" content={SITE.nombre} />
@@ -45,6 +102,30 @@ const imageUrl = new URL(image, Astro.site).href;
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    {GA_MEASUREMENT_ID && (
+      <Fragment>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script define:vars={{ GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            window.dataLayer.push(arguments);
+          }
+          // Astro envuelve este bloque en una función para inyectar
+          // define:vars de forma segura, así que gtag queda declarado
+          // adentro de esa función, no como window.gtag por default. Sin
+          // esta línea, page_view llega igual (el snippet se llama a sí
+          // mismo), pero CUALQUIER evento personalizado disparado desde
+          // otro script (el de más abajo) nunca encuentra window.gtag y
+          // se pierde en silencio.
+          window.gtag = gtag;
+          gtag("js", new Date());
+          gtag("config", GA_MEASUREMENT_ID);
+        </script>
+      </Fragment>
+    )}
   </head>
   <body class="flex min-h-screen flex-col">
     <LoadingScreen />
@@ -53,7 +134,36 @@ const imageUrl = new URL(image, Astro.site).href;
       <slot />
     </main>
     <Footer />
+    <WhatsappFloat />
     <BrandCursor />
     <ScrollReveal />
+
+    <script>
+      // Eventos de Analytics: un solo listener delegado en vez de tocar
+      // cada componente. Ver "MD para analytics de paginas web.md" de
+      // Deploy para los nombres exactos de evento y el vocabulario de
+      // "ubicacion". Sin GA_MEASUREMENT_ID configurado, gtag no existe y
+      // esto no hace nada (no rompe, solo no manda datos).
+      function trackEvent(nombre: string, params?: Record<string, string>) {
+        const gtag = (window as any).gtag;
+        if (typeof gtag === "function") gtag("event", nombre, params);
+      }
+
+      document.addEventListener("click", (e) => {
+        const link = (e.target as HTMLElement)?.closest?.("a[href]") as HTMLAnchorElement | null;
+        if (!link) return;
+
+        const ubicacionEl = link.closest<HTMLElement>("[data-ubicacion]");
+        const params: Record<string, string> = { ubicacion: ubicacionEl?.dataset.ubicacion ?? "otro" };
+
+        const href = link.href;
+        if (href.includes("wa.me")) {
+          trackEvent("click_whatsapp", params);
+          if (link.dataset.generateLead === "true") trackEvent("generate_lead", params);
+        } else if (link.closest("nav")) {
+          trackEvent("navigation_click", params);
+        }
+      });
+    </script>
   </body>
 </html>

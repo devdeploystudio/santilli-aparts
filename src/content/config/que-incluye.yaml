@@ -1,0 +1,12 @@
+que-incluye:
+  id: "que-incluye"
+  titulo: "Todo preparado para que ingreses y te sientas cómodo"
+  texto: "Nuestros departamentos están equipados para estadías por noche, con lo esencial incluido para que no tengas que preocuparte por nada. Los detalles exactos de cada unidad se confirman por WhatsApp según disponibilidad."
+  ropaBlancaTexto: "Sábanas, toallas y toallones para que el ingreso sea simple."
+  wifiTexto: "Conexión para trabajar, estudiar o mantenerte comunicado."
+  tvTexto: "Departamentos equipados con TV y servicios incluidos."
+  cocinaTexto: "Vajilla y elementos básicos para resolver comidas durante el día."
+  aireTexto: "Aire acondicionado en la mayoría de las unidades."
+  seguridadTexto: "Opciones en edificios cuidados y preparados para recibir huéspedes."
+  amenitiesTexto: "Algunas unidades cuentan con pileta, solarium u otros amenities."
+  cocheraTexto: "En algunas unidades puede haber cochera disponible."

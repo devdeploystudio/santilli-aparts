@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.santilliaparts.com.ar/sitemap-index.xml
+Sitemap: https://santilliaparts.com.ar/sitemap-index.xml

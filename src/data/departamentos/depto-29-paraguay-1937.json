@@ -1,0 +1,31 @@
+{
+  "nombre": "Depto para 1 y 2 personas, Paraguay 1937",
+  "zona": "Recoleta",
+  "direccion": "Paraguay 1937, CABA",
+  "coords": {
+    "lat": -34.5895,
+    "lng": -58.3927
+  },
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "servicios": [
+    "ropaBlanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
+  "fotos": [
+    "/departamentos/depto-29-paraguay-1937/01.jpg",
+    "/departamentos/depto-29-paraguay-1937/02.jpg",
+    "/departamentos/depto-29-paraguay-1937/03.jpg",
+    "/departamentos/depto-29-paraguay-1937/04.jpg",
+    "/departamentos/depto-29-paraguay-1937/05.jpg",
+    "/departamentos/depto-29-paraguay-1937/06.jpg",
+    "/departamentos/depto-29-paraguay-1937/07.jpg",
+    "/departamentos/depto-29-paraguay-1937/08.jpg",
+    "/departamentos/depto-29-paraguay-1937/09.jpg",
+    "/departamentos/depto-29-paraguay-1937/10.jpg"
+  ],
+  "esPlaceholder": false
+}

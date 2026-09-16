@@ -131,6 +131,18 @@
     }
   }
 
+  /* Fuera del hero (ej. CtaBanner) el skyline es un elemento decorativo de
+     fondo, no el gesto de entrada: se muestra ya dibujado, sin animación
+     (el estado base de arriba lo deja invisible por diseño para el hero). */
+  .skyline-static .skyline-buildings path,
+  .skyline-static .skyline-horizon {
+    stroke-dashoffset: 0;
+  }
+
+  .skyline-static .skyline-spine {
+    opacity: 1;
+  }
+
   /* Subrayado dorado que se dibuja bajo un énfasis del copy del hero —
      reemplaza la fila de stats genérica y llega junto al resto del gesto
      de entrada (el skyline) en vez de sumar una animación aparte. Mismo

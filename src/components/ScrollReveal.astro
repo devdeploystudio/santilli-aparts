@@ -23,6 +23,22 @@
 <script>
   const SELECTOR_ITEMS = ":scope > h1, :scope > h2, :scope > p, :scope > .grid > *, :scope > div > h1, :scope > div > h2, :scope > div > p, :scope > div > .grid > *, :scope > ol > *, :scope > ul > *";
 
+  // Astro renderiza cada island (client:visible, etc.) envuelto en
+  // <astro-island>, que el propio Astro pone en `display: contents`. Un
+  // elemento con `display: contents` no genera caja propia: opacity/
+  // transform no tienen ningún efecto visual ahí (el elemento "desaparece"
+  // del árbol de cajas, aunque siga en el DOM). Si el selector de abajo
+  // agarra un <astro-island> como item a revelar, hay que aplicarle las
+  // clases al hijo real (la raíz del componente) en vez de al wrapper, o la
+  // animación simplemente no se ve (bug real, encontrado en el form de
+  // "ayuda a elegir" del home).
+  function resolverObjetivoVisual(el: HTMLElement): HTMLElement {
+    while (el.tagName === "ASTRO-ISLAND" && el.children.length === 1) {
+      el = el.children[0] as HTMLElement;
+    }
+    return el;
+  }
+
   const secciones = document.querySelectorAll<HTMLElement>("main > section:not([data-no-reveal])");
   const lista: HTMLElement[] = [];
 
@@ -35,7 +51,8 @@
   secciones.forEach((seccion) => {
     const items = seccion.querySelectorAll<HTMLElement>(SELECTOR_ITEMS);
     const grupo = items.length > 0 ? [...items] : [seccion];
-    grupo.forEach((el, i) => {
+    grupo.forEach((item, i) => {
+      const el = resolverObjetivoVisual(item);
       el.style.setProperty("--reveal-delay", `${Math.min(i, 8) * 60}ms`);
       lista.push(el);
     });

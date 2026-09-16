@@ -6,6 +6,7 @@ import { buildConsultaDeptoMensaje, buildWhatsAppLink } from "../lib/whatsapp";
 
 interface Props {
   nombreDepto: string;
+  whatsappNumero: string;
 }
 
 function Stepper({
@@ -45,13 +46,23 @@ function Stepper({
   );
 }
 
-export default function BookingForm({ nombreDepto }: Props) {
+export default function BookingForm({ nombreDepto, whatsappNumero }: Props) {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const [rango, setRango] = useState<Date[]>([]);
   const [adultos, setAdultos] = useState(2);
   const [menores, setMenores] = useState(0);
   const [tieneMascotas, setTieneMascotas] = useState(false);
   const [detalleMascotas, setDetalleMascotas] = useState("");
+
+  // form_start: se dispara UNA sola vez, en la primera interacción real con
+  // cualquier campo (fecha, steppers o mascotas), sea cual sea el orden en
+  // que la persona los toque.
+  const formIniciadoRef = useRef(false);
+  function marcarInicio() {
+    if (formIniciadoRef.current) return;
+    formIniciadoRef.current = true;
+    (window as any).gtag?.("event", "form_start", { ubicacion: "ficha_depto" });
+  }
 
   useEffect(() => {
     if (!dateInputRef.current) return;
@@ -69,7 +80,10 @@ export default function BookingForm({ nombreDepto }: Props) {
       minDate: "today",
       dateFormat: "d/m/Y",
       locale: Spanish,
-      onChange: (selectedDates) => setRango([...selectedDates]),
+      onChange: (selectedDates) => {
+        marcarInicio();
+        setRango([...selectedDates]);
+      },
     });
     return () => fp.destroy();
   }, []);
@@ -90,6 +104,7 @@ export default function BookingForm({ nombreDepto }: Props) {
           tieneMascotas,
           detalleMascotas,
         }),
+        whatsappNumero,
       )
     : undefined;
 
@@ -112,8 +127,8 @@ export default function BookingForm({ nombreDepto }: Props) {
       </div>
 
       <div class="mt-5 flex flex-wrap gap-8">
-        <Stepper label="Adultos" value={adultos} min={1} onChange={setAdultos} />
-        <Stepper label="Menores" value={menores} min={0} onChange={setMenores} />
+        <Stepper label="Adultos" value={adultos} min={1} onChange={(v) => { marcarInicio(); setAdultos(v); }} />
+        <Stepper label="Menores" value={menores} min={0} onChange={(v) => { marcarInicio(); setMenores(v); }} />
       </div>
 
       <div class="mt-5">
@@ -121,7 +136,7 @@ export default function BookingForm({ nombreDepto }: Props) {
         <div class="mt-2 flex gap-2">
           <button
             type="button"
-            onClick={() => setTieneMascotas(false)}
+            onClick={() => { marcarInicio(); setTieneMascotas(false); }}
             class={`rounded-full border px-3.5 py-1.5 font-body text-sm transition-colors ${
               !tieneMascotas ? "border-gold bg-gold text-ink" : "border-hairline text-ink hover:border-gold-active"
             }`}
@@ -130,7 +145,7 @@ export default function BookingForm({ nombreDepto }: Props) {
           </button>
           <button
             type="button"
-            onClick={() => setTieneMascotas(true)}
+            onClick={() => { marcarInicio(); setTieneMascotas(true); }}
             class={`rounded-full border px-3.5 py-1.5 font-body text-sm transition-colors ${
               tieneMascotas ? "border-gold bg-gold text-ink" : "border-hairline text-ink hover:border-gold-active"
             }`}
@@ -145,6 +160,7 @@ export default function BookingForm({ nombreDepto }: Props) {
             value={detalleMascotas}
             onInput={(e) => setDetalleMascotas((e.target as HTMLInputElement).value)}
             placeholder="Contanos cuál (ej: un perro pequeño)"
+            aria-label="Detalle de la mascota"
             required
             aria-required="true"
             class="mt-3 w-full rounded-xl border border-hairline px-4 py-2.5 font-body text-sm text-ink"
@@ -156,6 +172,8 @@ export default function BookingForm({ nombreDepto }: Props) {
         href={link}
         target="_blank"
         rel="noopener noreferrer"
+        data-ubicacion="ficha_depto"
+        data-generate-lead="true"
         aria-disabled={!puedeConsultar}
         onClick={(e) => {
           if (!puedeConsultar) e.preventDefault();

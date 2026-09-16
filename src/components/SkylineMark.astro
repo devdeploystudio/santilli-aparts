@@ -1,8 +1,9 @@
 ---
 // Motivo de marca: el skyline del logo, redibujado como vector propio (no el
 // raster) para poder usarlo grande, animado y a cualquier tamaño sin perder
-// nitidez. Aparece una sola vez con peso real (hero); en el resto del sitio
-// se evita para que no se vuelva papel tapiz.
+// nitidez. currentColor a propósito (antes venía hardcodeado en dorado):
+// así el color se controla desde afuera con una clase de texto (text-gold,
+// text-white, etc.) según en qué sección se use.
 interface Props {
   class?: string;
 }
@@ -18,7 +19,7 @@ const { class: className = "" } = Astro.props;
   aria-hidden="true"
   role="presentation"
 >
-  <g stroke="var(--color-gold)" stroke-width="5" stroke-linejoin="round" class="skyline-buildings">
+  <g stroke="currentColor" stroke-width="5" stroke-linejoin="round" class="skyline-buildings">
     <path d="M40 300V150l70-46v196" style="--i:0" />
     <path d="M110 300V104l90-64v260" style="--i:1" />
     <path d="M200 300V190l55-38v148" style="--i:2" />
@@ -27,10 +28,10 @@ const { class: className = "" } = Astro.props;
     <path d="M400 300V118l78 54v128" style="--i:5" />
     <path d="M478 300V210l50-34v124" style="--i:6" />
   </g>
-  <rect x="228" y="150" width="26" height="150" fill="var(--color-gold)" class="skyline-spine" />
+  <rect x="228" y="150" width="26" height="150" fill="currentColor" class="skyline-spine" />
   <path
     d="M10 312c110-34 190-34 300-4 96 27 190 8 300-20"
-    stroke="var(--color-gold)"
+    stroke="currentColor"
     stroke-width="5"
     stroke-linecap="round"
     class="skyline-horizon"

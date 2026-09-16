@@ -1,38 +1,42 @@
 ---
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import familia from "../assets/familia.jpeg";
+import { WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
 
-const waLink = buildConsultaGeneralLink();
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
+const n = (await getEntry("configNosotros", "nosotros"))!.data;
 
+// Los íconos quedan fijos en código; título/texto de cada punto se editan
+// desde /admin.
 const puntos = [
   {
-    titulo: "Chico, a propósito",
-    texto: "No buscamos ser la inmobiliaria más grande de la zona, sino la que mejor te atiende.",
+    titulo: n.punto1Titulo,
+    texto: n.punto1Texto,
     path: "M3 11l9-7 9 7 M5 10v10h14V10 M9 20v-6h6v6",
   },
   {
-    titulo: "Siempre nosotros",
-    texto: "Desde el primer mensaje hasta el día que te vas, hablás con la misma familia.",
+    titulo: n.punto2Titulo,
+    texto: n.punto2Texto,
     path: "M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2 M10 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M21 20v-2a4 4 0 0 0-3-3.87 M15.5 4.13a4 4 0 0 1 0 7.75",
   },
   {
-    titulo: "Recoleta y Palermo",
-    texto: "Conocemos bien la zona donde vivimos y trabajamos. Por eso te podemos asesorar de verdad, no solo mostrarte fotos.",
+    titulo: n.punto3Titulo,
+    texto: n.punto3Texto,
     path: "M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
   },
 ];
 ---
 
 <Layout
-  title="Nosotros"
+  title="Nosotros: una familia, no una empresa"
   description="Santilli Aparts es un negocio familiar: somos tres personas y siempre te atendemos nosotros, desde la consulta hasta el ingreso."
 >
   <section class="grid lg:grid-cols-2 lg:items-stretch">
     <div data-cursor-dark class="group h-72 overflow-hidden sm:h-96 lg:h-auto lg:order-1">
       <Image
-        src={familia}
+        src={n.foto}
         alt="La familia Santilli, dueños y responsables de Santilli Aparts"
         width={1200}
         class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -41,25 +45,20 @@ const puntos = [
 
     <div class="flex flex-col justify-center px-4 py-16 sm:px-6 lg:order-2 lg:py-24 lg:pl-16 lg:pr-[max(1.5rem,calc((100vw-90rem)/2+1.5rem))]">
       <h1 class="font-display text-4xl leading-[1.1] text-ink sm:text-5xl">
-        Somos una familia, no una empresa.
+        {n.titulo}
       </h1>
       <p class="mt-5 font-body text-base text-muted">
-        Santilli Aparts lo llevamos adelante nosotros tres, y solo nosotros. No
-        hay call center, ni empleados rotando, ni respuestas automáticas: cada
-        consulta, cada coordinación de ingreso y cada imprevisto lo resolvemos
-        nosotros mismos.
+        {n.texto1}
       </p>
       <p class="mt-4 font-body text-base text-muted">
-        Elegimos que sea así a propósito. Trabajar en familia significa que
-        conocemos cada uno de nuestros departamentos, y que cuando nos
-        escribís, hablás con alguien que realmente puede resolverte algo, no
-        con un intermediario más.
+        {n.texto2}
       </p>
 
       <a
         href={waLink}
         target="_blank"
         rel="noopener noreferrer"
+        data-ubicacion="pagina_nosotros"
         class="btn-press mt-8 inline-block w-fit rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active"
       >
         Escribinos por WhatsApp

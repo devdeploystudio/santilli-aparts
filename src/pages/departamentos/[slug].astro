@@ -6,6 +6,7 @@ import Gallery from "../../components/Gallery.tsx";
 import MapView from "../../components/MapView.tsx";
 import BookingForm from "../../components/BookingForm.tsx";
 import { resaltarServicios } from "../../lib/highlight";
+import { WHATSAPP_NUMBER } from "../../config/site";
 
 export async function getStaticPaths() {
   const departamentos = await getCollection("departamentos");
@@ -92,7 +93,7 @@ const capacidadTexto =
       </div>
 
       <div>
-        <BookingForm client:visible nombreDepto={nombre} />
+        <BookingForm client:visible nombreDepto={nombre} whatsappNumero={WHATSAPP_NUMBER} />
       </div>
     </div>
   </section>

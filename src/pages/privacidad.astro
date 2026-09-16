@@ -1,0 +1,78 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, WHATSAPP_NUMBER } from "../config/site";
+import { buildConsultaGeneralLink } from "../lib/whatsapp";
+
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
+---
+
+<Layout
+  title="Política de privacidad"
+  description="Política de privacidad de Santilli Aparts: qué información se recolecta al visitar el sitio y cómo se usa."
+>
+  <section class="mx-auto max-w-2xl px-4 py-16 sm:px-6">
+    <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Legal</p>
+    <h1 class="mt-2 font-display text-3xl text-ink sm:text-4xl">Política de privacidad</h1>
+    <p class="mt-3 font-body text-xs text-muted">Última actualización: septiembre de 2026.</p>
+
+    <p class="mt-6 font-body text-base text-muted">
+      Esta política explica qué información recolecta este sitio (<strong class="text-ink">{SITE.nombre}</strong>)
+      cuando lo visitás, y cómo se usa esa información.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Qué información recolectamos</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Este sitio no tiene formularios que envíen datos a un servidor: consultar disponibilidad de un
+      departamento arma un mensaje de WhatsApp, no se guarda en ningún lado. La información que
+      recolectamos es la que genera automáticamente tu visita, a través de Google Analytics:
+    </p>
+    <ul class="mt-3 list-disc space-y-1.5 pl-5 font-body text-base text-muted marker:text-gold-active">
+      <li>Páginas que visitás y cuánto tiempo pasás en cada una.</li>
+      <li>Tipo de dispositivo, navegador y sistema operativo.</li>
+      <li>Ubicación aproximada (país/ciudad), calculada por tu dirección IP.</li>
+      <li>Cómo llegaste al sitio (buscador, redes sociales, link directo).</li>
+      <li>Si tocaste alguno de los botones de WhatsApp, para saber qué partes del sitio generan más consultas.</li>
+    </ul>
+    <p class="mt-3 font-body text-base text-muted">
+      Google Analytics identifica tu visita con un identificador anónimo (una cookie), no con tu
+      nombre ni con datos que te identifiquen personalmente.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Cookies</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Google Analytics usa cookies propias para diferenciar visitas nuevas de recurrentes. Podés
+      bloquear o borrar estas cookies desde la configuración de tu navegador en cualquier momento,
+      sin que esto afecte tu capacidad de usar el sitio.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Para qué usamos esta información</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Únicamente para entender qué contenido le interesa a quien visita el sitio y mejorar la
+      experiencia de navegación. No vendemos ni compartimos esta información con terceros más allá
+      de Google (proveedor de Analytics).
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Si nos contactás por WhatsApp</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      WhatsApp es propiedad de Meta y se rige por su propia política de privacidad. Los datos que
+      nos compartas ahí (tu número, tu nombre, tu consulta) los usamos únicamente para responderte
+      y coordinar tu estadía, y no los cedemos a terceros.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Tus derechos</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      De acuerdo a la Ley de Protección de Datos Personales (Ley 25.326) de Argentina, tenés
+      derecho a acceder, rectificar o solicitar la supresión de cualquier dato personal que nos
+      hayas compartido por WhatsApp. Para ejercer estos derechos,{" "}
+      <a href={waLink} target="_blank" rel="noopener noreferrer" class="font-semibold text-gold-active hover:text-gold">
+        escribinos por WhatsApp
+      </a>.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Cambios a esta política</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Podemos actualizar esta página si cambia algo en cómo recolectamos o usamos información. La
+      fecha de "última actualización" arriba siempre va a reflejar la versión vigente.
+    </p>
+  </section>
+</Layout>

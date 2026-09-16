@@ -1,0 +1,265 @@
+backend:
+  name: github
+  repo: devdeploystudio/santilli-aparts
+  branch: main
+  # Proxy de login por GitHub OAuth (Cloudflare Worker sveltia-cms-auth).
+  # Mismo Worker que usan todos los sitios de Deploy: solo hace falta sumar
+  # el dominio de este sitio a ALLOWED_DOMAINS en esa única instancia.
+  base_url: https://sveltia-cms-auth.contact-deploystudio.workers.dev
+
+# Permite probar el panel en local (npm run dev) sin pasar por GitHub:
+# corriendo `npx decap-server` en otra terminal, escribe directo a los
+# archivos locales. No se usa en el sitio publicado (ahí manda `backend`).
+local_backend: true
+
+media_folder: "src/assets"
+public_folder: "src/assets"
+
+collections:
+  - name: "config-inicio"
+    label: "🏠 Inicio → Textos"
+    description: "El título del Hero, el bloque \"Nuestros departamentos\", la ayuda a elegir y el cierre final. Todo en la home."
+    files:
+      - name: "inicio"
+        label: "Textos de Inicio"
+        file: "src/content/config/inicio.yaml"
+        fields:
+          - label: "Inicio"
+            name: "inicio"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio" }
+              - { label: "Título principal (portada)", name: "heroTitulo", widget: "text" }
+              - label: "Frase resaltada 1 (ej: \"más de 60 departamentos\")"
+                name: "heroDestacado1"
+                widget: "string"
+                hint: "Aparece subrayada con una animación. El resto de la frase que la rodea (\"Contamos con... en Recoleta y Palermo, para...\") queda fijo en el diseño."
+              - { label: "Frase resaltada 2 (ej: \"1 a 5 personas\")", name: "heroDestacado2", widget: "string" }
+              - { label: "Frase resaltada 3 (ej: \"abonás al ingresar\")", name: "heroDestacado3", widget: "string" }
+              - { label: "Primer párrafo del bloque \"Nuestros departamentos\"", name: "deptosTexto1", widget: "text" }
+              - { label: "Segundo párrafo del bloque \"Nuestros departamentos\"", name: "deptosTexto2", widget: "text" }
+              - { label: "Título del bloque de ayuda a elegir", name: "ayudaTitulo", widget: "string" }
+              - { label: "Texto del bloque de ayuda a elegir", name: "ayudaTexto", widget: "text" }
+              - { label: "Punto 1 de la lista de ayuda", name: "ayudaBullet1", widget: "string" }
+              - { label: "Punto 2 de la lista de ayuda", name: "ayudaBullet2", widget: "string" }
+              - { label: "Punto 3 de la lista de ayuda", name: "ayudaBullet3", widget: "string" }
+              - { label: "Título del bloque final (\"¿Ya sabés qué fechas necesitás?\")", name: "ctaTitulo", widget: "string" }
+              - { label: "Texto del bloque final", name: "ctaTexto", widget: "text" }
+              - { label: "Imagen de fondo del bloque final", name: "ctaFoto", widget: "image", media_folder: "/src/assets/inicio", public_folder: "../../assets/inicio" }
+
+  - name: "departamentos"
+    label: "🏢 Departamentos"
+    label_singular: "Departamento"
+    description: "Los departamentos que aparecen en el listado, el carrusel de la home y su propia ficha."
+    folder: "src/data/departamentos"
+    create: true
+    delete: true
+    extension: "json"
+    format: "json"
+    identifier_field: nombre
+    fields:
+      - { label: "Nombre", name: "nombre", widget: "string" }
+      - label: "Zona"
+        name: "zona"
+        widget: "select"
+        options: [{ label: "Recoleta", value: "Recoleta" }, { label: "Palermo", value: "Palermo" }, { label: "Balvanera", value: "Balvanera" }]
+      - { label: "Dirección", name: "direccion", widget: "string" }
+      - label: "Ubicación en el mapa"
+        name: "coords"
+        widget: "object"
+        fields:
+          - { label: "Latitud", name: "lat", widget: "number", value_type: "float" }
+          - { label: "Longitud", name: "lng", widget: "number", value_type: "float" }
+      - { label: "Capacidad mínima (personas)", name: "capacidadMin", widget: "number", value_type: "int" }
+      - { label: "Capacidad máxima (personas)", name: "capacidadMax", widget: "number", value_type: "int" }
+      - { label: "Descripción", name: "descripcionBreve", widget: "text" }
+      - label: "Servicios incluidos"
+        name: "servicios"
+        widget: "select"
+        multiple: true
+        options:
+          - { label: "WiFi incluido", value: "wifi" }
+          - { label: "Cocina equipada", value: "cocina" }
+          - { label: "Ropa blanca", value: "ropaBlanca" }
+          - { label: "TV", value: "tv" }
+          - { label: "Aire acondicionado", value: "aire" }
+          - { label: "Calefacción", value: "calefaccion" }
+          - { label: "Ascensor", value: "ascensor" }
+          - { label: "Cochera", value: "cochera" }
+          - { label: "Amenities", value: "amenities" }
+          - { label: "Seguridad", value: "seguridad" }
+      - label: "Fotos"
+        name: "fotos"
+        widget: "list"
+        field: { label: "Foto", name: "foto", widget: "image", media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
+      - label: "Video corto (opcional, se suma como una foto más al final de la galería)"
+        name: "video"
+        widget: "file"
+        required: false
+        media_folder: "/public/departamentos/{{slug}}"
+        public_folder: "/departamentos/{{slug}}"
+      - label: "Imagen de portada del video (opcional)"
+        name: "videoPoster"
+        widget: "image"
+        required: false
+        media_folder: "/public/departamentos/{{slug}}"
+        public_folder: "/departamentos/{{slug}}"
+      - label: "Portada de la tarjeta (opcional)"
+        name: "portada"
+        widget: "file"
+        required: false
+        hint: "Se usa en el carrusel de la home y en el listado de departamentos. Admite foto o video. Si se deja vacío, se usa la primera foto de arriba (o el video, solo si el depto no tiene ninguna foto todavía)."
+        media_folder: "/public/departamentos/{{slug}}"
+        public_folder: "/departamentos/{{slug}}"
+
+  - name: "config-nosotros"
+    label: "👨‍👩‍👦 Nosotros"
+    description: "La foto de familia, el título, los párrafos y los 3 puntos de la página \"Nosotros\"."
+    files:
+      - name: "nosotros"
+        label: "Textos de Nosotros"
+        file: "src/content/config/nosotros.yaml"
+        fields:
+          - label: "Nosotros"
+            name: "nosotros"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "nosotros" }
+              - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/src/assets", public_folder: "../assets" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Primer párrafo", name: "texto1", widget: "text" }
+              - { label: "Segundo párrafo", name: "texto2", widget: "text" }
+              - { label: "Título del punto 1", name: "punto1Titulo", widget: "string" }
+              - { label: "Texto del punto 1", name: "punto1Texto", widget: "text" }
+              - { label: "Título del punto 2", name: "punto2Titulo", widget: "string" }
+              - { label: "Texto del punto 2", name: "punto2Texto", widget: "text" }
+              - { label: "Título del punto 3", name: "punto3Titulo", widget: "string" }
+              - { label: "Texto del punto 3", name: "punto3Texto", widget: "text" }
+
+  - name: "config-diferenciales"
+    label: "✨ Diferenciales"
+    description: "El bloque \"Sin seña\", las 3 tarjetas secundarias y el aviso sobre asignación de departamentos (aparecen en la home)."
+    files:
+      - name: "diferenciales"
+        label: "Textos de Diferenciales"
+        file: "src/content/config/diferenciales.yaml"
+        fields:
+          - label: "Diferenciales"
+            name: "diferenciales"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "diferenciales" }
+              - { label: "Título principal", name: "titulo", widget: "string" }
+              - { label: "Texto principal", name: "texto", widget: "text" }
+              - { label: "Título tarjeta 1", name: "secundario1Titulo", widget: "string" }
+              - { label: "Texto tarjeta 1", name: "secundario1Texto", widget: "text" }
+              - { label: "Título tarjeta 2", name: "secundario2Titulo", widget: "string" }
+              - { label: "Texto tarjeta 2", name: "secundario2Texto", widget: "text" }
+              - { label: "Título tarjeta 3", name: "secundario3Titulo", widget: "string" }
+              - { label: "Texto tarjeta 3", name: "secundario3Texto", widget: "text" }
+              - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
+              - { label: "Texto del aviso de asignación", name: "importanteTexto", widget: "text" }
+
+  - name: "config-que-incluye"
+    label: "🧺 Qué incluye"
+    description: "El texto de cada uno de los 8 servicios que se muestran en la home."
+    files:
+      - name: "que-incluye"
+        label: "Textos de Qué incluye"
+        file: "src/content/config/que-incluye.yaml"
+        fields:
+          - label: "Qué incluye"
+            name: "que-incluye"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "que-incluye" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - { label: "Texto — Ropa blanca", name: "ropaBlancaTexto", widget: "text" }
+              - { label: "Texto — WiFi", name: "wifiTexto", widget: "text" }
+              - { label: "Texto — TV", name: "tvTexto", widget: "text" }
+              - { label: "Texto — Cocina", name: "cocinaTexto", widget: "text" }
+              - { label: "Texto — Aire acondicionado", name: "aireTexto", widget: "text" }
+              - { label: "Texto — Seguridad", name: "seguridadTexto", widget: "text" }
+              - { label: "Texto — Amenities", name: "amenitiesTexto", widget: "text" }
+              - { label: "Texto — Cochera", name: "cocheraTexto", widget: "text" }
+
+  - name: "config-como-trabajamos"
+    label: "🔁 Cómo trabajamos"
+    description: "Los 4 pasos del proceso, en la home."
+    files:
+      - name: "como-trabajamos"
+        label: "Textos de Cómo trabajamos"
+        file: "src/content/config/como-trabajamos.yaml"
+        fields:
+          - label: "Cómo trabajamos"
+            name: "como-trabajamos"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "como-trabajamos" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - { label: "Título paso 1", name: "paso1Titulo", widget: "string" }
+              - { label: "Texto paso 1", name: "paso1Texto", widget: "text" }
+              - { label: "Título paso 2", name: "paso2Titulo", widget: "string" }
+              - { label: "Texto paso 2", name: "paso2Texto", widget: "text" }
+              - { label: "Título paso 3", name: "paso3Titulo", widget: "string" }
+              - { label: "Texto paso 3", name: "paso3Texto", widget: "text" }
+              - { label: "Título paso 4", name: "paso4Titulo", widget: "string" }
+              - { label: "Texto paso 4", name: "paso4Texto", widget: "text" }
+              - { label: "Título del cartel \"¿Cómo se reserva?\"", name: "reservaTitulo", widget: "string" }
+              - { label: "Texto del cartel \"¿Cómo se reserva?\"", name: "reservaTexto", widget: "text" }
+
+  - name: "resenas"
+    label: "⭐ Reseñas"
+    label_singular: "Reseña"
+    description: "Las reseñas de huéspedes que aparecen en la home. Agregá, borrá o reordená las que quieras."
+    folder: "src/content/resenas"
+    create: true
+    delete: true
+    extension: "yaml"
+    format: "yaml"
+    identifier_field: zona
+    reorder: { key: orden }
+    fields:
+      - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
+      - { label: "Reseña", name: "texto", widget: "text" }
+
+  - name: "config-zonas"
+    label: "📍 Zonas"
+    description: "El bloque de zonas (Recoleta/Palermo) y los 4 accesos, en la home."
+    files:
+      - name: "zonas"
+        label: "Textos de Zonas"
+        file: "src/content/config/zonas.yaml"
+        fields:
+          - label: "Zonas"
+            name: "zonas"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - { label: "Subtítulo — Recoleta", name: "recoletaSubtitulo", widget: "string" }
+              - { label: "Texto — Recoleta", name: "recoletaTexto", widget: "text" }
+              - { label: "Subtítulo — Palermo", name: "palermoSubtitulo", widget: "string" }
+              - { label: "Texto — Palermo", name: "palermoTexto", widget: "text" }
+              - { label: "Acceso 1 (ej: \"Subte y colectivos a pocas cuadras\")", name: "acceso1Texto", widget: "string" }
+              - { label: "Acceso 2", name: "acceso2Texto", widget: "string" }
+              - { label: "Acceso 3", name: "acceso3Texto", widget: "string" }
+              - { label: "Acceso 4", name: "acceso4Texto", widget: "string" }
+
+  - name: "config"
+    label: "⚙️ General"
+    description: "El número de WhatsApp que se usa en todos los botones de consulta del sitio."
+    files:
+      - name: "site"
+        label: "Configuración general"
+        file: "src/content/config/site.yaml"
+        fields:
+          - label: "Sitio"
+            name: "site"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "site" }
+              - { label: "WhatsApp (solo números, con código de país, ej: 5491122334455)", name: "whatsappNumero", widget: "string", required: false }

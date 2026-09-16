@@ -1,0 +1,12 @@
+zonas:
+  id: "zonas"
+  titulo: "Trabajamos en zonas céntricas, prácticas y cercanas a todo."
+  texto: "Nuestra propuesta se enfoca principalmente en Recoleta y Palermo, dos zonas muy elegidas de Buenos Aires por su ubicación, movimiento, seguridad y cercanía con clínicas, facultades, comercios, restaurantes, transporte público y avenidas principales."
+  recoletaSubtitulo: "Clínicas, facultades y avenidas"
+  recoletaTexto: "Una zona cómoda, segura y muy buscada por quienes necesitan moverse rápido por la ciudad. Ideal para pacientes, familias y estadías cortas, cerca de clínicas, facultades y Av. Santa Fe."
+  palermoSubtitulo: "Gastronomía, bares y vida urbana"
+  palermoTexto: "Moderno y conectado: ideal para quienes quieren estar cerca de restaurantes, bares, transporte y puntos turísticos de la ciudad."
+  acceso1Texto: "Subte y colectivos a pocas cuadras"
+  acceso2Texto: "Hospitales y clínicas cercanas"
+  acceso3Texto: "Zonas seguras y muy transitadas"
+  acceso4Texto: "Conexión rápida con el resto de CABA"

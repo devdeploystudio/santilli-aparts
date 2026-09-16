@@ -8,8 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: reemplazar por el dominio real una vez que esté definido/comprado.
-  site: 'https://www.santilliaparts.com.ar',
+  site: 'https://santilliaparts.com.ar',
   integrations: [preact(), sitemap()],
 
   vite: {

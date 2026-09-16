@@ -1,42 +1,19 @@
 ---
+import { getCollection } from "astro:content";
 import MarginLines from "./MarginLines.astro";
 
-// Reseñas de ejemplo — reemplazar por reseñas reales de huéspedes antes de
+// Reseñas editables desde /admin (colección "resenas": agregar, borrar y
+// reordenar). Las de ejemplo cargadas hoy no llevan nombre ni foto de una
+// persona real — reemplazar por reseñas reales de huéspedes antes de
 // producción (punto 24 del estándar Deploy: no presentar testimonios
-// inventados como reales). Por eso no llevan nombre ni foto de una persona
-// real, y se lo aclara explícitamente debajo.
+// inventados como reales).
 //
 // Carrusel: misma estructura y script que ApartmentCarousel (portados de
 // estudio-3s_santino) — transform: translateX vía JS en vez de scroll
 // nativo, para evitar los bugs de iOS Safari con scrollLeft. Clases propias
 // (reviews-carousel__*) para no chocar con las del carrusel de deptos que
 // vive en la misma página.
-const reseñas = [
-  {
-    zona: "Huésped en Recoleta",
-    texto: "Ingreso simple, sin vueltas, y nos resolvieron una consulta a último momento por WhatsApp enseguida.",
-  },
-  {
-    zona: "Huésped en Palermo",
-    texto: "Departamento cómodo y bien ubicado, cerca de todo. Nos gustó que siempre hablamos con la misma persona.",
-  },
-  {
-    zona: "Huésped familiar",
-    texto: "Vinimos con nuestro hijo y nos ayudaron a elegir el depto según lo que necesitábamos. Muy buena atención.",
-  },
-  {
-    zona: "Huésped en Balvanera",
-    texto: "Muy bien ubicado para movernos en subte por toda la ciudad. El check-in fue rápido y sin complicaciones.",
-  },
-  {
-    zona: "Huésped en Recoleta",
-    texto: "Pedimos cambiar la fecha de salida a último momento y no tuvimos ningún problema. Nos atendieron siempre ellos mismos.",
-  },
-  {
-    zona: "Huésped de paso por trabajo",
-    texto: "Vine por unos días de trabajo y el depto tenía todo lo que necesitaba. Volvería a alquilar sin dudarlo.",
-  },
-];
+const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - b.data.orden);
 ---
 
 <section class="relative border-y border-hairline bg-canvas">
@@ -51,7 +28,7 @@ const reseñas = [
             reseñas.map((r) => (
               <div class="reviews-carousel__item">
                 <figure class="relative flex h-full flex-col rounded-2xl border border-hairline bg-surface p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:shadow-xl hover:shadow-ink/10">
-                  <span aria-hidden="true" class="font-display text-5xl leading-none text-gold">“</span>
+                  <span aria-hidden="true" class="font-display text-5xl leading-none text-gold">"</span>
                   <div class="mt-2 flex gap-0.5 text-gold" aria-hidden="true">
                     {Array.from({ length: 5 }).map(() => (
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -59,9 +36,9 @@ const reseñas = [
                       </svg>
                     ))}
                   </div>
-                  <blockquote class="mt-4 flex-1 font-body text-sm leading-relaxed text-ink">{r.texto}</blockquote>
+                  <blockquote class="mt-4 flex-1 font-body text-sm leading-relaxed text-ink">{r.data.texto}</blockquote>
                   <figcaption class="mt-5 border-t border-hairline pt-4 font-body text-xs font-semibold uppercase tracking-wide text-muted">
-                    {r.zona}
+                    {r.data.zona}
                   </figcaption>
                 </figure>
               </div>

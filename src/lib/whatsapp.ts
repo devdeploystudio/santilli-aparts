@@ -1,12 +1,16 @@
-import { WHATSAPP_NUMBER } from "../config/site";
-
-export function buildWhatsAppLink(mensaje: string): string {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
+// El número de WhatsApp se recibe siempre como parámetro (nunca se importa
+// acá): este archivo lo usan tanto páginas Astro (servidor) como islands
+// Preact (BookingForm, AyudaElegirForm, hidratadas en el navegador), y
+// config/site.ts resuelve el número vía astro:content, un módulo que solo
+// existe del lado del servidor — importarlo acá rompería el bundle cliente.
+export function buildWhatsAppLink(mensaje: string, numero: string): string {
+  return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 }
 
-export function buildConsultaGeneralLink(): string {
+export function buildConsultaGeneralLink(numero: string): string {
   return buildWhatsAppLink(
     "Hola Santilli Aparts, necesitaría que me ayuden a elegir un departamento para mi estadía.",
+    numero,
   );
 }
 

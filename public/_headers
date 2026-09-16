@@ -1,0 +1,34 @@
+# Cloudflare lee este archivo desde la raíz del build (dist/, Astro copia
+# public/ tal cual). El HTML nunca va acá a propósito: conviene que se
+# revalide siempre, para que un contenido nuevo se vea apenas se publica.
+
+# Assets con hash propio de Astro (CSS, JS, fuentes, y las imágenes que
+# pasan por astro:assets como la foto de familia o la del CTA): el hash
+# cambia solo si el contenido cambia, así que una caché larga acá es
+# segura sin depender de ningún bot.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fotos y video de cada departamento (subidos desde el panel a
+# public/departamentos/<slug>/). 30 días de caché segura ACÁ solo porque
+# está armado scripts/rename-uploads.mjs (ver .github/workflows/
+# optimize-images.yml): cada reemplazo termina en una URL nueva
+# (foto_v02.jpg), así que la caché larga nunca puede mostrar una versión
+# vieja. Si ese bot se llegara a desarmar, bajar esto a 1 día.
+/departamentos/*/*.jpg
+  Cache-Control: public, max-age=2592000
+/departamentos/*/*.jpeg
+  Cache-Control: public, max-age=2592000
+/departamentos/*/*.png
+  Cache-Control: public, max-age=2592000
+/departamentos/*/*.mp4
+  Cache-Control: public, max-age=2592000
+
+# Favicons e íconos sueltos en la raíz de public/: no tienen hash de
+# build, pero cambian muy rara vez. Caché moderada (1 semana).
+/favicon-*.png
+  Cache-Control: public, max-age=604800
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+/icon-*.png
+  Cache-Control: public, max-age=604800
