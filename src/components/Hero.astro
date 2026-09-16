@@ -10,9 +10,16 @@ const inicio = (await getEntry("configInicio", "inicio"))!.data;
 
 <section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] overflow-hidden" data-no-reveal>
   <div class="relative mx-auto grid w-full max-w-[90rem] lg:grid-cols-[1fr_1.1fr]">
-    <div class="flex flex-col justify-center px-4 py-16 sm:px-6 sm:py-20 lg:order-2 lg:pl-12 xl:pl-20">
+    <div class="flex flex-col justify-center px-5 py-16 sm:px-7 sm:py-20 lg:order-2 lg:pl-12 xl:pl-20">
       <div class="max-w-2xl">
-        <h1 class="font-display text-[2.75rem] leading-[1.05] text-ink sm:text-6xl lg:text-7xl">
+        {/* clamp en vez de breakpoints fijos (sm:text-6xl lg:text-7xl): con un
+        salto fijo justo en el breakpoint donde arranca el layout de 2
+        columnas (1024px), esta columna se queda con menos ancho de golpe y
+        el título pasaba a ocupar 3-4 líneas en vez de 2 en pantallas de
+        notebook, empujando el hero mucho más alto que una pantalla en esos
+        anchos puntuales aunque se viera bien en un monitor más ancho. El
+        clamp escala el tamaño de forma continua con el ancho, sin ese salto. */}
+        <h1 class="font-display text-[clamp(2.75rem,4vw+1rem,4.5rem)] leading-[1.05] text-ink">
           {inicio.heroTitulo}
         </h1>
 

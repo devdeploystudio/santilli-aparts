@@ -4,11 +4,14 @@ import { buildConsultaGeneralLink } from "../lib/whatsapp";
 
 const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 const anio = new Date().getFullYear();
-const numeroLegible = `${WHATSAPP_NUMBER.slice(0, 2)} ${WHATSAPP_NUMBER.slice(2, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 9)}-${WHATSAPP_NUMBER.slice(9)}`;
+const numeroLegible = `+${WHATSAPP_NUMBER.slice(0, 2)} ${WHATSAPP_NUMBER.slice(2, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 9)}-${WHATSAPP_NUMBER.slice(9)}`;
+// Deriva el @usuario del link completo (que se edita desde el panel) en vez
+// de tenerlo escrito dos veces: si cambia el link, el texto se actualiza solo.
+const instagramHandle = INSTAGRAM_URL?.replace(/\/+$/, "").split("/").pop();
 ---
 
 <footer class="bg-ink">
-  <div class="mx-auto grid max-w-[90rem] gap-10 px-4 py-14 sm:px-6 md:grid-cols-3">
+  <div class="mx-auto grid max-w-[90rem] gap-10 px-5 py-14 sm:px-7 md:grid-cols-3">
     <div>
       <a href="/" class="group inline-flex items-center gap-2.5">
         <span class="relative h-7 w-7 sm:h-8 sm:w-8">
@@ -31,15 +34,12 @@ const numeroLegible = `${WHATSAPP_NUMBER.slice(0, 2)} ${WHATSAPP_NUMBER.slice(2,
         </svg>
         {numeroLegible}
       </a>
-      <a href="/departamentos" class="mt-2 block font-body text-sm text-canvas/65 hover:text-gold">
-        Ver departamentos
-      </a>
       {INSTAGRAM_URL && (
         <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" data-ubicacion="footer" class="mt-2 flex items-center gap-2 font-body text-sm text-canvas/65 hover:text-gold">
           <svg viewBox="0 0 16 16" class="h-4 w-4 shrink-0 fill-current" aria-hidden="true">
             <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.269.087 3.85.048 4.703.01 5.556 0 5.829 0 8s.01 2.444.048 3.297c.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.556 15.99 5.829 16 8 16s2.444-.01 3.297-.048c.852-.04 1.433-.174 1.942-.372a3.9 3.9 0 0 0 1.417-.923c.444-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.444 16 10.171 16 8s-.01-2.444-.048-3.297c-.04-.852-.175-1.433-.372-1.942a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.091-.333-1.943-.372C10.443.01 10.17 0 7.998 0zm-.717 1.442h.717c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.276.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.48 2.48 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.033 1.024-.043 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
           </svg>
-          Instagram
+          @{instagramHandle}
         </a>
       )}
     </div>
@@ -55,10 +55,11 @@ const numeroLegible = `${WHATSAPP_NUMBER.slice(0, 2)} ${WHATSAPP_NUMBER.slice(2,
   </div>
 
   <div class="border-t border-canvas/15">
-    <div class="mx-auto flex max-w-[90rem] flex-wrap items-center justify-between gap-2 px-4 py-5 font-body text-xs text-canvas/50 sm:px-6">
+    <div class="mx-auto flex max-w-[90rem] flex-wrap items-center justify-between gap-2 px-5 py-5 font-body text-xs text-canvas/50 sm:px-7">
       <p>© {anio} {SITE.nombre}. Todos los derechos reservados.</p>
-      <p>
+      <p class="flex gap-4">
         <a href="/privacidad" class="hover:text-gold">Privacidad</a>
+        <a href="/terminos" class="hover:text-gold">Términos y condiciones</a>
       </p>
       <p>
         Sitio realizado por{" "}

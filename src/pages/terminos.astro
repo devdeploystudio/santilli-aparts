@@ -1,0 +1,85 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, WHATSAPP_NUMBER } from "../config/site";
+import { buildConsultaGeneralLink } from "../lib/whatsapp";
+
+const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
+---
+
+<Layout
+  title="Términos y condiciones"
+  description="Términos y condiciones de uso del sitio de Santilli Aparts."
+>
+  <section class="mx-auto max-w-2xl px-5 py-16 sm:px-7">
+    <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Legal</p>
+    <h1 class="mt-2 font-display text-3xl text-ink sm:text-4xl">Términos y condiciones</h1>
+    <p class="mt-3 font-body text-xs text-muted">Última actualización: septiembre de 2026.</p>
+
+    <p class="mt-6 font-body text-base text-muted">
+      Al navegar este sitio (<strong class="text-ink">{SITE.nombre}</strong>) aceptás los
+      siguientes términos.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Sobre este sitio</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Este sitio muestra los departamentos disponibles de {SITE.nombre} para alquiler temporario
+      en Recoleta, Palermo y Balvanera. No es un sitio de reservas online: no hay pago ni
+      confirmación de reserva dentro del sitio, toda consulta y coordinación de fechas se hace
+      directamente por WhatsApp.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Disponibilidad y condiciones de la estadía</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      La disponibilidad de cada departamento, las fechas, el precio y las condiciones de pago se
+      confirman siempre por WhatsApp antes de coordinar el ingreso. No pedimos seña para reservar,
+      pero eso no reemplaza la confirmación final que te damos por ese medio.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Propiedad intelectual</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Las fotos, textos, diseños y logotipos de este sitio son propiedad de {SITE.nombre} (o se
+      usan con autorización de sus respectivos dueños) y no pueden reproducirse, copiarse o
+      distribuirse sin autorización previa.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Enlaces a otros sitios</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Este sitio tiene links a WhatsApp e Instagram. No somos responsables por el contenido ni las
+      políticas de esos sitios de terceros.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Uso permitido</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Podés navegar libremente este sitio para conocer los departamentos disponibles y
+      contactarnos. No está permitido usar el contenido del sitio con fines comerciales propios,
+      ni intentar vulnerar su funcionamiento.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Limitación de responsabilidad</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Hacemos lo posible para que la información del sitio (fotos, descripciones, disponibilidad)
+      esté actualizada y sea correcta, pero no garantizamos que esté libre de errores en todo
+      momento. La disponibilidad real y las condiciones de cada estadía se confirman siempre de
+      forma directa por WhatsApp, no a través de este sitio.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Cambios a estos términos</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Podemos actualizar estos términos en cualquier momento. La fecha de "última actualización"
+      arriba siempre va a reflejar la versión vigente.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Ley aplicable</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Estos términos se rigen por las leyes de la República Argentina.
+    </p>
+
+    <h2 class="mt-8 font-display text-xl text-ink">Contacto</h2>
+    <p class="mt-3 font-body text-base text-muted">
+      Cualquier consulta sobre estos términos,{" "}
+      <a href={waLink} target="_blank" rel="noopener noreferrer" class="font-semibold text-gold-active hover:text-gold">
+        escribinos por WhatsApp
+      </a>.
+    </p>
+  </section>
+</Layout>
