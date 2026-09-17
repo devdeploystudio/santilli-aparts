@@ -126,7 +126,7 @@ export default function DepartamentosExplorer({ deptos }: Props) {
         {filtrados.map((d) => (
           <a
             key={d.slug}
-            href={`/departamentos/${d.slug}`}
+            href={`/departamentos/${d.slug}/`}
             class="depto-card group relative block overflow-hidden rounded-2xl border border-hairline bg-surface transition-shadow duration-300 hover:shadow-xl hover:shadow-ink/10"
           >
             <div class="relative aspect-[4/3] overflow-hidden">

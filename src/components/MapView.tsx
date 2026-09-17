@@ -64,7 +64,7 @@ export default function MapView({ pines, zoom, className = "h-80 w-full", etique
     const markers = pines.map((pin) => {
       const marker = L.marker([pin.lat, pin.lng]).addTo(map);
       const link = pin.slug
-        ? `<a href="/departamentos/${pin.slug}" style="color:#434242;text-decoration:none;">
+        ? `<a href="/departamentos/${pin.slug}/" style="color:#434242;text-decoration:none;">
              <span style="font-weight:600;">${pin.nombre}</span><br/>
              <span style="color:#ad8830;font-weight:600;">Ver más →</span>
            </a>`

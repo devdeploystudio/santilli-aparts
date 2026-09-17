@@ -56,7 +56,7 @@ const { deptos, titulo, texto1, texto2 } = Astro.props;
           {deptos.map((d) => (
             <div class="depto-carousel__item">
               <a
-                href={`/departamentos/${d.slug}`}
+                href={`/departamentos/${d.slug}/`}
                 class="depto-card group relative block overflow-hidden rounded-2xl border border-hairline bg-surface transition-shadow duration-300 hover:shadow-xl hover:shadow-ink/10"
               >
                 <div class="relative aspect-[4/3] overflow-hidden">

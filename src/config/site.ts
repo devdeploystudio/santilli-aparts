@@ -18,6 +18,6 @@ export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/#zonas", label: "Zonas" },
   { href: "/#como-se-reserva", label: "Cómo se reserva" },
-  { href: "/nosotros", label: "Nosotros" },
-  { href: "/departamentos", label: "Departamentos" },
+  { href: "/nosotros/", label: "Nosotros" },
+  { href: "/departamentos/", label: "Departamentos" },
 ];
