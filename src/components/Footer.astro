@@ -15,8 +15,8 @@ const instagramHandle = INSTAGRAM_URL?.replace(/\/+$/, "").split("/").pop();
     <div>
       <a href="/" class="group inline-flex items-center gap-2.5">
         <span class="relative h-7 w-7 sm:h-8 sm:w-8">
-          <img src="/icon-white.png" alt="" width="30" height="30" class="absolute inset-0 h-full w-full transition-opacity duration-200 group-hover:opacity-0" />
-          <img src="/icon-gold.png" alt="" width="30" height="30" class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+          <img src="/icon-white.png" alt="" width="30" height="30" loading="lazy" class="absolute inset-0 h-full w-full transition-opacity duration-200 group-hover:opacity-0" />
+          <img src="/icon-gold.png" alt="" width="30" height="30" loading="lazy" class="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
         </span>
         <span class="font-display text-xl text-canvas transition-colors group-hover:text-gold">{SITE.nombre}</span>
       </a>

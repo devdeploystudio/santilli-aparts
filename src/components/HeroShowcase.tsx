@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 export interface HeroSlideData {
   archivo: string;
   poster?: string;
+  width?: number;
+  height?: number;
 }
 
 function esVideo(ruta: string): boolean {
@@ -65,7 +67,15 @@ export default function HeroShowcase({ slides }: Props) {
               class="h-full w-full object-cover"
             />
           ) : (
-            <img src={slide.archivo} alt="" draggable={false} class="h-full w-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
+            <img
+              src={slide.archivo}
+              alt=""
+              draggable={false}
+              width={slide.width}
+              height={slide.height}
+              class="h-full w-full object-cover"
+              loading={i === 0 ? "eager" : "lazy"}
+            />
           )}
         </div>
       ))}

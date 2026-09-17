@@ -6,6 +6,7 @@
 // se evita la familia de bugs de iOS Safari donde el scrollLeft/contentSize
 // interno no se actualiza bien. Ver notas en el <script> más abajo.
 import PlaceholderPhoto from "./PlaceholderPhoto.astro";
+import { imageSize } from "../lib/imageSize";
 
 export interface CarruselDepto {
   slug: string;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const { deptos, titulo, texto1, texto2 } = Astro.props;
+const fotoSizes = await Promise.all(deptos.map((d) => (d.video || d.esPlaceholder ? null : imageSize(d.foto))));
 ---
 
 {
@@ -53,7 +55,7 @@ const { deptos, titulo, texto1, texto2 } = Astro.props;
 
       <div class="depto-carousel__viewport mt-8">
         <div class="depto-carousel__track">
-          {deptos.map((d) => (
+          {deptos.map((d, i) => (
             <div class="depto-carousel__item">
               <a
                 href={`/departamentos/${d.slug}/`}
@@ -78,6 +80,8 @@ const { deptos, titulo, texto1, texto2 } = Astro.props;
                       alt={`Foto de ${d.nombre}`}
                       loading="lazy"
                       draggable="false"
+                      width={fotoSizes[i]?.width}
+                      height={fotoSizes[i]?.height}
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   )}

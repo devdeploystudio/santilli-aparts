@@ -2,8 +2,10 @@
 import { getEntry } from "astro:content";
 import ServiceIcon, { SERVICIO_LABELS, type ServicioKey } from "./ServiceIcon.astro";
 import MarginLines from "./MarginLines.astro";
+import { imageSize } from "../lib/imageSize";
 
 const q = (await getEntry("configQueIncluye", "que-incluye"))!.data;
+const fotoFondoSize = await imageSize(q.fotoFondo);
 
 // Íconos y orden quedan fijos en código; el texto de cada servicio se
 // edita desde /admin.
@@ -25,6 +27,8 @@ const items: { key: ServicioKey; texto: string }[] = [
     alt=""
     draggable="false"
     loading="lazy"
+    width={fotoFondoSize?.width}
+    height={fotoFondoSize?.height}
     class="absolute inset-0 h-full w-full object-cover"
   />
   <div class="absolute inset-0 bg-ink/75" />

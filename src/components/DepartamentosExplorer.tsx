@@ -7,6 +7,8 @@ export interface DeptoResumen {
   capacidadMax: number;
   esPlaceholder: boolean;
   foto: string;
+  fotoWidth?: number;
+  fotoHeight?: number;
   video?: string;
   videoPoster?: string;
 }
@@ -143,7 +145,15 @@ export default function DepartamentosExplorer({ deptos }: Props) {
               ) : d.esPlaceholder ? (
                 <PlaceholderThumb />
               ) : (
-                <img src={d.foto} alt={`Foto de ${d.nombre}`} loading="lazy" draggable={false} class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                <img
+              src={d.foto}
+              alt={`Foto de ${d.nombre}`}
+              loading="lazy"
+              draggable={false}
+              width={d.fotoWidth}
+              height={d.fotoHeight}
+              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
               )}
               <span class="absolute left-3 top-3 rounded-full bg-surface/90 px-3 py-1 font-body text-xs font-semibold text-ink backdrop-blur-sm">
                 {d.zona}

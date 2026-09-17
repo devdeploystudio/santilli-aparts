@@ -3,9 +3,15 @@ import { getEntry } from "astro:content";
 import { WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
 import HeroShowcase from "./HeroShowcase.tsx";
+import { imageSize } from "../lib/imageSize";
 
 const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 const inicio = (await getEntry("configInicio", "inicio"))!.data;
+// null para los slides de video (sharp no lee dimensiones de mp4) - queda
+// igual que antes para esos, HeroShowcase ya maneja width/height opcionales.
+const heroSlidesConTamaño = await Promise.all(
+  inicio.heroSlides.map(async (s) => ({ ...s, ...((await imageSize(s.archivo)) ?? {}) })),
+);
 ---
 
 <section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] overflow-hidden" data-no-reveal>
@@ -51,7 +57,7 @@ const inicio = (await getEntry("configInicio", "inicio"))!.data;
     </div>
 
     <div class="order-first h-64 sm:h-96 lg:order-1 lg:h-auto lg:ml-[min(0px,calc((90rem-100vw)/2))]">
-      <HeroShowcase client:visible slides={inicio.heroSlides} />
+      <HeroShowcase client:visible slides={heroSlidesConTamaño} />
     </div>
   </div>
 </section>

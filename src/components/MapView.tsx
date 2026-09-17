@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "preact/hooks";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 // Pin propio (dorado de marca), generado a partir de la silueta default de
 // Leaflet vía sharp (mismo alto, mismo recorte) en vez de un filter CSS
 // hue-rotate sobre el ícono azul, que no daba un dorado convincente.
 import markerIcon2x from "../assets/map-marker-gold-2x.png";
 import markerIcon from "../assets/map-marker-gold.png";
+import { loadVendorCss } from "../lib/loadVendorCss";
 
 // Leaflet's Icon.Default sobreescribe _getIconUrl para anteponer su propio
 // imagePath detectado incluso cuando le pasamos URLs ya resueltas por Vite,
@@ -44,6 +44,8 @@ export default function MapView({ pines, zoom, className = "h-80 w-full", etique
 
   useEffect(() => {
     if (!containerRef.current || pines.length === 0) return;
+
+    loadVendorCss("leaflet.css");
 
     const map = L.map(containerRef.current, {
       scrollWheelZoom: false,

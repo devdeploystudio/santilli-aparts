@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import MarginLines from "./MarginLines.astro";
+import { imageSize } from "../lib/imageSize";
 
 // Reseñas editables desde /admin (colección "resenas": agregar, borrar y
 // reordenar). Son capturas reales de WhatsApp con huéspedes (recortadas,
@@ -14,7 +15,10 @@ import MarginLines from "./MarginLines.astro";
 // nativo, para evitar los bugs de iOS Safari con scrollLeft. Clases propias
 // (reviews-carousel__*) para no chocar con las del carrusel de deptos que
 // vive en la misma página.
-const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - b.data.orden);
+const reseñasSinTamaño = (await getCollection("resenas")).sort((a, b) => a.data.orden - b.data.orden);
+const reseñas = await Promise.all(
+  reseñasSinTamaño.map(async (r) => ({ ...r, imagenSize: await imageSize(r.data.imagen) })),
+);
 ---
 
 <section class="relative border-y border-hairline bg-canvas">
@@ -56,6 +60,8 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
                       alt={r.data.texto}
                       loading="lazy"
                       draggable="false"
+                      width={r.imagenSize?.width}
+                      height={r.imagenSize?.height}
                       class="max-h-full w-full rounded-md object-contain opacity-90 shadow-sm"
                     />
                   </button>
@@ -102,7 +108,7 @@ const reseñas = (await getCollection("resenas")).sort((a, b) => a.data.orden - 
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
-    <img id="reviews-lightbox-img" src="" alt="" class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl" />
+    <img id="reviews-lightbox-img" src="" alt="" loading="lazy" class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl" />
   </div>
 </section>
 

@@ -2,8 +2,14 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import EmblaCarousel from "embla-carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 
+interface FotoTamaño {
+  width?: number;
+  height?: number;
+}
+
 interface Props {
   fotos: string[];
+  fotoSizes?: (FotoTamaño | null)[];
   esPlaceholder: boolean;
   nombre: string;
   video?: string;
@@ -15,11 +21,13 @@ function FotoSlide({
   placeholder,
   alt,
   eager = false,
+  size,
 }: {
   src: string;
   placeholder: boolean;
   alt: string;
   eager?: boolean;
+  size?: FotoTamaño | null;
 }) {
   if (placeholder) {
     return (
@@ -35,7 +43,17 @@ function FotoSlide({
       </div>
     );
   }
-  return <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} draggable={false} class="h-full w-full object-cover" />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={eager ? "eager" : "lazy"}
+      draggable={false}
+      width={size?.width}
+      height={size?.height}
+      class="h-full w-full object-cover"
+    />
+  );
 }
 
 // Miniatura recortada con zoom (mismo trato que una foto, object-cover, no
@@ -74,7 +92,7 @@ function VideoSlide({
   );
 }
 
-export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPoster }: Props) {
+export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video, videoPoster }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const emblaRef = useRef<EmblaCarouselType | null>(null);
   const [selected, setSelected] = useState(0);
@@ -141,7 +159,7 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
               onClick={() => setLightboxIndex(i)}
               aria-label={`Ampliar foto ${i + 1} de ${nombre}`}
             >
-              <FotoSlide src={foto} placeholder={esPlaceholder} alt={`Foto ${i + 1} de ${nombre}`} eager={i === 0} />
+              <FotoSlide src={foto} placeholder={esPlaceholder} alt={`Foto ${i + 1} de ${nombre}`} eager={i === 0} size={fotoSizes?.[i]} />
             </button>
           ))}
           {video && (
@@ -250,6 +268,8 @@ export default function Gallery({ fotos, esPlaceholder, nombre, video, videoPost
                 src={fotos[lightboxIndex]}
                 alt={`Foto ${lightboxIndex + 1} de ${nombre}, tamaño completo`}
                 draggable={false}
+                width={fotoSizes?.[lightboxIndex]?.width}
+                height={fotoSizes?.[lightboxIndex]?.height}
                 class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl object-contain"
               />
             )}

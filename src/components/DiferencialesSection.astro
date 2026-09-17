@@ -1,8 +1,10 @@
 ---
 import { getEntry } from "astro:content";
 import MarginLines from "./MarginLines.astro";
+import { imageSize } from "../lib/imageSize";
 
 const d = (await getEntry("configDiferenciales", "diferenciales"))!.data;
+const fotoFondoSize = await imageSize(d.fotoFondo);
 
 // Los íconos quedan fijos en código (parte del diseño, no del contenido);
 // título/texto de cada tarjeta se editan desde /admin.
@@ -31,6 +33,8 @@ const secundarios = [
     alt=""
     draggable="false"
     loading="lazy"
+    width={fotoFondoSize?.width}
+    height={fotoFondoSize?.height}
     class="absolute inset-0 h-full w-full object-cover"
   />
   <div class="absolute inset-0 bg-ink/75" />

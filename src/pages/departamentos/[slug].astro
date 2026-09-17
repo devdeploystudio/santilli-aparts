@@ -7,6 +7,7 @@ import MapView from "../../components/MapView.tsx";
 import BookingForm from "../../components/BookingForm.tsx";
 import { resaltarServicios } from "../../lib/highlight";
 import { WHATSAPP_NUMBER } from "../../config/site";
+import { imageSize } from "../../lib/imageSize";
 
 export async function getStaticPaths() {
   const departamentos = await getCollection("departamentos");
@@ -36,6 +37,11 @@ const capacidadTexto =
   capacidadMin === capacidadMax
     ? `${capacidadMax} ${capacidadMax === 1 ? "persona" : "personas"}`
     : `${capacidadMin} a ${capacidadMax} personas`;
+
+// Placeholder: FotoSlide ni siquiera renderiza un <img> para esos casos
+// (ver Gallery.tsx), así que no hace falta (ni conviene, pueden no ser
+// archivos reales) calcular tamaño.
+const fotoSizes = esPlaceholder ? [] : await Promise.all(fotos.map((f) => imageSize(f)));
 ---
 
 <Layout title={nombre} description={descripcionBreve}>
@@ -49,7 +55,7 @@ const capacidadTexto =
 
     <div class="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-stretch">
       <div id="galeria-columna">
-        <Gallery client:visible fotos={fotos} esPlaceholder={esPlaceholder} nombre={nombre} video={video} videoPoster={videoPoster} />
+        <Gallery client:visible fotos={fotos} fotoSizes={fotoSizes} esPlaceholder={esPlaceholder} nombre={nombre} video={video} videoPoster={videoPoster} />
       </div>
 
       <div>

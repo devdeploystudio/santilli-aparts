@@ -3,17 +3,26 @@ import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import DepartamentosExplorer, { type DeptoResumen } from "../../components/DepartamentosExplorer.tsx";
 import { resolverPortada } from "../../lib/portada";
+import { imageSize } from "../../lib/imageSize";
 
 const departamentos = await getCollection("departamentos");
 
-const resumen: DeptoResumen[] = departamentos.map((d) => ({
-  slug: d.id,
-  nombre: d.data.nombre,
-  zona: d.data.zona,
-  capacidadMax: d.data.capacidadMax,
-  esPlaceholder: d.data.esPlaceholder,
-  ...resolverPortada(d.data),
-}));
+const resumen: DeptoResumen[] = await Promise.all(
+  departamentos.map(async (d) => {
+    const portada = resolverPortada(d.data);
+    const size = portada.foto ? await imageSize(portada.foto) : null;
+    return {
+      slug: d.id,
+      nombre: d.data.nombre,
+      zona: d.data.zona,
+      capacidadMax: d.data.capacidadMax,
+      esPlaceholder: d.data.esPlaceholder,
+      ...portada,
+      fotoWidth: size?.width,
+      fotoHeight: size?.height,
+    };
+  }),
+);
 ---
 
 <Layout

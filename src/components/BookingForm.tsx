@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import flatpickr from "flatpickr";
 import { Spanish } from "flatpickr/dist/l10n/es.js";
-import "flatpickr/dist/flatpickr.min.css";
 import { buildConsultaDeptoMensaje, buildWhatsAppLink } from "../lib/whatsapp";
+import { loadVendorCss } from "../lib/loadVendorCss";
 
 interface Props {
   nombreDepto: string;
@@ -66,6 +66,7 @@ export default function BookingForm({ nombreDepto, whatsappNumero }: Props) {
 
   useEffect(() => {
     if (!dateInputRef.current) return;
+    loadVendorCss("flatpickr.css");
     // Bug real encontrado y resuelto: flatpickr llama `e.stopPropagation()`
     // en cada click de día (así que un listener puesto en el calendario o
     // en el documento nunca lo ve), y en modo rango MUTA el mismo array

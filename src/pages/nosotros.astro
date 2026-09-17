@@ -3,9 +3,11 @@ import { getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { WHATSAPP_NUMBER } from "../config/site";
 import { buildConsultaGeneralLink } from "../lib/whatsapp";
+import { imageSize } from "../lib/imageSize";
 
 const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 const n = (await getEntry("configNosotros", "nosotros"))!.data;
+const fotoSize = await imageSize(n.foto);
 
 // Los íconos quedan fijos en código; título/texto de cada punto se editan
 // desde /admin.
@@ -38,6 +40,8 @@ const puntos = [
         src={n.foto}
         alt="La familia Santilli, dueños y responsables de Santilli Aparts"
         loading="lazy"
+        width={fotoSize?.width}
+        height={fotoSize?.height}
         class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
       />
     </div>

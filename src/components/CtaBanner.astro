@@ -5,6 +5,7 @@
 // ink), que está justo debajo. Título/texto/foto son editables desde
 // /admin (colección "config-inicio"), pasados como props desde index.astro.
 import SkylineDecor from "./SkylineDecor.astro";
+import { imageSize } from "../lib/imageSize";
 
 interface Props {
   titulo: string;
@@ -13,10 +14,11 @@ interface Props {
 }
 
 const { titulo, texto, foto } = Astro.props;
+const fotoSize = await imageSize(foto);
 ---
 
 <section class="cta-banner relative overflow-hidden">
-  <img src={foto} alt="" aria-hidden="true" draggable="false" loading="lazy" class="h-[26rem] w-full object-cover sm:h-[30rem]" />
+  <img src={foto} alt="" aria-hidden="true" draggable="false" loading="lazy" width={fotoSize?.width} height={fotoSize?.height} class="h-[26rem] w-full object-cover sm:h-[30rem]" />
   {/* El texto queda centrado verticalmente (items-center más abajo), no
      pegado a un borde: por eso el scrim tiene que ser parejo en toda la
      altura (no solo un degradé de abajo hacia arriba) para que se lea bien

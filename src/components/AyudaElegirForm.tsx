@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import flatpickr from "flatpickr";
 import { Spanish } from "flatpickr/dist/l10n/es.js";
-import "flatpickr/dist/flatpickr.min.css";
 import { buildConsultaAyudaMensaje, buildWhatsAppLink } from "../lib/whatsapp";
+import { loadVendorCss } from "../lib/loadVendorCss";
 
 // Mismo componente y lógica que BookingForm.tsx (ficha de depto puntual),
 // pero sin nombreDepto: este es el que ayuda a ELEGIR uno, para el home.
@@ -65,6 +65,7 @@ export default function AyudaElegirForm({ whatsappNumero }: Props) {
 
   useEffect(() => {
     if (!dateInputRef.current) return;
+    loadVendorCss("flatpickr.css");
     // Ver BookingForm.tsx para el detalle del bug de flatpickr que explica
     // el `[...selectedDates]` acá abajo (clonar el array en cada cambio).
     const fp = flatpickr(dateInputRef.current, {
