@@ -1,51 +1,20 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { imageSize as leerTamaño } from "image-size";
+import manifest from "./imageManifest.json";
 
-// Lee el ancho/alto REAL de una imagen de public/ en tiempo de build (esto
-// corre en Node, adentro del frontmatter de un .astro - nunca llega al
-// navegador). Sirve para declarar width/height en el <img> sin depender de
-// astro:assets/image() (ver el comentario en content.config.ts sobre por
-// qué eso rompía en Cloudflare) - object-cover en el CSS igual manda el
-// tamaño final en pantalla, así que ni siquiera hace falta que el valor sea
-// exacto para que se vea bien, pero sí para que el navegador reserve el
-// espacio correcto ANTES de que cargue la imagen y no "salte" la página.
+// Ancho/alto real de cada imagen de public/, precalculado por
+// scripts/build-image-manifest.mjs (corre en "prebuild"/"predev", ANTES de
+// Astro - ver ese script para el por qué). Acá solo se hace un lookup en un
+// JSON ya armado: nada de leer archivos en este punto, porque el paso de
+// "prerender" de Cloudflare corre en un sandbox sin acceso al filesystem
+// real del repo (ahí fallaba en silencio leyendo el archivo directo, y
+// antes de eso con astro:assets/sharp fallaba directamente con un error -
+// ver los comentarios de content.config.ts y el historial de este archivo).
 //
-// "image-size" (JS puro, lee solo los primeros bytes del header, sin
-// binarios nativos) y NO "sharp": Cloudflare corre el getStaticPaths de las
-// páginas dentro de un sandbox tipo Workers para "prerenderear" el sitio, y
-// ese sandbox no puede cargar módulos nativos (sharp trae binarios en C++)
-// bajo ninguna circunstancia - reventaba el build entero con "No such
-// module 'chunks/sharp'" aunque en local (Node normal) andaba perfecto.
-// Mismo tipo de límite que ya habíamos pisado con astro:assets/image() en
-// este proyecto (ver ese otro comentario) - cualquier lectura de imagen en
-// build time en este repo tiene que ser JS puro, nunca un módulo nativo.
-//
-// Cacheado por ruta: en un build con 40+ deptos, la misma foto se puede
-// pedir varias veces (carrusel del home + ficha + explorador).
-const cache = new Map<string, { width: number; height: number } | null>();
+// object-cover en el CSS manda el tamaño final en pantalla igual, así que
+// ni hace falta que el valor sea exacto para que se vea bien - sirve para
+// que el navegador reserve el espacio correcto ANTES de que cargue la
+// imagen, evitando que la página "salte".
+const tamaños: Record<string, { width: number; height: number }> = manifest;
 
 export async function imageSize(publicPath: string): Promise<{ width: number; height: number } | null> {
-  if (cache.has(publicPath)) return cache.get(publicPath)!;
-
-  let size: { width: number; height: number } | null = null;
-  try {
-    // process.cwd(), no import.meta.url: Vite/Astro bundlea este módulo
-    // para el build, así que en tiempo de ejecución import.meta.url apunta
-    // a donde haya quedado ese bundle (no a src/lib/imageSize.ts como
-    // archivo fuente) - la ruta relativa calculada desde ahí no daba con
-    // public/ de verdad y esto siempre devolvía null en silencio (por eso
-    // ningún <img> del sitio terminaba con width/height, aunque el código
-    // no tiraba ningún error). astro build/dev siempre corre con el cwd en
-    // la raíz del proyecto, así que esto sí es estable.
-    const filePath = join(process.cwd(), "public", publicPath);
-    const buffer = readFileSync(filePath);
-    const { width, height } = leerTamaño(buffer);
-    if (width && height) size = { width, height };
-  } catch {
-    size = null;
-  }
-
-  cache.set(publicPath, size);
-  return size;
+  return tamaños[publicPath] ?? null;
 }

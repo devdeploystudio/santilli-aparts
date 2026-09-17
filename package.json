@@ -6,9 +6,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "node scripts/copy-vendor-css.mjs",
+    "predev": "node scripts/copy-vendor-css.mjs && node scripts/build-image-manifest.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/copy-vendor-css.mjs",
+    "prebuild": "node scripts/copy-vendor-css.mjs && node scripts/build-image-manifest.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
