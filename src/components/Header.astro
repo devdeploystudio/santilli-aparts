@@ -6,7 +6,7 @@ const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 ---
 
 <header class="sticky top-0 z-40 border-b border-hairline bg-surface/90 backdrop-blur">
-  <div class="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-0 py-3 sm:px-0">
+  <div class="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-2 py-3 sm:px-3">
     <a href="/" class="flex items-center gap-2.5">
       {/* aspect-[...] en vez de un cuadrado: el ícono real es rectangular
          (~1.27:1) - forzarlo a un cuadrado (como icon-192.png, pensado
@@ -61,7 +61,7 @@ const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
   <nav
     id="mobile-menu"
     aria-label="Principal (mobile)"
-    class="mobile-menu absolute inset-x-0 top-full flex flex-col gap-1 border-t border-hairline bg-surface px-0 py-3 shadow-lg lg:hidden"
+    class="mobile-menu absolute inset-x-0 top-full flex flex-col gap-1 border-t border-hairline bg-surface px-2 py-3 shadow-lg lg:hidden"
   >
     {
       NAV_LINKS.map((link) => (
