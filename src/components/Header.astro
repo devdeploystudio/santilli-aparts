@@ -8,7 +8,12 @@ const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
 <header class="sticky top-0 z-40 border-b border-hairline bg-surface/90 backdrop-blur">
   <div class="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-5 py-3 sm:px-7">
     <a href="/" class="flex items-center gap-2.5">
-      <img src="/icon-192.png" alt="" width="34" height="34" draggable="false" loading="eager" class="h-8 w-8 rounded-md sm:h-9 sm:w-9" />
+      {/* aspect-[...] en vez de un cuadrado: el ícono real es rectangular
+         (~1.27:1) - forzarlo a un cuadrado (como icon-192.png, pensado
+         para favicon/PWA) lo dejaba chico y corrido hacia abajo dentro de
+         su propio marco. icon-gold.png ya viene recortado a la proporción
+         real, sin el margen extra que necesita un ícono cuadrado. */}
+      <img src="/icon-gold.png" alt="" width="443" height="350" draggable="false" loading="eager" class="h-8 w-auto sm:h-9" />
       <span class="font-display text-lg leading-none text-ink sm:text-xl">
         Santilli <span class="text-gold-active">Aparts</span>
       </span>

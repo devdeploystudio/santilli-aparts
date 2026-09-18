@@ -1,0 +1,89 @@
+---
+// Reemplaza al viejo SkylineMark/SkylineDecor (un skyline redibujado a
+// mano, "parecido" al logo pero no el logo real - pedido explícito del
+// cliente de usar el isotipo EXACTO, no una aproximación). Usa el archivo
+// real (public/icon-white.png o icon-gold.png, los mismos que ya usa el
+// Footer) y lo "dibuja" con un wipe de izquierda a derecha vía clip-path,
+// en vez de animar un trazo SVG - así el gesto de entrada se mantiene sin
+// tocar un solo píxel del isotipo real.
+interface Props {
+  class?: string;
+  tono?: "white" | "gold";
+}
+
+const { class: className = "", tono = "white" } = Astro.props;
+const src = tono === "gold" ? "/icon-gold.png" : "/icon-white.png";
+---
+
+<div class={`logo-reveal pointer-events-none opacity-70 ${className}`}>
+  <img src={src} alt="" aria-hidden="true" draggable="false" class="h-full w-full object-contain object-left" />
+</div>
+
+<style>
+  .logo-reveal img {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .logo-reveal-in-view img {
+    animation: logo-reveal-wipe 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 225ms;
+  }
+
+  @keyframes logo-reveal-wipe {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-reveal img {
+      clip-path: inset(0 0 0 0);
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Mismo patrón que el viejo SkylineDecor: un solo listener genérico (por
+  // clase, no por id) para todas las instancias de la página, re-jugando el
+  // gesto cada vez que la sección vuelve a estar en pantalla (subiendo o
+  // bajando), no solo la primera vez.
+  function initLogoReveal() {
+    const els = document.querySelectorAll<HTMLElement>(".logo-reveal:not([data-logo-reveal-bound])");
+    if (els.length === 0) return;
+
+    const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    els.forEach((el) => {
+      el.dataset.logoRevealBound = "true";
+
+      if (reducirMovimiento || !("IntersectionObserver" in window)) {
+        el.classList.add("logo-reveal-in-view");
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              el.classList.remove("logo-reveal-in-view");
+              void el.offsetWidth;
+              el.classList.add("logo-reveal-in-view");
+            } else {
+              el.classList.remove("logo-reveal-in-view");
+            }
+          }
+        },
+        { threshold: 0.3 },
+      );
+
+      observer.observe(el);
+    });
+  }
+
+  initLogoReveal();
+  document.addEventListener("astro:page-load", initLogoReveal);
+</script>

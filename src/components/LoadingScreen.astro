@@ -9,7 +9,7 @@ import { SITE } from "../config/site";
 ---
 
 <div id="loading-screen" class="loading-screen" aria-hidden="true">
-  <img src="/icon-gold.png" alt="" width={64} height={64} loading="eager" class="loading-screen__logo" />
+  <img src="/icon-gold.png" alt="" width={443} height={350} loading="eager" class="loading-screen__logo" />
   <p class="loading-screen__title">{SITE.nombre}</p>
 </div>
 
@@ -35,8 +35,9 @@ import { SITE } from "../config/site";
 
   .loading-screen__logo {
     display: block;
-    width: 56px;
-    height: 56px;
+    width: 88px;
+    height: 70px;
+    object-fit: contain;
     animation: loading-pulse 1.4s ease-in-out infinite;
   }
 

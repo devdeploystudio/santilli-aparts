@@ -4,7 +4,7 @@
 // ink con un lavado dorado para que no quede idéntico al footer (flat
 // ink), que está justo debajo. Título/texto/foto son editables desde
 // /admin (colección "config-inicio"), pasados como props desde index.astro.
-import SkylineDecor from "./SkylineDecor.astro";
+import LogoReveal from "./LogoReveal.astro";
 import { imageSize } from "../lib/imageSize";
 
 interface Props {
@@ -26,11 +26,11 @@ const fotoSize = await imageSize(foto);
   <div class="absolute inset-0 bg-ink/60" />
   <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/55 to-ink/35" />
   <div class="absolute inset-0 bg-gradient-to-tr from-gold/25 via-transparent to-transparent mix-blend-overlay" />
-  <SkylineDecor class="absolute bottom-4 right-4 top-auto hidden h-24 w-40 items-end sm:flex lg:inset-y-0 lg:right-16 lg:h-auto lg:w-[28rem] lg:items-center xl:right-24 xl:w-[34rem]" />
+  <LogoReveal class="absolute bottom-4 right-4 top-auto hidden h-16 w-28 items-end sm:flex lg:inset-y-0 lg:right-16 lg:h-auto lg:w-[20rem] lg:items-center xl:right-24 xl:w-[24rem]" />
   <div class="absolute inset-0 flex items-center">
     <div class="mx-auto w-full max-w-[90rem] px-5 sm:px-7">
       <div class="max-w-lg">
-        <SkylineDecor class="mb-3 flex h-14 w-24 items-end sm:hidden" />
+        <LogoReveal class="mb-3 flex h-14 w-24 items-end sm:hidden" />
         <h2 class="font-display text-3xl leading-[1.1] text-canvas sm:text-4xl">
           {titulo}
         </h2>
