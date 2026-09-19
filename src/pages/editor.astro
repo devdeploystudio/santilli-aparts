@@ -7,6 +7,8 @@ import Layout from "../layouts/Layout.astro";
 // un menú más claro para llegar, no maneja nada de eso — no va en el menú
 // de navegación del sitio (no es algo que un visitante deba encontrar), el
 // cliente la guarda en favoritos.
+// Mismo orden en que estos bloques aparecen scrolleando la página real
+// (home de arriba a abajo, después las páginas aparte, General al final).
 const grupos = [
   {
     emoji: "🏠",
@@ -16,23 +18,17 @@ const grupos = [
       { label: "Portada: fotos", coleccion: "config-inicio-portada-fotos" },
       { label: "Nuestros departamentos", coleccion: "config-inicio-deptos" },
       { label: "Ayuda a elegir", coleccion: "config-inicio-ayuda" },
-      { label: "Bloque final", coleccion: "config-inicio-final" },
     ],
-  },
-  {
-    emoji: "🏢",
-    nombre: "Departamentos",
-    items: [{ label: "Ver, agregar y editar departamentos", coleccion: "departamentos" }],
-  },
-  {
-    emoji: "👨‍👩‍👦",
-    nombre: "Nosotros",
-    items: [{ label: "Foto, textos y puntos de la página", coleccion: "config-nosotros" }],
   },
   {
     emoji: "✨",
     nombre: "Diferenciales",
     items: [{ label: "Textos y tarjetas", coleccion: "config-diferenciales" }],
+  },
+  {
+    emoji: "📍",
+    nombre: "Zonas",
+    items: [{ label: "Tarjetas de zona y accesos", coleccion: "config-zonas" }],
   },
   {
     emoji: "🧺",
@@ -41,7 +37,7 @@ const grupos = [
   },
   {
     emoji: "🔁",
-    nombre: "Cómo trabajamos",
+    nombre: "Cómo se reserva",
     items: [{ label: "Los pasos del proceso", coleccion: "config-como-trabajamos" }],
   },
   {
@@ -50,9 +46,19 @@ const grupos = [
     items: [{ label: "Agregar, borrar y reordenar reseñas", coleccion: "resenas" }],
   },
   {
-    emoji: "📍",
-    nombre: "Zonas",
-    items: [{ label: "Tarjetas de zona y accesos", coleccion: "config-zonas" }],
+    emoji: "🏠",
+    nombre: "Inicio",
+    items: [{ label: "Bloque final", coleccion: "config-inicio-final" }],
+  },
+  {
+    emoji: "👨‍👩‍👦",
+    nombre: "Nosotros",
+    items: [{ label: "Foto, textos y puntos de la página", coleccion: "config-nosotros" }],
+  },
+  {
+    emoji: "🏢",
+    nombre: "Departamentos",
+    items: [{ label: "Ver, agregar y editar departamentos", coleccion: "departamentos" }],
   },
   {
     emoji: "⚙️",
@@ -74,7 +80,7 @@ const grupos = [
       <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Editor</p>
       <h1 class="mt-2 font-display text-2xl text-ink">Ingresá tu mail</h1>
       <p class="mt-3 font-body text-sm text-muted">
-        Esta sección es solo para el equipo de Santilli Aparts y Deploy.
+        Esta sección es solo para el equipo de Santilli Aparts.
       </p>
       <form id="editor-gate-form" class="mt-6 flex flex-col gap-3">
         <input
@@ -99,7 +105,7 @@ const grupos = [
     <div id="editor-content" class="hidden">
       <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Editor</p>
       <h1 class="mt-2 font-display text-3xl text-ink sm:text-4xl">¿Qué querés editar?</h1>
-      <p class="mt-4 max-w-2xl font-body text-base text-muted">
+      <p class="mt-4 font-body text-base text-muted">
         Elegí abajo qué parte del sitio querés cambiar. La primera vez te va a
         pedir iniciar sesión con una cuenta de GitHub, algo así como el usuario
         con el que entrás a cualquier servicio: es gratis y podés crearla en un

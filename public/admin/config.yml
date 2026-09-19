@@ -23,6 +23,12 @@ public_folder: "src/assets"
 editor:
   preview: false
 
+# El orden de la lista de acá abajo es a propósito el mismo orden en que
+# esos bloques aparecen scrolleando la página real (home primero de
+# arriba a abajo, después Nosotros y Departamentos como páginas aparte,
+# General al final) - así el cliente puede ir bajando por el sitio y
+# encontrar cada sección en el mismo orden en el panel, sin tener que
+# adivinar dónde quedó cada cosa.
 collections:
   # El bloque "Inicio" (home) está partido en varias carpetitas chicas,
   # una por cada parte de la pantalla - así editar el título de la
@@ -36,6 +42,7 @@ collections:
   - name: "config-inicio-portada-texto"
     label: "🏠 Inicio → Portada (texto)"
     description: "El título grande y el párrafo de abajo, en la primera pantalla de la home."
+    editor: { preview: true }
     files:
       - name: "inicio-hero"
         label: "Texto de la portada"
@@ -65,7 +72,7 @@ collections:
 
   - name: "config-inicio-portada-fotos"
     label: "🏠 Inicio → Portada (fotos)"
-    description: "Las fotos y videos que van pasando solos en la primera pantalla de la home."
+    description: "Las fotos y videos que van pasando solos en la primera pantalla de la home. Se pueden agregar, borrar y reordenar arrastrando."
     files:
       - name: "inicio-fotos"
         label: "Fotos de la portada"
@@ -92,6 +99,7 @@ collections:
   - name: "config-inicio-deptos"
     label: "🏠 Inicio → Nuestros departamentos"
     description: "El título y los 2 párrafos de arriba del carrusel de departamentos, en la home."
+    editor: { preview: true }
     files:
       - name: "inicio-deptos"
         label: "Nuestros departamentos"
@@ -108,7 +116,8 @@ collections:
 
   - name: "config-inicio-ayuda"
     label: "🏠 Inicio → Ayuda a elegir"
-    description: "El bloque \"¿Ya sabés cuándo necesitás alojamiento?\", con el formulario de ayuda, en la home."
+    description: "El bloque \"¿Ya sabés cuándo necesitás alojamiento?\", con el formulario de ayuda, en la home. Los puntos de la lista se pueden agregar, borrar y reordenar arrastrando."
+    editor: { preview: true }
     files:
       - name: "inicio-ayuda"
         label: "Ayuda a elegir"
@@ -128,9 +137,154 @@ collections:
                 summary: "{{fields.texto}}"
                 field: { label: "Punto", name: "texto", widget: "string" }
 
+  - name: "config-diferenciales"
+    label: "✨ Diferenciales"
+    description: "El bloque \"Sin seña\", las tarjetas secundarias y el aviso sobre asignación de departamentos (aparecen en la home). Las tarjetas se pueden agregar, borrar y reordenar arrastrando."
+    editor: { preview: true }
+    files:
+      - name: "diferenciales"
+        label: "Textos de Diferenciales"
+        file: "src/content/config/diferenciales.yaml"
+        fields:
+          - label: "Diferenciales"
+            name: "diferenciales"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "diferenciales" }
+              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
+              - { label: "Título principal", name: "titulo", widget: "string" }
+              - { label: "Texto principal", name: "texto", widget: "text" }
+              - label: "Tarjetas secundarias"
+                name: "cards"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada tarjeta es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+              - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
+              - { label: "Texto del aviso de asignación", name: "importanteTexto", widget: "text" }
+
+  - name: "config-zonas"
+    label: "📍 Zonas"
+    description: "El bloque de zonas (Recoleta/Palermo) y los accesos, en la home. Las tarjetas de zona y los accesos se pueden agregar, borrar y reordenar arrastrando, cada lista por separado."
+    editor: { preview: true }
+    files:
+      - name: "zonas"
+        label: "Textos de Zonas"
+        file: "src/content/config/zonas.yaml"
+        fields:
+          - label: "Zonas"
+            name: "zonas"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - label: "Tarjetas de zona"
+                name: "zonas"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando (ej: sumar una tarjeta de Balvanera más adelante)."
+                summary: "{{fields.nombre}}"
+                fields:
+                  - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
+                  - { label: "Subtítulo", name: "subtitulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+              - label: "Accesos (la lista de 4 con ícono, abajo de todo)"
+                name: "accesos"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada acceso es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                summary: "{{fields.texto}}"
+                field: { label: "Texto", name: "texto", widget: "string" }
+
+  - name: "config-que-incluye"
+    label: "🧺 Qué incluye"
+    description: "Los servicios que se muestran en la home. Se pueden agregar, borrar y reordenar arrastrando."
+    editor: { preview: true }
+    files:
+      - name: "que-incluye"
+        label: "Textos de Qué incluye"
+        file: "src/content/config/que-incluye.yaml"
+        fields:
+          - label: "Qué incluye"
+            name: "que-incluye"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "que-incluye" }
+              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - label: "Servicios"
+                name: "items"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - label: "Ícono"
+                    name: "icono"
+                    widget: "select"
+                    hint: "Elegí de la lista, así el dibujo siempre queda prolijo (no se puede escribir cualquier cosa acá)."
+                    options:
+                      - { label: "WiFi", value: "wifi" }
+                      - { label: "Cocina", value: "cocina" }
+                      - { label: "Ropa blanca", value: "ropaBlanca" }
+                      - { label: "TV", value: "tv" }
+                      - { label: "Aire acondicionado", value: "aire" }
+                      - { label: "Calefacción", value: "calefaccion" }
+                      - { label: "Ascensor", value: "ascensor" }
+                      - { label: "Cochera", value: "cochera" }
+                      - { label: "Amenities (pileta, solarium, etc.)", value: "amenities" }
+                      - { label: "Seguridad", value: "seguridad" }
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+
+  - name: "config-como-trabajamos"
+    label: "🔁 Cómo se reserva"
+    description: "Los pasos del proceso, en la home (mismo bloque al que apunta \"Cómo se reserva\" del menú del sitio). Los pasos se pueden agregar, borrar y reordenar arrastrando; se numeran solos."
+    editor: { preview: true }
+    files:
+      - name: "como-trabajamos"
+        label: "Textos de Cómo se reserva"
+        file: "src/content/config/como-trabajamos.yaml"
+        fields:
+          - label: "Cómo se reserva"
+            name: "como-trabajamos"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "como-trabajamos" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Bajada", name: "texto", widget: "text" }
+              - label: "Pasos"
+                name: "pasos"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El número (01, 02...) lo pone el diseño solo según el orden, no se escribe acá."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+              - { label: "Título del cartel \"¿Cómo se reserva?\"", name: "reservaTitulo", widget: "string" }
+              - { label: "Texto del cartel \"¿Cómo se reserva?\"", name: "reservaTexto", widget: "text" }
+
+  - name: "resenas"
+    label: "⭐ Reseñas"
+    label_singular: "Reseña"
+    description: "Las reseñas de huéspedes que aparecen en la home. Agregá, borrá o reordená las que quieras."
+    folder: "src/content/resenas"
+    create: true
+    delete: true
+    extension: "yaml"
+    format: "yaml"
+    identifier_field: zona
+    reorder: { key: orden }
+    fields:
+      - { label: "Captura de WhatsApp", name: "imagen", widget: "image", media_folder: "/public/resenas", public_folder: "/resenas", hint: "Recorte de la conversación real con el huésped. Se muestra tal cual (no se edita el color), enmarcada con los colores del sitio." }
+      - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
+      - { label: "Texto (para lectores de pantalla, no se ve)", name: "texto", widget: "text", hint: "Escribí lo mismo que dice la captura: no se muestra en la tarjeta, pero lo necesitan los lectores de pantalla." }
+
   - name: "config-inicio-final"
     label: "🏠 Inicio → Bloque final"
     description: "El último cartel de la home (\"¿Ya sabés qué fechas necesitás?\"), con su foto de fondo."
+    editor: { preview: true }
     files:
       - name: "inicio-cta"
         label: "Bloque final"
@@ -144,6 +298,31 @@ collections:
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Imagen de fondo", name: "foto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
+
+  - name: "config-nosotros"
+    label: "👨‍👩‍👦 Nosotros"
+    description: "La foto de familia, el título, los párrafos y los 3 puntos de la página \"Nosotros\"."
+    editor: { preview: true }
+    files:
+      - name: "nosotros"
+        label: "Textos de Nosotros"
+        file: "src/content/config/nosotros.yaml"
+        fields:
+          - label: "Nosotros"
+            name: "nosotros"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "nosotros" }
+              - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/public/nosotros", public_folder: "/nosotros" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Primer párrafo", name: "texto1", widget: "text" }
+              - { label: "Segundo párrafo", name: "texto2", widget: "text" }
+              - { label: "Título del punto 1", name: "punto1Titulo", widget: "string" }
+              - { label: "Texto del punto 1", name: "punto1Texto", widget: "text" }
+              - { label: "Título del punto 2", name: "punto2Titulo", widget: "string" }
+              - { label: "Texto del punto 2", name: "punto2Texto", widget: "text" }
+              - { label: "Título del punto 3", name: "punto3Titulo", widget: "string" }
+              - { label: "Texto del punto 3", name: "punto3Texto", widget: "text" }
 
   - name: "departamentos"
     label: "🏢 Departamentos"
@@ -209,170 +388,6 @@ collections:
         hint: "Se usa en el carrusel de la home y en el listado de departamentos. Admite foto o video. Si se deja vacío, se usa la primera foto de arriba (o el video, solo si el depto no tiene ninguna foto todavía)."
         media_folder: "/public/departamentos/{{slug}}"
         public_folder: "/departamentos/{{slug}}"
-
-  - name: "config-nosotros"
-    label: "👨‍👩‍👦 Nosotros"
-    description: "La foto de familia, el título, los párrafos y los 3 puntos de la página \"Nosotros\"."
-    files:
-      - name: "nosotros"
-        label: "Textos de Nosotros"
-        file: "src/content/config/nosotros.yaml"
-        fields:
-          - label: "Nosotros"
-            name: "nosotros"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "nosotros" }
-              - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/public/nosotros", public_folder: "/nosotros" }
-              - { label: "Título", name: "titulo", widget: "string" }
-              - { label: "Primer párrafo", name: "texto1", widget: "text" }
-              - { label: "Segundo párrafo", name: "texto2", widget: "text" }
-              - { label: "Título del punto 1", name: "punto1Titulo", widget: "string" }
-              - { label: "Texto del punto 1", name: "punto1Texto", widget: "text" }
-              - { label: "Título del punto 2", name: "punto2Titulo", widget: "string" }
-              - { label: "Texto del punto 2", name: "punto2Texto", widget: "text" }
-              - { label: "Título del punto 3", name: "punto3Titulo", widget: "string" }
-              - { label: "Texto del punto 3", name: "punto3Texto", widget: "text" }
-
-  - name: "config-diferenciales"
-    label: "✨ Diferenciales"
-    description: "El bloque \"Sin seña\", las 3 tarjetas secundarias y el aviso sobre asignación de departamentos (aparecen en la home)."
-    files:
-      - name: "diferenciales"
-        label: "Textos de Diferenciales"
-        file: "src/content/config/diferenciales.yaml"
-        fields:
-          - label: "Diferenciales"
-            name: "diferenciales"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "diferenciales" }
-              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
-              - { label: "Título principal", name: "titulo", widget: "string" }
-              - { label: "Texto principal", name: "texto", widget: "text" }
-              - label: "Tarjetas secundarias"
-                name: "cards"
-                widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada tarjeta es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
-                summary: "{{fields.titulo}}"
-                fields:
-                  - { label: "Título", name: "titulo", widget: "string" }
-                  - { label: "Texto", name: "texto", widget: "text" }
-              - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
-              - { label: "Texto del aviso de asignación", name: "importanteTexto", widget: "text" }
-
-  - name: "config-que-incluye"
-    label: "🧺 Qué incluye"
-    description: "El texto de cada uno de los 8 servicios que se muestran en la home."
-    files:
-      - name: "que-incluye"
-        label: "Textos de Qué incluye"
-        file: "src/content/config/que-incluye.yaml"
-        fields:
-          - label: "Qué incluye"
-            name: "que-incluye"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "que-incluye" }
-              - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
-              - { label: "Título", name: "titulo", widget: "string" }
-              - { label: "Bajada", name: "texto", widget: "text" }
-              - label: "Servicios"
-                name: "items"
-                widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando."
-                summary: "{{fields.titulo}}"
-                fields:
-                  - label: "Ícono"
-                    name: "icono"
-                    widget: "select"
-                    hint: "Elegí de la lista, así el dibujo siempre queda prolijo (no se puede escribir cualquier cosa acá)."
-                    options:
-                      - { label: "WiFi", value: "wifi" }
-                      - { label: "Cocina", value: "cocina" }
-                      - { label: "Ropa blanca", value: "ropaBlanca" }
-                      - { label: "TV", value: "tv" }
-                      - { label: "Aire acondicionado", value: "aire" }
-                      - { label: "Calefacción", value: "calefaccion" }
-                      - { label: "Ascensor", value: "ascensor" }
-                      - { label: "Cochera", value: "cochera" }
-                      - { label: "Amenities (pileta, solarium, etc.)", value: "amenities" }
-                      - { label: "Seguridad", value: "seguridad" }
-                  - { label: "Título", name: "titulo", widget: "string" }
-                  - { label: "Texto", name: "texto", widget: "text" }
-
-  - name: "config-como-trabajamos"
-    label: "🔁 Cómo trabajamos"
-    description: "Los 4 pasos del proceso, en la home."
-    files:
-      - name: "como-trabajamos"
-        label: "Textos de Cómo trabajamos"
-        file: "src/content/config/como-trabajamos.yaml"
-        fields:
-          - label: "Cómo trabajamos"
-            name: "como-trabajamos"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "como-trabajamos" }
-              - { label: "Título", name: "titulo", widget: "string" }
-              - { label: "Bajada", name: "texto", widget: "text" }
-              - label: "Pasos"
-                name: "pasos"
-                widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando. El número (01, 02...) lo pone el diseño solo según el orden, no se escribe acá."
-                summary: "{{fields.titulo}}"
-                fields:
-                  - { label: "Título", name: "titulo", widget: "string" }
-                  - { label: "Texto", name: "texto", widget: "text" }
-              - { label: "Título del cartel \"¿Cómo se reserva?\"", name: "reservaTitulo", widget: "string" }
-              - { label: "Texto del cartel \"¿Cómo se reserva?\"", name: "reservaTexto", widget: "text" }
-
-  - name: "resenas"
-    label: "⭐ Reseñas"
-    label_singular: "Reseña"
-    description: "Las reseñas de huéspedes que aparecen en la home. Agregá, borrá o reordená las que quieras."
-    folder: "src/content/resenas"
-    create: true
-    delete: true
-    extension: "yaml"
-    format: "yaml"
-    identifier_field: zona
-    reorder: { key: orden }
-    fields:
-      - { label: "Captura de WhatsApp", name: "imagen", widget: "image", media_folder: "/public/resenas", public_folder: "/resenas", hint: "Recorte de la conversación real con el huésped. Se muestra tal cual (no se edita el color), enmarcada con los colores del sitio." }
-      - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
-      - { label: "Texto (para lectores de pantalla, no se ve)", name: "texto", widget: "text", hint: "Escribí lo mismo que dice la captura: no se muestra en la tarjeta, pero lo necesitan los lectores de pantalla." }
-
-  - name: "config-zonas"
-    label: "📍 Zonas"
-    description: "El bloque de zonas (Recoleta/Palermo) y los 4 accesos, en la home."
-    files:
-      - name: "zonas"
-        label: "Textos de Zonas"
-        file: "src/content/config/zonas.yaml"
-        fields:
-          - label: "Zonas"
-            name: "zonas"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas" }
-              - { label: "Título", name: "titulo", widget: "string" }
-              - { label: "Bajada", name: "texto", widget: "text" }
-              - label: "Tarjetas de zona"
-                name: "zonas"
-                widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando (ej: sumar una tarjeta de Balvanera más adelante)."
-                summary: "{{fields.nombre}}"
-                fields:
-                  - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
-                  - { label: "Subtítulo", name: "subtitulo", widget: "string" }
-                  - { label: "Texto", name: "texto", widget: "text" }
-              - label: "Accesos (la lista de 4 con ícono, abajo de todo)"
-                name: "accesos"
-                widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada acceso es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
-                summary: "{{fields.texto}}"
-                field: { label: "Texto", name: "texto", widget: "string" }
 
   - name: "config"
     label: "⚙️ General"
