@@ -29,7 +29,7 @@ const resumen: DeptoResumen[] = await Promise.all(
   title="Departamentos"
   description="Explorá los departamentos disponibles en Recoleta, Palermo y Balvanera, y filtrá por barrio o cantidad de personas."
 >
-  <section class="mx-auto max-w-[90rem] px-4 pt-16 sm:px-6">
+  <section class="mx-auto max-w-[90rem] px-7 pt-16 sm:px-10">
     <h1 class="font-display text-4xl text-ink sm:text-5xl">Departamentos</h1>
     <p class="mt-3 font-body text-base text-muted">
       Filtrá según lo que necesites. Los precios y la disponibilidad exacta se
@@ -37,7 +37,7 @@ const resumen: DeptoResumen[] = await Promise.all(
     </p>
   </section>
 
-  <section data-no-reveal class="mx-auto max-w-[90rem] px-4 pb-16 sm:px-6">
+  <section data-no-reveal class="mx-auto max-w-[90rem] px-7 pb-16 sm:px-10">
     <div class="mt-8">
       <DepartamentosExplorer client:load deptos={resumen} />
     </div>

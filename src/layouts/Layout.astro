@@ -23,7 +23,7 @@ interface Props {
   image?: string;
 }
 
-const { title, description = SITE.descripcion, image = "/departamentos/depto-20-callao-966/01.jpg" } = Astro.props;
+const { title, description = SITE.descripcion, image = "/seo/og-image.jpg" } = Astro.props;
 const pageTitle = `${SITE.nombre} - ${title}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image, Astro.site).href;
