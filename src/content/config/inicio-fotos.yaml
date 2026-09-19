@@ -1,9 +1,5 @@
-inicio:
-  id: "inicio"
-  heroTitulo: "Departamentos listos para disfrutar Buenos Aires."
-  heroDestacado1: "más de 60 departamentos"
-  heroDestacado2: "1 a 5 personas"
-  heroDestacado3: "abonás al ingresar"
+inicioFotos:
+  id: "inicio-fotos"
   heroSlides:
     - archivo: "/hero/obelisco-1.jpg"
     - archivo: "/hero/video-av-callao.mp4"
@@ -32,13 +28,3 @@ inicio:
     - archivo: "/hero/sanatorio-finochietto.jpg"
     - archivo: "/hero/sanatorio-guemes.jpg"
     - archivo: "/hero/sanatorio-otamendi.jpg"
-  deptosTexto1: "Tenemos opciones para parejas, personas solas, familias, pacientes del interior, viajes laborales y grupos chicos que buscan una estadía cómoda en zonas estratégicas de CABA."
-  deptosTexto2: "Una muestra de lo que tenemos disponible en Recoleta y Palermo. Se van sumando departamentos todo el tiempo, consultanos por el que más te interese."
-  ayudaTitulo: "¿Ya sabés cuándo necesitás alojamiento?"
-  ayudaTexto: "Contanos las fechas, cuántos son y si tenés mascota. Con eso te ayudamos a elegir el departamento que mejor se adapte, sin tener que revisar los 60 vos mismo."
-  ayudaBullet1: "Respuesta rápida por WhatsApp"
-  ayudaBullet2: "Te asesora la misma familia, no un call center"
-  ayudaBullet3: "Sin compromiso: es solo para ayudarte a elegir"
-  ctaTitulo: "¿Ya sabés qué fechas necesitás?"
-  ctaTexto: "Mirá los departamentos que tenemos y consultanos por el que mejor se adapte a lo que necesitás."
-  ctaFoto: "/inicio/cta.jpg"

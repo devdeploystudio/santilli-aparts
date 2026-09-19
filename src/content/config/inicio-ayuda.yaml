@@ -1,0 +1,8 @@
+inicioAyuda:
+  id: "inicio-ayuda"
+  titulo: "¿Ya sabés cuándo necesitás alojamiento?"
+  texto: "Contanos las fechas, cuántos son y si tenés mascota. Con eso te ayudamos a elegir el departamento que mejor se adapte, sin tener que revisar los 60 vos mismo."
+  items:
+    - texto: "Respuesta rápida por WhatsApp"
+    - texto: "Te asesora la misma familia, no un call center"
+    - texto: "Sin compromiso: es solo para ayudarte a elegir"

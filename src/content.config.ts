@@ -85,19 +85,37 @@ const config = defineCollection({
   }),
 });
 
-// Hero + bloque "Nuestros departamentos" + ayuda a elegir + CTA final: todo
-// vive en la home, agrupado como "Inicio" en el panel.
-const configInicio = defineCollection({
-  loader: file("./src/content/config/inicio.yaml"),
+// El bloque "Inicio" está partido en 5 colecciones separadas (una por
+// sección de la home) para que el panel las muestre como items
+// independientes dentro de la misma carpeta "🏠 Inicio" - así editar el
+// texto del Hero no mezcla en la misma pantalla las fotos, ni "Nuestros
+// departamentos" con "Ayuda a elegir", etc. Antes era un solo YAML/objeto
+// gigante con todo junto.
+
+const configInicioHero = defineCollection({
+  loader: file("./src/content/config/inicio-hero.yaml"),
   schema: z.object({
     id: z.string(),
     heroTitulo: z.string(),
-    // Las 3 frases resaltadas del párrafo del Hero (subrayado animado).
-    // El texto que las conecta queda fijo en el componente para no
-    // romper la animación armada a mano.
+    // Párrafo del Hero completo y editable, armado en 7 piezas en este
+    // orden: heroPre + [heroDestacado1] + heroEntre1 + [heroDestacado2] +
+    // heroEntre2 + [heroDestacado3] + heroFinal. Los 3 "heroDestacadoN"
+    // son los que salen subrayados con la animación; el resto es texto
+    // plano, pero también editable (antes quedaba fijo en el componente).
+    heroPre: z.string(),
     heroDestacado1: z.string(),
+    heroEntre1: z.string(),
     heroDestacado2: z.string(),
+    heroEntre2: z.string(),
     heroDestacado3: z.string(),
+    heroFinal: z.string(),
+  }),
+});
+
+const configInicioFotos = defineCollection({
+  loader: file("./src/content/config/inicio-fotos.yaml"),
+  schema: z.object({
+    id: z.string(),
     // Vidriera rotativa de fotos/video del barrio en el Hero — editable
     // desde el panel (agregar, borrar, reordenar). "archivo" admite foto o
     // video (se detecta por extensión al mostrarlo); "poster" solo aplica
@@ -108,21 +126,44 @@ const configInicio = defineCollection({
         poster: sinVacios(z.string()),
       }),
     ),
-    deptosTexto1: z.string(),
-    deptosTexto2: z.string(),
-    ayudaTitulo: z.string(),
-    ayudaTexto: z.string(),
-    ayudaBullet1: z.string(),
-    ayudaBullet2: z.string(),
-    ayudaBullet3: z.string(),
-    ctaTitulo: z.string(),
-    ctaTexto: z.string(),
+  }),
+});
+
+const configInicioDeptos = defineCollection({
+  loader: file("./src/content/config/inicio-deptos.yaml"),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    texto1: z.string(),
+    texto2: z.string(),
+  }),
+});
+
+const configInicioAyuda = defineCollection({
+  loader: file("./src/content/config/inicio-ayuda.yaml"),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    texto: z.string(),
+    // Lista dinámica (agregar/borrar/reordenar desde el panel) en vez de
+    // 3 campos fijos (ayudaBullet1/2/3 antes) - así se pueden sumar o
+    // sacar puntos sin tocar el schema.
+    items: z.array(z.object({ texto: z.string() })),
+  }),
+});
+
+const configInicioCta = defineCollection({
+  loader: file("./src/content/config/inicio-cta.yaml"),
+  schema: z.object({
+    id: z.string(),
+    titulo: z.string(),
+    texto: z.string(),
     // Path a /public (no astro:assets/image()): en el hosting de Cloudflare
     // la optimización de imagen en build (sharp) generaba un endpoint
     // /_image en vez de un archivo estático, que no funciona sin server
     // runtime — se rompía en el deploy aunque local funcionara bien. Mismo
     // criterio que las fotos de departamentos: archivo plano ya comprimido.
-    ctaFoto: z.string(),
+    foto: z.string(),
   }),
 });
 
@@ -150,16 +191,18 @@ const configDiferenciales = defineCollection({
   schema: z.object({
     id: z.string(),
     // Foto de fondo de toda la sección (path a /public, mismo criterio que
-    // ctaFoto/nosotros foto: ver comentario en configInicio).
+    // foto/configInicioCta: ver comentario ahí).
     fotoFondo: z.string(),
     titulo: z.string(),
     texto: z.string(),
-    secundario1Titulo: z.string(),
-    secundario1Texto: z.string(),
-    secundario2Titulo: z.string(),
-    secundario2Texto: z.string(),
-    secundario3Titulo: z.string(),
-    secundario3Texto: z.string(),
+    // Lista dinámica (agregar/borrar/reordenar) en vez de 3 campos fijos
+    // (secundario1/2/3 antes). El ícono de cada tarjeta rota entre un set
+    // fijo de dibujos (ver ICONOS_CARDS en el componente) según la
+    // posición, no es elegible desde el panel - son decorativos, no hay
+    // uno "correcto" por tarjeta como sí pasa en Qué incluye (ahí el
+    // ícono SÍ importa, es wifi/cocina/etc., y por eso ahí es un campo
+    // elegible).
+    cards: z.array(z.object({ titulo: z.string(), texto: z.string() })),
     importanteTitulo: z.string(),
     importanteTexto: z.string(),
   }),
@@ -172,14 +215,31 @@ const configQueIncluye = defineCollection({
     fotoFondo: z.string(),
     titulo: z.string(),
     texto: z.string(),
-    ropaBlancaTexto: z.string(),
-    wifiTexto: z.string(),
-    tvTexto: z.string(),
-    cocinaTexto: z.string(),
-    aireTexto: z.string(),
-    seguridadTexto: z.string(),
-    amenitiesTexto: z.string(),
-    cocheraTexto: z.string(),
+    // Lista dinámica (agregar/borrar/reordenar) en vez de un campo fijo
+    // por servicio. Acá el ícono SÍ importa (tiene que representar bien
+    // wifi/cocina/etc., a diferencia de las cards decorativas de
+    // Diferenciales/Zonas), así que es un campo elegible de un set fijo
+    // (mismos íconos que ya existían como servicios en ServiceIcon.astro)
+    // en vez de texto libre, para que el cliente no pueda dejarlo vacío o
+    // escribir cualquier cosa ahí.
+    items: z.array(
+      z.object({
+        icono: z.enum([
+          "wifi",
+          "cocina",
+          "ropaBlanca",
+          "tv",
+          "aire",
+          "calefaccion",
+          "ascensor",
+          "cochera",
+          "amenities",
+          "seguridad",
+        ]),
+        titulo: z.string(),
+        texto: z.string(),
+      }),
+    ),
   }),
 });
 
@@ -189,14 +249,11 @@ const configComoTrabajamos = defineCollection({
     id: z.string(),
     titulo: z.string(),
     texto: z.string(),
-    paso1Titulo: z.string(),
-    paso1Texto: z.string(),
-    paso2Titulo: z.string(),
-    paso2Texto: z.string(),
-    paso3Titulo: z.string(),
-    paso3Texto: z.string(),
-    paso4Titulo: z.string(),
-    paso4Texto: z.string(),
+    // Lista dinámica (agregar/borrar/reordenar) en vez de 4 pasos fijos
+    // (paso1..4 antes). El número ("01", "02"...) se calcula solo según
+    // la posición en la lista, no se guarda como dato - así reordenar
+    // nunca deja un número pisado o repetido.
+    pasos: z.array(z.object({ titulo: z.string(), texto: z.string() })),
     reservaTitulo: z.string(),
     reservaTexto: z.string(),
   }),
@@ -208,14 +265,15 @@ const configZonas = defineCollection({
     id: z.string(),
     titulo: z.string(),
     texto: z.string(),
-    recoletaSubtitulo: z.string(),
-    recoletaTexto: z.string(),
-    palermoSubtitulo: z.string(),
-    palermoTexto: z.string(),
-    acceso1Texto: z.string(),
-    acceso2Texto: z.string(),
-    acceso3Texto: z.string(),
-    acceso4Texto: z.string(),
+    // Antes "Recoleta"/"Palermo" fijos en código, solo subtítulo/texto
+    // editables. Ahora la tarjeta completa (incluido el nombre) es un
+    // ítem de lista - se pueden agregar/sacar/reordenar zonas destacadas
+    // sin tocar código. El link "Ver departamentos en {nombre}" de cada
+    // tarjeta filtra por ese mismo nombre.
+    zonas: z.array(z.object({ nombre: z.string(), subtitulo: z.string(), texto: z.string() })),
+    // Ídem cards de Diferenciales: el ícono es decorativo, rota según la
+    // posición del ítem en la lista, no es elegible desde el panel.
+    accesos: z.array(z.object({ texto: z.string() })),
   }),
 });
 
@@ -223,7 +281,11 @@ export const collections = {
   departamentos,
   resenas,
   config,
-  configInicio,
+  configInicioHero,
+  configInicioFotos,
+  configInicioDeptos,
+  configInicioAyuda,
+  configInicioCta,
   configNosotros,
   configDiferenciales,
   configQueIncluye,

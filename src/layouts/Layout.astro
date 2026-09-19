@@ -21,9 +21,10 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
 }
 
-const { title, description = SITE.descripcion, image = "/seo/og-image.jpg" } = Astro.props;
+const { title, description = SITE.descripcion, image = "/seo/og-image.jpg", noindex = false } = Astro.props;
 const pageTitle = `${SITE.nombre} - ${title}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image, Astro.site).href;
@@ -89,6 +90,7 @@ const jsonLd = {
     <title>{pageTitle}</title>
     <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:site_name" content={SITE.nombre} />
     <meta property="og:locale" content="es_AR" />

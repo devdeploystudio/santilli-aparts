@@ -1,0 +1,173 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Cada link lleva directo a esa colección puntual dentro del panel real
+// (Sveltia CMS, en /admin/). Si no estás logueada todavía, Sveltia pide el
+// login de GitHub primero y después te lleva ahí solo. Esta página es solo
+// un menú más claro para llegar, no maneja nada de eso — no va en el menú
+// de navegación del sitio (no es algo que un visitante deba encontrar), el
+// cliente la guarda en favoritos.
+const grupos = [
+  {
+    emoji: "🏠",
+    nombre: "Inicio",
+    items: [
+      { label: "Portada: texto", coleccion: "config-inicio-portada-texto" },
+      { label: "Portada: fotos", coleccion: "config-inicio-portada-fotos" },
+      { label: "Nuestros departamentos", coleccion: "config-inicio-deptos" },
+      { label: "Ayuda a elegir", coleccion: "config-inicio-ayuda" },
+      { label: "Bloque final", coleccion: "config-inicio-final" },
+    ],
+  },
+  {
+    emoji: "🏢",
+    nombre: "Departamentos",
+    items: [{ label: "Ver, agregar y editar departamentos", coleccion: "departamentos" }],
+  },
+  {
+    emoji: "👨‍👩‍👦",
+    nombre: "Nosotros",
+    items: [{ label: "Foto, textos y puntos de la página", coleccion: "config-nosotros" }],
+  },
+  {
+    emoji: "✨",
+    nombre: "Diferenciales",
+    items: [{ label: "Textos y tarjetas", coleccion: "config-diferenciales" }],
+  },
+  {
+    emoji: "🧺",
+    nombre: "Qué incluye",
+    items: [{ label: "Servicios (título, texto e ícono de cada uno)", coleccion: "config-que-incluye" }],
+  },
+  {
+    emoji: "🔁",
+    nombre: "Cómo trabajamos",
+    items: [{ label: "Los pasos del proceso", coleccion: "config-como-trabajamos" }],
+  },
+  {
+    emoji: "⭐",
+    nombre: "Reseñas",
+    items: [{ label: "Agregar, borrar y reordenar reseñas", coleccion: "resenas" }],
+  },
+  {
+    emoji: "📍",
+    nombre: "Zonas",
+    items: [{ label: "Tarjetas de zona y accesos", coleccion: "config-zonas" }],
+  },
+  {
+    emoji: "⚙️",
+    nombre: "General",
+    items: [{ label: "Número de WhatsApp", coleccion: "config" }],
+  },
+];
+---
+
+<Layout title="Editor" description="Menú para editar el contenido del sitio." noindex>
+  <section class="mx-auto max-w-[90rem] px-7 py-16 sm:px-10">
+    {/* Portón de mail: NO es seguridad real (es un sitio 100% estático, no
+       hay backend que valide nada — cualquiera que abra el código fuente
+       ve esta misma lista de mails permitidos). Es solo para que un
+       visitante común que llega a /editor de casualidad no vea directo el
+       menú de edición. La seguridad de verdad sigue siendo el login de
+       GitHub de Sveltia en /admin/, que es server-side de verdad. */}
+    <div id="editor-gate" class="mx-auto max-w-sm py-20 text-center">
+      <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Editor</p>
+      <h1 class="mt-2 font-display text-2xl text-ink">Ingresá tu mail</h1>
+      <p class="mt-3 font-body text-sm text-muted">
+        Esta sección es solo para el equipo de Santilli Aparts y Deploy.
+      </p>
+      <form id="editor-gate-form" class="mt-6 flex flex-col gap-3">
+        <input
+          type="email"
+          id="editor-gate-email"
+          required
+          placeholder="tu@mail.com"
+          class="rounded-xl border border-hairline bg-surface px-4 py-3 text-center font-body text-sm text-ink outline-none focus:border-gold-active"
+        />
+        <button
+          type="submit"
+          class="btn-press rounded-full bg-gold px-6 py-3 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active"
+        >
+          Continuar
+        </button>
+        <p id="editor-gate-error" class="hidden font-body text-sm text-red-600">
+          Ese mail no tiene acceso a esta sección.
+        </p>
+      </form>
+    </div>
+
+    <div id="editor-content" class="hidden">
+      <p class="font-body text-sm font-semibold uppercase tracking-wide text-gold-active">Editor</p>
+      <h1 class="mt-2 font-display text-3xl text-ink sm:text-4xl">¿Qué querés editar?</h1>
+      <p class="mt-4 max-w-2xl font-body text-base text-muted">
+        Elegí abajo qué parte del sitio querés cambiar. La primera vez te va a
+        pedir iniciar sesión con una cuenta de GitHub, algo así como el usuario
+        con el que entrás a cualquier servicio: es gratis y podés crearla en un
+        minuto usando tu mismo Gmail. Una vez que la tengas, siempre vas a
+        entrar con esa misma cuenta. Es lo que protege el sitio, para que solo
+        vos puedas cambiar el contenido.
+      </p>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          grupos.map((grupo) => (
+            <article class="rounded-2xl border border-hairline bg-surface p-6">
+              <p class="font-display text-lg text-ink">
+                <span aria-hidden="true">{grupo.emoji}</span> {grupo.nombre}
+              </p>
+              <div class="mt-4 flex flex-col gap-2.5">
+                {grupo.items.map((item) => (
+                  <a
+                    href={`/admin/#/collections/${item.coleccion}`}
+                    class="rounded-xl border border-hairline px-4 py-3 font-body text-sm font-semibold text-ink transition-colors hover:border-gold-active hover:text-gold-active"
+                  >
+                    {item.label} →
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Lista de mails permitidos. Solo obscurece el acceso casual: ver el
+  // comentario grande más arriba, en el JSX del portón.
+  const MAILS_PERMITIDOS = [
+    "marumungo@gmail.com",
+    "francosantilli71@gmail.com",
+  ];
+
+  const STORAGE_KEY = "editor-mail-ok";
+
+  const gate = document.getElementById("editor-gate")!;
+  const content = document.getElementById("editor-content")!;
+  const form = document.getElementById("editor-gate-form") as HTMLFormElement;
+  const input = document.getElementById("editor-gate-email") as HTMLInputElement;
+  const error = document.getElementById("editor-gate-error")!;
+
+  function desbloquear() {
+    gate.classList.add("hidden");
+    content.classList.remove("hidden");
+  }
+
+  const mailGuardado = localStorage.getItem(STORAGE_KEY);
+  if (mailGuardado && MAILS_PERMITIDOS.includes(mailGuardado)) {
+    desbloquear();
+  }
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const mail = input.value.trim().toLowerCase();
+    if (MAILS_PERMITIDOS.includes(mail)) {
+      localStorage.setItem(STORAGE_KEY, mail);
+      error.classList.add("hidden");
+      desbloquear();
+    } else {
+      error.classList.remove("hidden");
+    }
+  });
+</script>

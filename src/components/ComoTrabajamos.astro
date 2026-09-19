@@ -4,12 +4,10 @@ import MarginLines from "./MarginLines.astro";
 
 const c = (await getEntry("configComoTrabajamos", "como-trabajamos"))!.data;
 
-const pasos = [
-  { n: "01", titulo: c.paso1Titulo, texto: c.paso1Texto },
-  { n: "02", titulo: c.paso2Titulo, texto: c.paso2Texto },
-  { n: "03", titulo: c.paso3Titulo, texto: c.paso3Texto },
-  { n: "04", titulo: c.paso4Titulo, texto: c.paso4Texto },
-];
+// El número ("01", "02"...) sale de la posición en la lista, no es un
+// dato guardado - así se puede agregar/sacar/reordenar pasos desde el
+// panel sin que quede un número pisado o repetido.
+const pasos = c.pasos.map((p, i) => ({ ...p, n: String(i + 1).padStart(2, "0") }));
 ---
 
 <section id="como-se-reserva" class="relative scroll-mt-24 border-y border-hairline bg-surface">

@@ -6,11 +6,12 @@ import HeroShowcase from "./HeroShowcase.tsx";
 import { imageSize } from "../lib/imageSize";
 
 const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
-const inicio = (await getEntry("configInicio", "inicio"))!.data;
+const inicio = (await getEntry("configInicioHero", "inicioHero"))!.data;
+const fotos = (await getEntry("configInicioFotos", "inicioFotos"))!.data;
 // null para los slides de video (sharp no lee dimensiones de mp4) - queda
 // igual que antes para esos, HeroShowcase ya maneja width/height opcionales.
 const heroSlidesConTamaño = await Promise.all(
-  inicio.heroSlides.map(async (s) => ({ ...s, ...((await imageSize(s.archivo)) ?? {}) })),
+  fotos.heroSlides.map(async (s) => ({ ...s, ...((await imageSize(s.archivo)) ?? {}) })),
 );
 ---
 
@@ -30,10 +31,10 @@ const heroSlidesConTamaño = await Promise.all(
         </h1>
 
         <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-muted sm:text-xl">
-          Contamos con <span class="ink-underline font-semibold text-ink" style="--delay:825ms">{inicio.heroDestacado1}</span>{" "}
-          en Recoleta y Palermo, para <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">{inicio.heroDestacado2}</span>,{" "}
-          y no pedimos seña: <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">{inicio.heroDestacado3}</span>.{" "}
-          Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia.
+          {inicio.heroPre} <span class="ink-underline font-semibold text-ink" style="--delay:825ms">{inicio.heroDestacado1}</span>{" "}
+          {inicio.heroEntre1} <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">{inicio.heroDestacado2}</span>,{" "}
+          {inicio.heroEntre2} <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">{inicio.heroDestacado3}</span>.{" "}
+          {inicio.heroFinal}
         </p>
 
         <div class="mt-9 flex flex-wrap gap-4">

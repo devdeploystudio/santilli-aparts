@@ -11,42 +11,22 @@ const { pines } = Astro.props;
 
 const z = (await getEntry("configZonas", "zonas"))!.data;
 
-// Solo Recoleta y Palermo como cards destacadas (ahí trabajamos
-// principalmente); Balvanera sigue existiendo como zona real de deptos
-// puntuales (filtro, mapa), pero no se destaca acá. El nombre de cada
-// zona queda fijo en código (lo usa también el link de filtro de
-// /departamentos), solo subtítulo/texto se editan desde /admin.
-const zonas = [
-  {
-    nombre: "Recoleta",
-    subtitulo: z.recoletaSubtitulo,
-    texto: z.recoletaTexto,
-  },
-  {
-    nombre: "Palermo",
-    subtitulo: z.palermoSubtitulo,
-    texto: z.palermoTexto,
-  },
-];
+// Tarjetas de zona destacada (nombre, subtítulo y texto) y los 4 accesos
+// de abajo son listas editables desde /admin: se pueden agregar, sacar y
+// reordenar. Balvanera sigue existiendo como zona real de deptos
+// puntuales (filtro, mapa), aunque no tenga una tarjeta destacada acá.
+const zonas = z.zonas;
 
-const accesos = [
-  {
-    texto: z.acceso1Texto,
-    path: "M6 3h12a2 2 0 0 1 2 2v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2z M4 12h16 M8 20l-1.5 2 M17 20l1.5 2",
-  },
-  {
-    texto: z.acceso2Texto,
-    path: "M4 4h16v16H4z M12 8v8 M8 12h8",
-  },
-  {
-    texto: z.acceso3Texto,
-    path: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
-  },
-  {
-    texto: z.acceso4Texto,
-    path: "M12 2l7 19-7-4-7 4z",
-  },
+// El ícono de cada acceso es decorativo, rota según la posición del ítem
+// en la lista (no es elegible desde el panel) - ver mismo criterio en
+// DiferencialesSection.
+const ICONOS_ACCESOS = [
+  "M6 3h12a2 2 0 0 1 2 2v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2z M4 12h16 M8 20l-1.5 2 M17 20l1.5 2",
+  "M4 4h16v16H4z M12 8v8 M8 12h8",
+  "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
+  "M12 2l7 19-7-4-7 4z",
 ];
+const accesos = z.accesos.map((a, i) => ({ ...a, path: ICONOS_ACCESOS[i % ICONOS_ACCESOS.length] }));
 
 // Mismos centros aproximados usados al asignar zona/coords a cada depto
 // (ver script de carga de datos): solo para ubicar el nombre del barrio en

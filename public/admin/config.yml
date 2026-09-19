@@ -15,22 +15,68 @@ local_backend: true
 media_folder: "src/assets"
 public_folder: "src/assets"
 
+# Sin esto, Sveltia muestra un panel de vista previa en vivo al lado del
+# formulario y los campos de texto quedan comprimidos a la mitad del ancho
+# de la pantalla. Ninguna colección de este panel usa esa vista previa (no
+# hay una plantilla configurada que la aproveche), así que solo restaba
+# espacio - desactivada global para que el formulario ocupe todo el ancho.
+editor:
+  preview: false
+
 collections:
-  - name: "config-inicio"
-    label: "🏠 Inicio → Textos"
-    description: "El título del Hero, el bloque \"Nuestros departamentos\", la ayuda a elegir y el cierre final. Todo en la home."
+  # El bloque "Inicio" (home) está partido en varias carpetitas chicas,
+  # una por cada parte de la pantalla - así editar el título de la
+  # portada nunca mezcla en la misma pantalla las fotos, ni con "Ayuda a
+  # elegir" o el resto. Todas comparten el prefijo "🏠 Inicio →" para
+  # que se vean agrupadas una al lado de la otra en la lista de la
+  # izquierda (Sveltia no soporta carpetas anidadas de verdad, así que
+  # esto es lo más parecido). Ninguna usa la palabra técnica "Hero": para
+  # el cliente esto es "la portada", la primera pantalla que se ve al
+  # entrar al sitio.
+  - name: "config-inicio-portada-texto"
+    label: "🏠 Inicio → Portada (texto)"
+    description: "El título grande y el párrafo de abajo, en la primera pantalla de la home."
     files:
-      - name: "inicio"
-        label: "Textos de Inicio"
-        file: "src/content/config/inicio.yaml"
+      - name: "inicio-hero"
+        label: "Texto de la portada"
+        file: "src/content/config/inicio-hero.yaml"
         fields:
-          - label: "Inicio"
-            name: "inicio"
+          - label: "Portada"
+            name: "inicioHero"
             widget: "object"
             fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio" }
-              - { label: "Título principal (portada)", name: "heroTitulo", widget: "text" }
-              - label: "Fotos y videos del Hero (van pasando solas)"
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-hero" }
+              - { label: "Título principal", name: "heroTitulo", widget: "text" }
+              - label: "Párrafo de abajo del título"
+                name: "parrafo_nota"
+                widget: "hidden"
+                default: true
+                hint: "El párrafo se arma en 7 partes, en este orden exacto, para que las 3 frases resaltadas queden siempre subrayadas con la animación."
+              - { label: "1. Texto inicial", name: "heroPre", widget: "string", hint: "Ej: \"Contamos con\"" }
+              - label: "2. Frase resaltada"
+                name: "heroDestacado1"
+                widget: "string"
+                hint: "Sale subrayada con una animación. Ej: \"más de 60 departamentos\""
+              - { label: "3. Texto siguiente", name: "heroEntre1", widget: "string", hint: "Ej: \"en Recoleta y Palermo, para\"" }
+              - { label: "4. Frase resaltada", name: "heroDestacado2", widget: "string", hint: "Ej: \"1 a 5 personas\"" }
+              - { label: "5. Texto siguiente", name: "heroEntre2", widget: "string", hint: "Ej: \"y no pedimos seña:\"" }
+              - { label: "6. Frase resaltada", name: "heroDestacado3", widget: "string", hint: "Ej: \"abonás al ingresar\"" }
+              - { label: "7. Resto del párrafo", name: "heroFinal", widget: "text" }
+
+  - name: "config-inicio-portada-fotos"
+    label: "🏠 Inicio → Portada (fotos)"
+    description: "Las fotos y videos que van pasando solos en la primera pantalla de la home."
+    files:
+      - name: "inicio-fotos"
+        label: "Fotos de la portada"
+        file: "src/content/config/inicio-fotos.yaml"
+        fields:
+          - label: "Fotos"
+            name: "inicioFotos"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-fotos" }
+              - label: "Fotos y videos (van pasando solas)"
                 name: "heroSlides"
                 widget: "list"
                 hint: "Se pueden agregar, borrar y reordenar arrastrando. Admite foto o video en el mismo campo (se detecta por la extensión del archivo)."
@@ -42,22 +88,62 @@ collections:
                   fields:
                     - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/hero", public_folder: "/hero" }
                     - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/hero", public_folder: "/hero" }
-              - label: "Frase resaltada 1 (ej: \"más de 60 departamentos\")"
-                name: "heroDestacado1"
-                widget: "string"
-                hint: "Aparece subrayada con una animación. El resto de la frase que la rodea (\"Contamos con... en Recoleta y Palermo, para...\") queda fijo en el diseño."
-              - { label: "Frase resaltada 2 (ej: \"1 a 5 personas\")", name: "heroDestacado2", widget: "string" }
-              - { label: "Frase resaltada 3 (ej: \"abonás al ingresar\")", name: "heroDestacado3", widget: "string" }
-              - { label: "Primer párrafo del bloque \"Nuestros departamentos\"", name: "deptosTexto1", widget: "text" }
-              - { label: "Segundo párrafo del bloque \"Nuestros departamentos\"", name: "deptosTexto2", widget: "text" }
-              - { label: "Título del bloque de ayuda a elegir", name: "ayudaTitulo", widget: "string" }
-              - { label: "Texto del bloque de ayuda a elegir", name: "ayudaTexto", widget: "text" }
-              - { label: "Punto 1 de la lista de ayuda", name: "ayudaBullet1", widget: "string" }
-              - { label: "Punto 2 de la lista de ayuda", name: "ayudaBullet2", widget: "string" }
-              - { label: "Punto 3 de la lista de ayuda", name: "ayudaBullet3", widget: "string" }
-              - { label: "Título del bloque final (\"¿Ya sabés qué fechas necesitás?\")", name: "ctaTitulo", widget: "string" }
-              - { label: "Texto del bloque final", name: "ctaTexto", widget: "text" }
-              - { label: "Imagen de fondo del bloque final", name: "ctaFoto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
+
+  - name: "config-inicio-deptos"
+    label: "🏠 Inicio → Nuestros departamentos"
+    description: "El título y los 2 párrafos de arriba del carrusel de departamentos, en la home."
+    files:
+      - name: "inicio-deptos"
+        label: "Nuestros departamentos"
+        file: "src/content/config/inicio-deptos.yaml"
+        fields:
+          - label: "Nuestros departamentos"
+            name: "inicioDeptos"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-deptos" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Primer párrafo", name: "texto1", widget: "text" }
+              - { label: "Segundo párrafo", name: "texto2", widget: "text" }
+
+  - name: "config-inicio-ayuda"
+    label: "🏠 Inicio → Ayuda a elegir"
+    description: "El bloque \"¿Ya sabés cuándo necesitás alojamiento?\", con el formulario de ayuda, en la home."
+    files:
+      - name: "inicio-ayuda"
+        label: "Ayuda a elegir"
+        file: "src/content/config/inicio-ayuda.yaml"
+        fields:
+          - label: "Ayuda a elegir"
+            name: "inicioAyuda"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-ayuda" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Texto", name: "texto", widget: "text" }
+              - label: "Puntos de la lista (con tilde ✓)"
+                name: "items"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando."
+                summary: "{{fields.texto}}"
+                field: { label: "Punto", name: "texto", widget: "string" }
+
+  - name: "config-inicio-final"
+    label: "🏠 Inicio → Bloque final"
+    description: "El último cartel de la home (\"¿Ya sabés qué fechas necesitás?\"), con su foto de fondo."
+    files:
+      - name: "inicio-cta"
+        label: "Bloque final"
+        file: "src/content/config/inicio-cta.yaml"
+        fields:
+          - label: "Bloque final"
+            name: "inicioCta"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-cta" }
+              - { label: "Título", name: "titulo", widget: "string" }
+              - { label: "Texto", name: "texto", widget: "text" }
+              - { label: "Imagen de fondo", name: "foto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
 
   - name: "departamentos"
     label: "🏢 Departamentos"
@@ -164,12 +250,14 @@ collections:
               - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
               - { label: "Título principal", name: "titulo", widget: "string" }
               - { label: "Texto principal", name: "texto", widget: "text" }
-              - { label: "Título tarjeta 1", name: "secundario1Titulo", widget: "string" }
-              - { label: "Texto tarjeta 1", name: "secundario1Texto", widget: "text" }
-              - { label: "Título tarjeta 2", name: "secundario2Titulo", widget: "string" }
-              - { label: "Texto tarjeta 2", name: "secundario2Texto", widget: "text" }
-              - { label: "Título tarjeta 3", name: "secundario3Titulo", widget: "string" }
-              - { label: "Texto tarjeta 3", name: "secundario3Texto", widget: "text" }
+              - label: "Tarjetas secundarias"
+                name: "cards"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada tarjeta es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
               - { label: "Texto del aviso de asignación", name: "importanteTexto", widget: "text" }
 
@@ -189,14 +277,29 @@ collections:
               - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Bajada", name: "texto", widget: "text" }
-              - { label: "Texto — Ropa blanca", name: "ropaBlancaTexto", widget: "text" }
-              - { label: "Texto — WiFi", name: "wifiTexto", widget: "text" }
-              - { label: "Texto — TV", name: "tvTexto", widget: "text" }
-              - { label: "Texto — Cocina", name: "cocinaTexto", widget: "text" }
-              - { label: "Texto — Aire acondicionado", name: "aireTexto", widget: "text" }
-              - { label: "Texto — Seguridad", name: "seguridadTexto", widget: "text" }
-              - { label: "Texto — Amenities", name: "amenitiesTexto", widget: "text" }
-              - { label: "Texto — Cochera", name: "cocheraTexto", widget: "text" }
+              - label: "Servicios"
+                name: "items"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - label: "Ícono"
+                    name: "icono"
+                    widget: "select"
+                    hint: "Elegí de la lista, así el dibujo siempre queda prolijo (no se puede escribir cualquier cosa acá)."
+                    options:
+                      - { label: "WiFi", value: "wifi" }
+                      - { label: "Cocina", value: "cocina" }
+                      - { label: "Ropa blanca", value: "ropaBlanca" }
+                      - { label: "TV", value: "tv" }
+                      - { label: "Aire acondicionado", value: "aire" }
+                      - { label: "Calefacción", value: "calefaccion" }
+                      - { label: "Ascensor", value: "ascensor" }
+                      - { label: "Cochera", value: "cochera" }
+                      - { label: "Amenities (pileta, solarium, etc.)", value: "amenities" }
+                      - { label: "Seguridad", value: "seguridad" }
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
 
   - name: "config-como-trabajamos"
     label: "🔁 Cómo trabajamos"
@@ -213,14 +316,14 @@ collections:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "como-trabajamos" }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Bajada", name: "texto", widget: "text" }
-              - { label: "Título paso 1", name: "paso1Titulo", widget: "string" }
-              - { label: "Texto paso 1", name: "paso1Texto", widget: "text" }
-              - { label: "Título paso 2", name: "paso2Titulo", widget: "string" }
-              - { label: "Texto paso 2", name: "paso2Texto", widget: "text" }
-              - { label: "Título paso 3", name: "paso3Titulo", widget: "string" }
-              - { label: "Texto paso 3", name: "paso3Texto", widget: "text" }
-              - { label: "Título paso 4", name: "paso4Titulo", widget: "string" }
-              - { label: "Texto paso 4", name: "paso4Texto", widget: "text" }
+              - label: "Pasos"
+                name: "pasos"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El número (01, 02...) lo pone el diseño solo según el orden, no se escribe acá."
+                summary: "{{fields.titulo}}"
+                fields:
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Título del cartel \"¿Cómo se reserva?\"", name: "reservaTitulo", widget: "string" }
               - { label: "Texto del cartel \"¿Cómo se reserva?\"", name: "reservaTexto", widget: "text" }
 
@@ -255,14 +358,21 @@ collections:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas" }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Bajada", name: "texto", widget: "text" }
-              - { label: "Subtítulo — Recoleta", name: "recoletaSubtitulo", widget: "string" }
-              - { label: "Texto — Recoleta", name: "recoletaTexto", widget: "text" }
-              - { label: "Subtítulo — Palermo", name: "palermoSubtitulo", widget: "string" }
-              - { label: "Texto — Palermo", name: "palermoTexto", widget: "text" }
-              - { label: "Acceso 1 (ej: \"Subte y colectivos a pocas cuadras\")", name: "acceso1Texto", widget: "string" }
-              - { label: "Acceso 2", name: "acceso2Texto", widget: "string" }
-              - { label: "Acceso 3", name: "acceso3Texto", widget: "string" }
-              - { label: "Acceso 4", name: "acceso4Texto", widget: "string" }
+              - label: "Tarjetas de zona"
+                name: "zonas"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando (ej: sumar una tarjeta de Balvanera más adelante)."
+                summary: "{{fields.nombre}}"
+                fields:
+                  - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
+                  - { label: "Subtítulo", name: "subtitulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+              - label: "Accesos (la lista de 4 con ícono, abajo de todo)"
+                name: "accesos"
+                widget: "list"
+                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada acceso es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                summary: "{{fields.texto}}"
+                field: { label: "Texto", name: "texto", widget: "string" }
 
   - name: "config"
     label: "⚙️ General"

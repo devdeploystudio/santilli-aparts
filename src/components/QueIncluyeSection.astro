@@ -1,24 +1,11 @@
 ---
 import { getEntry } from "astro:content";
-import ServiceIcon, { SERVICIO_LABELS, type ServicioKey } from "./ServiceIcon.astro";
+import ServiceIcon from "./ServiceIcon.astro";
 import MarginLines from "./MarginLines.astro";
 import { imageSize } from "../lib/imageSize";
 
 const q = (await getEntry("configQueIncluye", "que-incluye"))!.data;
 const fotoFondoSize = await imageSize(q.fotoFondo);
-
-// Íconos y orden quedan fijos en código; el texto de cada servicio se
-// edita desde /admin.
-const items: { key: ServicioKey; texto: string }[] = [
-  { key: "ropaBlanca", texto: q.ropaBlancaTexto },
-  { key: "wifi", texto: q.wifiTexto },
-  { key: "tv", texto: q.tvTexto },
-  { key: "cocina", texto: q.cocinaTexto },
-  { key: "aire", texto: q.aireTexto },
-  { key: "seguridad", texto: q.seguridadTexto },
-  { key: "amenities", texto: q.amenitiesTexto },
-  { key: "cochera", texto: q.cocheraTexto },
-];
 ---
 
 <section class="relative overflow-hidden border-y border-hairline">
@@ -43,12 +30,12 @@ const items: { key: ServicioKey; texto: string }[] = [
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
-        items.map((item) => (
+        q.items.map((item) => (
           <div class="group rounded-2xl border border-hairline bg-surface/90 p-6 shadow-lg shadow-ink/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:bg-surface hover:shadow-xl">
             <span class="flex h-14 w-14 items-center justify-center rounded-full bg-canvas text-gold-active shadow-sm transition-transform duration-300 group-hover:scale-110">
-              <ServiceIcon servicio={item.key} class="h-7 w-7" />
+              <ServiceIcon servicio={item.icono} class="h-7 w-7" />
             </span>
-            <h3 class="mt-5 font-display text-lg text-ink">{SERVICIO_LABELS[item.key]}</h3>
+            <h3 class="mt-5 font-display text-lg text-ink">{item.titulo}</h3>
             <p class="mt-2 font-body text-sm leading-relaxed text-muted">{item.texto}</p>
           </div>
         ))
