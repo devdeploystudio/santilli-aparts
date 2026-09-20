@@ -7,13 +7,20 @@ interface FotoTamaño {
   height?: number;
 }
 
+interface MediaItem {
+  archivo: string;
+  poster?: string;
+  tamaño?: FotoTamaño | null;
+}
+
 interface Props {
-  fotos: string[];
-  fotoSizes?: (FotoTamaño | null)[];
+  media: MediaItem[];
   esPlaceholder: boolean;
   nombre: string;
-  video?: string;
-  videoPoster?: string;
+}
+
+function esVideo(ruta: string): boolean {
+  return /\.(mp4|mov|webm)$/i.test(ruta);
 }
 
 function FotoSlide({
@@ -58,9 +65,8 @@ function FotoSlide({
 
 // Miniatura recortada con zoom (mismo trato que una foto, object-cover, no
 // letterbox) con un ícono de play encima; al clickear abre el lightbox de
-// video. Se usa tanto si el video es la ÚNICA slide (depto sin fotos
-// todavía) como si es una slide más al final del carrusel de fotos (ej.
-// video de la pileta del edificio, compartido entre varios deptos).
+// ese video puntual. Puede haber varios videos intercalados entre las
+// fotos, en cualquier posición (orden que arma el cliente desde el panel).
 function VideoSlide({
   video,
   videoPoster,
@@ -92,20 +98,20 @@ function VideoSlide({
   );
 }
 
-export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video, videoPoster }: Props) {
+export default function Gallery({ media, esPlaceholder, nombre }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const emblaRef = useRef<EmblaCarouselType | null>(null);
   const [selected, setSelected] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [videoAbierto, setVideoAbierto] = useState(false);
+  const [videoAbierto, setVideoAbierto] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const closeVideoRef = useRef<HTMLButtonElement>(null);
 
-  // El video (si existe) siempre va como última slide del carrusel, sea
-  // el único contenido (depto sin fotos todavía) o una slide más sumada
-  // a las fotos propias del depto (ej. video de una pileta compartida por
-  // varios deptos del mismo edificio).
-  const totalSlides = fotos.length + (video ? 1 : 0);
+  // El lightbox de "ampliar foto" navega solo entre las FOTOS (no cuenta
+  // los videos, que tienen su propio modal aparte) - misma experiencia de
+  // antes, ahora derivada de la lista unificada.
+  const fotos = media.filter((m) => !esVideo(m.archivo));
+  const totalSlides = media.length;
 
   useEffect(() => {
     if (!viewportRef.current) return;
@@ -138,7 +144,7 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
     closeVideoRef.current?.focus();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setVideoAbierto(false);
+      if (e.key === "Escape") setVideoAbierto(null);
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -151,27 +157,28 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
     <div class="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[20rem]">
       <div class="absolute inset-0 overflow-hidden rounded-2xl" ref={viewportRef}>
         <div class="flex h-full">
-          {fotos.map((foto, i) => (
-            <button
-              type="button"
-              key={i}
-              class="h-full min-w-0 shrink-0 grow-0 basis-full cursor-zoom-in"
-              onClick={() => setLightboxIndex(i)}
-              aria-label={`Ampliar foto ${i + 1} de ${nombre}`}
-            >
-              <FotoSlide src={foto} placeholder={esPlaceholder} alt={`Foto ${i + 1} de ${nombre}`} eager={i === 0} size={fotoSizes?.[i]} />
-            </button>
-          ))}
-          {video && (
-            <div class="h-full min-w-0 shrink-0 grow-0 basis-full">
-              <VideoSlide
-                video={video}
-                videoPoster={videoPoster}
-                nombre={nombre}
-                eager={fotos.length === 0}
-                onClick={() => setVideoAbierto(true)}
-              />
-            </div>
+          {media.map((item, i) =>
+            esVideo(item.archivo) ? (
+              <div key={i} class="h-full min-w-0 shrink-0 grow-0 basis-full">
+                <VideoSlide
+                  video={item.archivo}
+                  videoPoster={item.poster}
+                  nombre={nombre}
+                  eager={i === 0}
+                  onClick={() => setVideoAbierto(item.archivo)}
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                key={i}
+                class="h-full min-w-0 shrink-0 grow-0 basis-full cursor-zoom-in"
+                onClick={() => setLightboxIndex(fotos.findIndex((f) => f.archivo === item.archivo))}
+                aria-label={`Ampliar foto de ${nombre}`}
+              >
+                <FotoSlide src={item.archivo} placeholder={esPlaceholder} alt={`Foto de ${nombre}`} eager={i === 0} size={item.tamaño} />
+              </button>
+            ),
           )}
         </div>
       </div>
@@ -180,7 +187,7 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
         <>
           <button
             type="button"
-            aria-label="Foto anterior"
+            aria-label="Anterior"
             onClick={() => emblaRef.current?.scrollPrev()}
             class="absolute left-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-ink shadow hover:text-gold-active"
           >
@@ -188,7 +195,7 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
           </button>
           <button
             type="button"
-            aria-label="Foto siguiente"
+            aria-label="Siguiente"
             onClick={() => emblaRef.current?.scrollNext()}
             class="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-ink shadow hover:text-gold-active"
           >
@@ -265,11 +272,11 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
               // para que las cards queden parejas, pero en el lightbox el
               // objetivo es ver la foto entera, no una versión recortada.
               <img
-                src={fotos[lightboxIndex]}
-                alt={`Foto ${lightboxIndex + 1} de ${nombre}, tamaño completo`}
+                src={fotos[lightboxIndex].archivo}
+                alt={`Foto ampliada de ${nombre}`}
                 draggable={false}
-                width={fotoSizes?.[lightboxIndex]?.width}
-                height={fotoSizes?.[lightboxIndex]?.height}
+                width={fotos[lightboxIndex].tamaño?.width}
+                height={fotos[lightboxIndex].tamaño?.height}
                 class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl object-contain"
               />
             )}
@@ -277,25 +284,25 @@ export default function Gallery({ fotos, fotoSizes, esPlaceholder, nombre, video
         </div>
       )}
 
-      {videoAbierto && video && (
+      {videoAbierto && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`Video de ${nombre}`}
           class="fixed inset-0 z-[1200] flex items-center justify-center bg-ink/90 p-4"
-          onClick={() => setVideoAbierto(false)}
+          onClick={() => setVideoAbierto(null)}
         >
           <button
             ref={closeVideoRef}
             type="button"
             aria-label="Cerrar"
-            onClick={() => setVideoAbierto(false)}
+            onClick={() => setVideoAbierto(null)}
             class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface/10 text-surface hover:bg-surface/20"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>
           <video
-            src={video}
+            src={videoAbierto}
             controls
             autoPlay
             onClick={(e) => e.stopPropagation()}

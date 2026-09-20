@@ -11,9 +11,10 @@ interface Props {
   titulo: string;
   texto: string;
   foto: string;
+  botonTexto: string;
 }
 
-const { titulo, texto, foto } = Astro.props;
+const { titulo, texto, foto, botonTexto } = Astro.props;
 const fotoSize = await imageSize(foto);
 ---
 
@@ -41,7 +42,7 @@ const fotoSize = await imageSize(foto);
           href="/departamentos/"
           class="btn-press mt-7 inline-block rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink transition-colors hover:bg-gold-active"
         >
-          Ver departamentos
+          {botonTexto}
         </a>
       </div>
     </div>

@@ -10,7 +10,7 @@
   "capacidadMax": 3,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con utensilios de cocina y vista a la piscina. También ofrece cama matrimonial y sillón cama muy cómodo. Se completa con doble anafe eléctrico y baño completo con bañadera. Incluye también calefacción central y aire acondicionado.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "aire",
@@ -18,19 +18,41 @@
     "cocina",
     "amenities"
   ],
-  "fotos": [
-    "/departamentos/depto-18-av-callao-930/01.jpg",
-    "/departamentos/depto-18-av-callao-930/02.jpg",
-    "/departamentos/depto-18-av-callao-930/03.jpg",
-    "/departamentos/depto-18-av-callao-930/04.jpg",
-    "/departamentos/depto-18-av-callao-930/05.jpg",
-    "/departamentos/depto-18-av-callao-930/06.jpg",
-    "/departamentos/depto-18-av-callao-930/07.jpg",
-    "/departamentos/depto-18-av-callao-930/08.jpg",
-    "/departamentos/depto-18-av-callao-930/09.jpg",
-    "/departamentos/depto-18-av-callao-930/10.jpg"
-  ],
   "esPlaceholder": false,
-  "video": "/departamentos/_compartido/pileta-callao-930.mp4",
-  "videoPoster": "/departamentos/_compartido/pileta-callao-930-poster.jpg"
+  "media": [
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-18-av-callao-930/10.jpg"
+    },
+    {
+      "archivo": "/departamentos/_compartido/pileta-callao-930.mp4",
+      "poster": "/departamentos/_compartido/pileta-callao-930-poster.jpg"
+    }
+  ]
 }

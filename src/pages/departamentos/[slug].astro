@@ -1,7 +1,7 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import ServiceIcon, { SERVICIO_LABELS } from "../../components/ServiceIcon.astro";
+import Icon from "../../components/Icon.astro";
 import Gallery from "../../components/Gallery.tsx";
 import MapView from "../../components/MapView.tsx";
 import BookingForm from "../../components/BookingForm.tsx";
@@ -27,9 +27,7 @@ const {
   capacidadMax,
   descripcionBreve,
   servicios,
-  fotos,
-  video,
-  videoPoster,
+  media,
   esPlaceholder,
 } = depto.data;
 
@@ -40,8 +38,20 @@ const capacidadTexto =
 
 // Placeholder: FotoSlide ni siquiera renderiza un <img> para esos casos
 // (ver Gallery.tsx), así que no hace falta (ni conviene, pueden no ser
-// archivos reales) calcular tamaño.
-const fotoSizes = esPlaceholder ? [] : await Promise.all(fotos.map((f) => imageSize(f)));
+// archivos reales) calcular tamaño. Solo se calcula para fotos (los
+// videos no tienen dimensiones vía sharp/image-size).
+const mediaConTamaño = esPlaceholder
+  ? media
+  : await Promise.all(
+      media.map(async (m) => ({ ...m, tamaño: /\.(mp4|mov|webm)$/i.test(m.archivo) ? null : await imageSize(m.archivo) })),
+    );
+
+// "servicios" guarda el slug del catálogo (ver src/data/servicios-disponibles),
+// no un enum fijo - se busca cada uno ahí para saber qué ícono/nombre mostrar.
+const catalogoServicios = await getCollection("serviciosDisponibles");
+const serviciosInfo = servicios
+  .map((slug) => catalogoServicios.find((s) => s.id === slug)?.data)
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
 ---
 
 <Layout title={nombre} description={descripcionBreve}>
@@ -55,7 +65,7 @@ const fotoSizes = esPlaceholder ? [] : await Promise.all(fotos.map((f) => imageS
 
     <div class="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-stretch">
       <div id="galeria-columna">
-        <Gallery client:visible fotos={fotos} fotoSizes={fotoSizes} esPlaceholder={esPlaceholder} nombre={nombre} video={video} videoPoster={videoPoster} />
+        <Gallery client:visible media={mediaConTamaño} esPlaceholder={esPlaceholder} nombre={nombre} />
       </div>
 
       <div>
@@ -70,15 +80,15 @@ const fotoSizes = esPlaceholder ? [] : await Promise.all(fotos.map((f) => imageS
         <div class="mt-8">
           <h2 class="font-display text-xl text-ink">Servicios incluidos</h2>
           <div class="mt-4 rounded-2xl border border-hairline bg-surface p-6">
-            {servicios.length > 0 ? (
+            {serviciosInfo.length > 0 ? (
               <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                 {
-                  servicios.map((s) => (
+                  serviciosInfo.map((s) => (
                     <div class="flex items-center gap-3">
                       <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-active">
-                        <ServiceIcon servicio={s} class="h-4 w-4" />
+                        <Icon icono={s.icono} class="h-4 w-4" />
                       </span>
-                      <span class="font-body text-sm text-ink">{SERVICIO_LABELS[s]}</span>
+                      <span class="font-body text-sm text-ink">{s.nombre}</span>
                     </div>
                   ))
                 }

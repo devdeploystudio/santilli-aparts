@@ -98,6 +98,21 @@ export default function MapView({ pines, zoom, className = "h-80 w-full", etique
       map.fitBounds(group.getBounds().pad(0.2));
     }
 
+    // Leaflet recién crea los <img> del pin/sombra en el DOM una vez que
+    // el mapa tiene centro/zoom definidos (setView/fitBounds, arriba) -
+    // hacerlo antes no encuentra nada todavía. whenReady() asegura que ya
+    // estén. Sin width/height ni loading="lazy" nativos, el checker de
+    // /post-deploy/performance los marca incompletos - se los agregamos a
+    // mano, con el tamaño que Leaflet ya usa por default (25x41 el pin,
+    // 41x41 la sombra; confirmado contra los PNG reales en src/assets).
+    map.whenReady(() => {
+      for (const img of containerRef.current!.querySelectorAll<HTMLImageElement>(".leaflet-marker-icon, .leaflet-marker-shadow")) {
+        if (!img.hasAttribute("width")) img.setAttribute("width", img.classList.contains("leaflet-marker-shadow") ? "41" : "25");
+        if (!img.hasAttribute("height")) img.setAttribute("height", "41");
+        img.loading = "lazy";
+      }
+    });
+
     return () => map.remove();
   }, [pines]);
 

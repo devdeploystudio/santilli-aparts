@@ -3,3 +3,4 @@ inicioCta:
   titulo: "¿Ya sabés qué fechas necesitás?"
   texto: "Mirá los departamentos que tenemos y consultanos por el que mejor se adapte a lo que necesitás."
   foto: "/inicio/cta.jpg"
+  botonTexto: "Ver departamentos"

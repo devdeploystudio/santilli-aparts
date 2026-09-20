@@ -10,14 +10,17 @@
   "capacidadMax": 2,
   "descripcionBreve": "Este departamento incluye ropa de cama, toallas y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado F/C y cocina con horno. También ofrece heladera grande y utensilios de cocina. Se completa con baño completo con bañera y balcón con vista al frente. Está a una cuadra del shopping Alto Palermo.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "aire",
     "cocina"
   ],
-  "fotos": [],
-  "video": "/departamentos/depto-46-av-santa-fe-3395/preview.mp4",
-  "videoPoster": "/departamentos/depto-46-av-santa-fe-3395/poster.jpg",
-  "esPlaceholder": true
+  "esPlaceholder": true,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-46-av-santa-fe-3395/preview.mp4",
+      "poster": "/departamentos/depto-46-av-santa-fe-3395/poster.jpg"
+    }
+  ]
 }

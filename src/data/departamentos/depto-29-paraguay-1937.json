@@ -10,22 +10,42 @@
   "capacidadMax": 2,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "cocina"
   ],
-  "fotos": [
-    "/departamentos/depto-29-paraguay-1937/01.jpg",
-    "/departamentos/depto-29-paraguay-1937/02.jpg",
-    "/departamentos/depto-29-paraguay-1937/03.jpg",
-    "/departamentos/depto-29-paraguay-1937/04.jpg",
-    "/departamentos/depto-29-paraguay-1937/05.jpg",
-    "/departamentos/depto-29-paraguay-1937/06.jpg",
-    "/departamentos/depto-29-paraguay-1937/07.jpg",
-    "/departamentos/depto-29-paraguay-1937/08.jpg",
-    "/departamentos/depto-29-paraguay-1937/09.jpg",
-    "/departamentos/depto-29-paraguay-1937/10.jpg"
-  ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-29-paraguay-1937/10.jpg"
+    }
+  ]
 }

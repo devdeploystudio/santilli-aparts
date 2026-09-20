@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import PlaceholderPhoto from "./PlaceholderPhoto.astro";
+import { resolverPortada } from "../lib/portada";
 
 interface Props {
   depto: CollectionEntry<"departamentos">;
@@ -9,6 +10,7 @@ interface Props {
 
 const { depto, class: className = "" } = Astro.props;
 const { nombre, zona, esPlaceholder } = depto.data;
+const { foto } = resolverPortada(depto.data);
 ---
 
 <a
@@ -21,7 +23,7 @@ const { nombre, zona, esPlaceholder } = depto.data;
         <PlaceholderPhoto class="h-full w-full transition-transform duration-500 group-hover:scale-105" />
       ) : (
         <img
-          src={depto.data.fotos[0]}
+          src={foto}
           alt={`Foto de ${nombre}`}
           loading="lazy"
           draggable="false"

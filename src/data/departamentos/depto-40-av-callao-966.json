@@ -10,22 +10,42 @@
   "capacidadMax": 3,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "cocina"
   ],
-  "fotos": [
-    "/departamentos/depto-40-av-callao-966/01.jpg",
-    "/departamentos/depto-40-av-callao-966/02.jpg",
-    "/departamentos/depto-40-av-callao-966/03.jpg",
-    "/departamentos/depto-40-av-callao-966/04.jpg",
-    "/departamentos/depto-40-av-callao-966/05.jpg",
-    "/departamentos/depto-40-av-callao-966/06.jpg",
-    "/departamentos/depto-40-av-callao-966/07.jpg",
-    "/departamentos/depto-40-av-callao-966/08.jpg",
-    "/departamentos/depto-40-av-callao-966/09.jpg",
-    "/departamentos/depto-40-av-callao-966/10.jpg"
-  ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-40-av-callao-966/10.jpg"
+    }
+  ]
 }

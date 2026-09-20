@@ -9,6 +9,16 @@
 // misma que Decap CMS (Sveltia mantiene compatibilidad). Sin build step:
 // se escribe con createClass + h (hyperscript), variables globales que
 // expone el propio script de Sveltia una vez cargado.
+//
+// Tiene que cargarse DESPUÉS de icon-picker.js (usa window.__iconosDeploy).
+//
+// Todo el archivo va en un IIFE: sin type="module" (script clásico, ver
+// index.html), un `const` de nivel superior acá chocaría con el mismo
+// nombre declarado en icon-picker.js (comparten scope léxico al no ser
+// módulos) - pasó de verdad con `const { createClass, h }`, tiraba
+// "Identifier 'createClass' has already been declared" y rompía el panel
+// entero.
+(function () {
 
 CMS.registerPreviewStyle(
   "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;600;700&display=swap",
@@ -75,14 +85,13 @@ CMS.registerPreviewStyle(`
   }
   .p-card-icono {
     display: inline-flex;
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
     border-radius: 999px;
     background: #faf7f2;
     color: #ad8830;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
     margin-bottom: 0.5rem;
   }
   .p-card-titulo {
@@ -113,14 +122,98 @@ CMS.registerPreviewStyle(`
     color: #ad8830;
     font-size: 0.8rem;
   }
+  .p-boton {
+    display: inline-block;
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: #cca038;
+    color: #434242;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .p-boton-secundario {
+    background: transparent;
+    border: 1px solid #e7e3dc;
+  }
 `);
 
 const { createClass, h } = window;
 
-// Arma la lista ordenada de trocitos del párrafo del Hero/Portada
-// (heroPre + destacado1 + entre1 + destacado2 + entre2 + destacado3 +
-// final), igual que hace Hero.astro, para que el subrayado dorado
-// aparezca en el mismo lugar acá también.
+// `items` puede ser una List de Immutable.js (viene de entry.getIn(...))
+// o un array común (cuando arma la lista a mano) - toArray() normaliza
+// ambos casos a un array plano.
+function toPlainArray(items) {
+  if (!items) return [];
+  return typeof items.toArray === "function" ? items.toArray() : items;
+}
+
+function campoDe(item, nombre) {
+  return typeof item.get === "function" ? item.get(nombre) : item[nombre];
+}
+
+// getAsset() es sincrónico y devuelve { url, ... } (o undefined) - NO un
+// string ni una Promise. Usarlo directo como src rompía todas las fotos
+// de fondo del preview (quedaba "[object Object]").
+function Foto({ getAsset, ruta }) {
+  if (!ruta) return null;
+  const asset = getAsset(ruta);
+  if (!asset || !asset.url) return null;
+  return h("img", { className: "p-foto", src: asset.url });
+}
+
+function IconoIndividual({ nombre }) {
+  const iconos = window.__iconosDeploy;
+  if (!iconos || !nombre || !iconos.paths[nombre]) return null;
+  return h(
+    "svg",
+    { viewBox: "0 0 24 24", width: 20, height: 20, fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" },
+    h("path", { d: iconos.paths[nombre] }),
+  );
+}
+
+function Lista({ items, campo }) {
+  const lista = toPlainArray(items);
+  if (!lista.length) return null;
+  return h(
+    "ul",
+    { className: "p-lista" },
+    lista.map((item, i) => h("li", { key: i }, campo ? campoDe(item, campo) : item)),
+  );
+}
+
+// Grilla de tarjetas título+texto, con ícono opcional (si el item trae
+// `icono`, se dibuja el SVG real - mismo set que src/components/Icon.astro).
+function Grid({ items }) {
+  const lista = toPlainArray(items);
+  if (!lista.length) return null;
+  return h(
+    "div",
+    { className: "p-grid" },
+    lista.map((item, i) => {
+      const icono = campoDe(item, "icono");
+      return h(
+        "div",
+        { className: "p-card", key: i },
+        icono && h("span", { className: "p-card-icono" }, h(IconoIndividual, { nombre: icono })),
+        h("p", { className: "p-card-titulo" }, campoDe(item, "titulo")),
+        h("p", { className: "p-card-texto" }, campoDe(item, "texto")),
+      );
+    }),
+  );
+}
+
+// Botón de muestra (no es un link real, es solo para ver el texto con la
+// pinta del sitio - la nota de "adónde lleva" va aparte, en el campo).
+function Boton({ texto, secundario }) {
+  if (!texto) return null;
+  return h("span", { className: secundario ? "p-boton p-boton-secundario" : "p-boton" }, texto);
+}
+
+// Arma la lista ordenada de trocitos del párrafo de la Portada (heroPre +
+// destacado1 + entre1 + destacado2 + entre2 + destacado3 + final), igual
+// que hace Hero.astro, para que el subrayado dorado aparezca en el mismo
+// lugar acá también.
 function ParrafoPortada({ data }) {
   return h(
     "p",
@@ -141,46 +234,6 @@ function ParrafoPortada({ data }) {
   );
 }
 
-function Lista({ items, campo }) {
-  const lista = toPlainArray(items);
-  if (!lista.length) return null;
-  return h(
-    "ul",
-    { className: "p-lista" },
-    lista.map((item, i) => h("li", { key: i }, campo ? campoDe(item, campo) : item)),
-  );
-}
-
-// `items` puede ser una List de Immutable.js (viene de entry.getIn(...))
-// o un array común (cuando arma la lista a mano, ej. los puntos de
-// Nosotros) - toArray() normaliza ambos casos a un array plano.
-function toPlainArray(items) {
-  if (!items) return [];
-  return typeof items.toArray === "function" ? items.toArray() : items;
-}
-
-function campoDe(item, nombre) {
-  return typeof item.get === "function" ? item.get(nombre) : item[nombre];
-}
-
-function Grid({ items }) {
-  const lista = toPlainArray(items);
-  if (!lista.length) return null;
-  return h(
-    "div",
-    { className: "p-grid" },
-    lista.map((item, i) =>
-      h(
-        "div",
-        { className: "p-card", key: i },
-        campoDe(item, "icono") && h("span", { className: "p-card-icono" }, "●"),
-        h("p", { className: "p-card-titulo" }, campoDe(item, "titulo")),
-        h("p", { className: "p-card-texto" }, campoDe(item, "texto")),
-      ),
-    ),
-  );
-}
-
 // --- Inicio → Portada (texto) ---
 CMS.registerPreviewTemplate(
   "inicio-hero",
@@ -194,6 +247,7 @@ CMS.registerPreviewTemplate(
         h("h1", { className: "p-titulo" }, data.get("heroTitulo")),
         h(ParrafoPortada, { data }),
         h("span", { className: "p-nota" }, "El subrayado dorado es solo una referencia: en el sitio real aparece con una animación."),
+        h("div", { style: { marginTop: "1.25rem" } }, h(Boton, { texto: data.get("botonWhatsappTexto") }), h(Boton, { texto: data.get("botonDeptosTexto"), secundario: true })),
       );
     },
   }),
@@ -246,10 +300,10 @@ CMS.registerPreviewTemplate(
       return h(
         "div",
         {},
-        this.props.getAsset(data.get("foto")) &&
-          h("img", { className: "p-foto", src: this.props.getAsset(data.get("foto")).toString() }),
+        h(Foto, { getAsset: this.props.getAsset, ruta: data.get("foto") }),
         h("h1", { className: "p-titulo" }, data.get("titulo")),
         h("p", { className: "p-texto" }, data.get("texto")),
+        h(Boton, { texto: data.get("botonTexto") }),
       );
     },
   }),
@@ -265,8 +319,7 @@ CMS.registerPreviewTemplate(
       return h(
         "div",
         {},
-        this.props.getAsset(data.get("fotoFondo")) &&
-          h("img", { className: "p-foto", src: this.props.getAsset(data.get("fotoFondo")).toString() }),
+        h(Foto, { getAsset: this.props.getAsset, ruta: data.get("fotoFondo") }),
         h("h1", { className: "p-titulo" }, data.get("titulo")),
         h("p", { className: "p-texto" }, data.get("texto")),
         h(Grid, { items: data.get("cards") }),
@@ -303,7 +356,7 @@ CMS.registerPreviewTemplate(
           ),
         ),
         h("p", { className: "p-subtitulo", style: { marginTop: "1.5rem" } }, "Estas zonas cuentan con:"),
-        h(Lista, { items: data.get("accesos"), campo: "texto" }),
+        h(Grid, { items: data.get("accesos") }),
       );
     },
   }),
@@ -319,8 +372,7 @@ CMS.registerPreviewTemplate(
       return h(
         "div",
         {},
-        this.props.getAsset(data.get("fotoFondo")) &&
-          h("img", { className: "p-foto", src: this.props.getAsset(data.get("fotoFondo")).toString() }),
+        h(Foto, { getAsset: this.props.getAsset, ruta: data.get("fotoFondo") }),
         h("h1", { className: "p-titulo" }, data.get("titulo")),
         h("p", { className: "p-texto" }, data.get("texto")),
         h(Grid, { items: data.get("items") }),
@@ -371,17 +423,14 @@ CMS.registerPreviewTemplate(
       return h(
         "div",
         {},
-        this.props.getAsset(data.get("foto")) &&
-          h("img", { className: "p-foto", src: this.props.getAsset(data.get("foto")).toString() }),
+        h(Foto, { getAsset: this.props.getAsset, ruta: data.get("foto") }),
         h("h1", { className: "p-titulo" }, data.get("titulo")),
         h("p", { className: "p-texto" }, data.get("texto1")),
         h("p", { className: "p-texto" }, data.get("texto2")),
-        h(Grid, {
-          items: [1, 2, 3]
-            .map((n) => data.get(`punto${n}Titulo`) && { titulo: data.get(`punto${n}Titulo`), texto: data.get(`punto${n}Texto`) })
-            .filter(Boolean),
-        }),
+        h(Grid, { items: data.get("puntos") }),
       );
     },
   }),
 );
+
+})();

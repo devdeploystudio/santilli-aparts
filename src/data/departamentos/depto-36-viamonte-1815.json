@@ -10,22 +10,42 @@
   "capacidadMax": 2,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "cocina"
   ],
-  "fotos": [
-    "/departamentos/depto-36-viamonte-1815/01.jpg",
-    "/departamentos/depto-36-viamonte-1815/02.jpg",
-    "/departamentos/depto-36-viamonte-1815/03.jpg",
-    "/departamentos/depto-36-viamonte-1815/04.jpg",
-    "/departamentos/depto-36-viamonte-1815/05.jpg",
-    "/departamentos/depto-36-viamonte-1815/06.jpg",
-    "/departamentos/depto-36-viamonte-1815/07.jpg",
-    "/departamentos/depto-36-viamonte-1815/08.jpg",
-    "/departamentos/depto-36-viamonte-1815/09.jpg",
-    "/departamentos/depto-36-viamonte-1815/10.jpg"
-  ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-36-viamonte-1815/10.jpg"
+    }
+  ]
 }

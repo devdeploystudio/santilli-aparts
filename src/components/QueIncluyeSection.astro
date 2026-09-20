@@ -1,6 +1,6 @@
 ---
 import { getEntry } from "astro:content";
-import ServiceIcon from "./ServiceIcon.astro";
+import Icon from "./Icon.astro";
 import MarginLines from "./MarginLines.astro";
 import { imageSize } from "../lib/imageSize";
 
@@ -33,7 +33,7 @@ const fotoFondoSize = await imageSize(q.fotoFondo);
         q.items.map((item) => (
           <div class="group rounded-2xl border border-hairline bg-surface/90 p-6 shadow-lg shadow-ink/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:bg-surface hover:shadow-xl">
             <span class="flex h-14 w-14 items-center justify-center rounded-full bg-canvas text-gold-active shadow-sm transition-transform duration-300 group-hover:scale-110">
-              <ServiceIcon servicio={item.icono} class="h-7 w-7" />
+              <Icon icono={item.icono} class="h-7 w-7" />
             </span>
             <h3 class="mt-5 font-display text-lg text-ink">{item.titulo}</h3>
             <p class="mt-2 font-body text-sm leading-relaxed text-muted">{item.texto}</p>

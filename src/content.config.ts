@@ -9,11 +9,74 @@ import { glob, file } from "astro/loaders";
 const sinVacios = <T extends z.ZodType>(schema: T) =>
   z.preprocess((val) => (val === "" ? undefined : val), schema.optional());
 
+// Biblioteca de íconos compartida por Qué incluye, Zonas (accesos),
+// Nosotros (puntos) y el catálogo de servicios de Departamentos - tiene
+// que coincidir EXACTO con `IconKey` en src/components/Icon.astro (el que
+// dibuja el ícono real) y con el mapa `ICONOS` en
+// public/admin/icon-picker.js (el que arma el selector visual del panel).
+// Si se agrega un ícono nuevo, agregarlo en los 3 lugares.
+const IconKey = z.enum([
+  "wifi",
+  "cocina",
+  "ropaBlanca",
+  "tv",
+  "aire",
+  "calefaccion",
+  "ascensor",
+  "cochera",
+  "amenities",
+  "seguridad",
+  "subte",
+  "salud",
+  "ubicacion",
+  "reloj",
+  "estrella",
+  "corazon",
+  "sol",
+  "cama",
+  "ducha",
+  "telefono",
+  "descuento",
+  "candado",
+  "familia",
+  "mascota",
+  "cafe",
+  "avion",
+  "maleta",
+]);
+
+// Catálogos chicos y "creativos" (referencia): Sveltia no tiene un select
+// con "agregar opción nueva" (a diferencia de un combobox tipo react-select
+// en un sitio armado a mano), así que la forma estándar de lograr un
+// desplegable que el cliente pueda ir ampliando es un widget "relation"
+// apuntando a una colección chica como esta. Agregar una entrada nueva acá
+// (ej. una zona nueva) la deja disponible como opción en el próximo
+// departamento que se edite, sin tocar código ni schema.
+const zonasDisponibles = defineCollection({
+  loader: glob({ pattern: "*.json", base: "./src/data/zonas-disponibles" }),
+  schema: z.object({
+    nombre: z.string(),
+  }),
+});
+
+const serviciosDisponibles = defineCollection({
+  loader: glob({ pattern: "*.json", base: "./src/data/servicios-disponibles" }),
+  schema: z.object({
+    nombre: z.string(),
+    icono: IconKey,
+  }),
+});
+
 const departamentos = defineCollection({
   loader: glob({ pattern: "**/*.json", base: "./src/data/departamentos" }),
   schema: z.object({
     nombre: z.string(),
-    zona: z.enum(["Recoleta", "Palermo", "Balvanera"]),
+    // Antes un enum fijo (Recoleta/Palermo/Balvanera en código) - ahora
+    // texto libre en los datos, pero en el panel se elige de la colección
+    // "Zonas disponibles" (widget relation), así el cliente puede sumar
+    // una zona nueva ahí y que quede disponible para elegir en el próximo
+    // departamento, sin que nadie tenga que tocar el schema.
+    zona: z.string(),
     direccion: z.string(),
     coords: z.object({
       lat: z.number(),
@@ -22,37 +85,30 @@ const departamentos = defineCollection({
     capacidadMin: z.number().int().min(1),
     capacidadMax: z.number().int().min(1),
     descripcionBreve: z.string(),
-    servicios: z.array(
-      z.enum([
-        "wifi",
-        "cocina",
-        "ropaBlanca",
-        "tv",
-        "aire",
-        "calefaccion",
-        "ascensor",
-        "cochera",
-        "amenities",
-        "seguridad",
-      ]),
+    // Ídem zona: antes un enum fijo, ahora texto libre que en el panel se
+    // elige (multiple) de la colección "Servicios disponibles" (relation).
+    // Agregar un servicio nuevo ahí (con su ícono) lo deja disponible para
+    // marcar en cualquier depto, sin tocar código.
+    servicios: z.array(z.string()),
+    // Fotos y videos en UNA sola lista ordenable (mismo patrón que
+    // heroSlides de la Portada): antes "fotos" (lista de imágenes) y un
+    // único "video"/"videoPoster" sueltos, que SIEMPRE quedaban al final
+    // de la galería sin poder intercalarse ni haber más de uno. Ahora
+    // "media" admite cualquier cantidad de fotos Y videos, en el orden
+    // que el cliente arrastre - el tipo (foto/video) se detecta solo por
+    // la extensión del archivo al mostrarlo. "poster" solo se usa cuando
+    // ese ítem es un video (frame fijo para la miniatura del carrusel).
+    media: z.array(
+      z.object({
+        archivo: z.string(),
+        poster: sinVacios(z.string()),
+      }),
     ),
-    fotos: z.array(z.string()),
-    // Video corto opcional (preview mudo, liviano): aparece como una foto
-    // más al final del carrusel de la ficha (Gallery.tsx), no reemplaza
-    // las fotos propias del depto. Puede ser propio de esa unidad o uno
-    // compartido por varias (ej. video de la pileta del edificio, mismo
-    // archivo referenciado desde varios deptos). videoPoster es un frame
-    // fijo del mismo video (recortado a 4:3) para la miniatura del
-    // carrusel en vez de un <video> en vivo — evita el gris mientras el
-    // video autoplay arranca, y es la base sobre la que va el ícono de play.
-    video: sinVacios(z.string()),
-    videoPoster: sinVacios(z.string()),
     // Portada de la TARJETA (carrusel de la home, listado de deptos) -
-    // sin esto, la tarjeta usa la primera foto por default, o el video
-    // solo si el depto no tiene ninguna foto todavía. Se usa este campo
-    // para forzar algo puntual (ej. que la tarjeta muestre el video en
-    // vez de una foto, aunque el depto sí tenga fotos). Admite foto o
-    // video (se detecta por la extensión del archivo al mostrarla).
+    // sin esto, la tarjeta usa el primer ítem de "media" por default. Se
+    // usa este campo para forzar algo puntual (ej. que la tarjeta
+    // muestre un video en vez de una foto). Admite foto o video (se
+    // detecta por la extensión del archivo al mostrarla).
     portada: sinVacios(z.string()),
     esPlaceholder: z.boolean().default(false),
   }),
@@ -109,6 +165,11 @@ const configInicioHero = defineCollection({
     heroEntre2: z.string(),
     heroDestacado3: z.string(),
     heroFinal: z.string(),
+    // Texto de los 2 botones debajo del párrafo. El destino de cada uno
+    // queda fijo en el componente (WhatsApp / listado de departamentos) -
+    // no tiene sentido que el cliente pueda romper el link, solo el texto.
+    botonWhatsappTexto: z.string(),
+    botonDeptosTexto: z.string(),
   }),
 });
 
@@ -164,6 +225,9 @@ const configInicioCta = defineCollection({
     // runtime — se rompía en el deploy aunque local funcionara bien. Mismo
     // criterio que las fotos de departamentos: archivo plano ya comprimido.
     foto: z.string(),
+    // Destino fijo en el componente (listado de departamentos), solo el
+    // texto es editable.
+    botonTexto: z.string(),
   }),
 });
 
@@ -175,15 +239,13 @@ const configNosotros = defineCollection({
     // /public y no astro:assets.
     foto: z.string(),
     titulo: z.string(),
-      texto1: z.string(),
-      texto2: z.string(),
-      punto1Titulo: z.string(),
-      punto1Texto: z.string(),
-      punto2Titulo: z.string(),
-      punto2Texto: z.string(),
-      punto3Titulo: z.string(),
-      punto3Texto: z.string(),
-    }),
+    texto1: z.string(),
+    texto2: z.string(),
+    // Lista dinámica (agregar/borrar/reordenar) en vez de 3 puntos fijos
+    // (punto1/2/3 antes). El ícono es un campo elegible (con el mismo
+    // selector visual que Qué incluye/Zonas), no decorativo.
+    puntos: z.array(z.object({ icono: IconKey, titulo: z.string(), texto: z.string() })),
+  }),
 });
 
 const configDiferenciales = defineCollection({
@@ -217,29 +279,9 @@ const configQueIncluye = defineCollection({
     texto: z.string(),
     // Lista dinámica (agregar/borrar/reordenar) en vez de un campo fijo
     // por servicio. Acá el ícono SÍ importa (tiene que representar bien
-    // wifi/cocina/etc., a diferencia de las cards decorativas de
-    // Diferenciales/Zonas), así que es un campo elegible de un set fijo
-    // (mismos íconos que ya existían como servicios en ServiceIcon.astro)
-    // en vez de texto libre, para que el cliente no pueda dejarlo vacío o
-    // escribir cualquier cosa ahí.
-    items: z.array(
-      z.object({
-        icono: z.enum([
-          "wifi",
-          "cocina",
-          "ropaBlanca",
-          "tv",
-          "aire",
-          "calefaccion",
-          "ascensor",
-          "cochera",
-          "amenities",
-          "seguridad",
-        ]),
-        titulo: z.string(),
-        texto: z.string(),
-      }),
-    ),
+    // wifi/cocina/etc.), así que es un campo elegible de la biblioteca
+    // compartida (IconKey, ver arriba) en vez de texto libre.
+    items: z.array(z.object({ icono: IconKey, titulo: z.string(), texto: z.string() })),
   }),
 });
 
@@ -271,14 +313,18 @@ const configZonas = defineCollection({
     // sin tocar código. El link "Ver departamentos en {nombre}" de cada
     // tarjeta filtra por ese mismo nombre.
     zonas: z.array(z.object({ nombre: z.string(), subtitulo: z.string(), texto: z.string() })),
-    // Ídem cards de Diferenciales: el ícono es decorativo, rota según la
-    // posición del ítem en la lista, no es elegible desde el panel.
-    accesos: z.array(z.object({ texto: z.string() })),
+    // El ícono acá SÍ es elegible (a diferencia de las cards de
+    // Diferenciales, que son decorativas): representa algo puntual
+    // (subte, salud, seguridad, etc.), así que usa la biblioteca
+    // compartida con un selector visual en el panel.
+    accesos: z.array(z.object({ icono: IconKey, texto: z.string() })),
   }),
 });
 
 export const collections = {
   departamentos,
+  zonasDisponibles,
+  serviciosDisponibles,
   resenas,
   config,
   configInicioHero,

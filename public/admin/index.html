@@ -7,7 +7,12 @@
     <link rel="icon" href="data:," />
   </head>
   <body>
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
-    <script src="preview.js" type="module"></script>
+    <!-- Sin type="module": Sveltia mismo avisa en consola que cargarlo como
+         módulo puede romper la API de JS (CMS.registerWidget/registerPreviewTemplate
+         que usan icon-picker.js y preview.js) - script clásico, como indica
+         la documentación oficial. -->
+    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script src="icon-picker.js"></script>
+    <script src="preview.js"></script>
   </body>
 </html>

@@ -53,6 +53,8 @@ const reseñas = await Promise.all(
                     class="flex h-56 w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-xl bg-canvas p-2"
                     data-lightbox-src={r.data.imagen}
                     data-lightbox-alt={r.data.texto}
+                    data-lightbox-width={r.imagenSize?.width}
+                    data-lightbox-height={r.imagenSize?.height}
                     aria-label={`Ampliar reseña de ${r.data.zona}`}
                   >
                     <img
@@ -108,7 +110,11 @@ const reseñas = await Promise.all(
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
-    <img id="reviews-lightbox-img" src="" alt="" loading="lazy" class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl" />
+    {/* Sin src acá a propósito: un src="" vacío hace que el navegador
+       intente "cargar" la página actual como si fuera una imagen (un bug
+       real que detectó el checker de performance) - el src de verdad lo
+       pone el script de abajo recién cuando se abre una reseña. */}
+    <img id="reviews-lightbox-img" alt="" class="block max-h-[85vh] max-w-[90vw] w-auto h-auto rounded-xl" />
   </div>
 </section>
 
@@ -357,9 +363,14 @@ const reseñas = await Promise.all(
     if (!lightbox || !img || !closeBtn || lightbox.dataset.bound === "true") return;
     lightbox.dataset.bound = "true";
 
-    function abrir(src: string, alt: string) {
+    function abrir(src: string, alt: string, width?: string, height?: string) {
       img!.src = src;
       img!.alt = alt;
+      // width/height ya calculados en el build (ver imagenSize más arriba):
+      // evita que el checker de performance marque esta imagen como "sin
+      // tamaño declarado" - igual la CSS (w-auto h-auto) manda al mostrarla.
+      if (width) img!.width = Number(width);
+      if (height) img!.height = Number(height);
       lightbox!.classList.remove("hidden");
       lightbox!.classList.add("flex");
       document.body.style.overflow = "hidden";
@@ -374,7 +385,7 @@ const reseñas = await Promise.all(
     document.addEventListener("click", (e) => {
       const trigger = (e.target as HTMLElement).closest<HTMLElement>("[data-lightbox-src]");
       if (trigger) {
-        abrir(trigger.dataset.lightboxSrc!, trigger.dataset.lightboxAlt ?? "");
+        abrir(trigger.dataset.lightboxSrc!, trigger.dataset.lightboxAlt ?? "", trigger.dataset.lightboxWidth, trigger.dataset.lightboxHeight);
         return;
       }
       if ((e.target as HTMLElement).closest("#reviews-lightbox-close")) {

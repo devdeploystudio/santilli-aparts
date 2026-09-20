@@ -2,6 +2,7 @@
 import { getEntry } from "astro:content";
 import MapView, { type MapPin } from "./MapView.tsx";
 import MarginLines from "./MarginLines.astro";
+import Icon from "./Icon.astro";
 
 interface Props {
   pines: MapPin[];
@@ -11,22 +12,14 @@ const { pines } = Astro.props;
 
 const z = (await getEntry("configZonas", "zonas"))!.data;
 
-// Tarjetas de zona destacada (nombre, subtítulo y texto) y los 4 accesos
-// de abajo son listas editables desde /admin: se pueden agregar, sacar y
+// Tarjetas de zona destacada (nombre, subtítulo y texto) y los accesos de
+// abajo son listas editables desde /admin: se pueden agregar, sacar y
 // reordenar. Balvanera sigue existiendo como zona real de deptos
-// puntuales (filtro, mapa), aunque no tenga una tarjeta destacada acá.
+// puntuales (filtro, mapa), aunque no tenga una tarjeta destacada acá. El
+// ícono de cada acceso SÍ es elegible desde el panel (representa algo
+// puntual, no es decorativo).
 const zonas = z.zonas;
-
-// El ícono de cada acceso es decorativo, rota según la posición del ítem
-// en la lista (no es elegible desde el panel) - ver mismo criterio en
-// DiferencialesSection.
-const ICONOS_ACCESOS = [
-  "M6 3h12a2 2 0 0 1 2 2v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V5a2 2 0 0 1 2-2z M4 12h16 M8 20l-1.5 2 M17 20l1.5 2",
-  "M4 4h16v16H4z M12 8v8 M8 12h8",
-  "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z",
-  "M12 2l7 19-7-4-7 4z",
-];
-const accesos = z.accesos.map((a, i) => ({ ...a, path: ICONOS_ACCESOS[i % ICONOS_ACCESOS.length] }));
+const accesos = z.accesos;
 
 // Mismos centros aproximados usados al asignar zona/coords a cada depto
 // (ver script de carga de datos): solo para ubicar el nombre del barrio en
@@ -82,9 +75,7 @@ const etiquetasZona = [
           accesos.map((a) => (
             <div class="flex items-center gap-3 rounded-xl border border-hairline bg-surface p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold-active hover:shadow-lg hover:shadow-ink/10">
               <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-canvas text-gold-active">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d={a.path} />
-                </svg>
+                <Icon icono={a.icono} class="h-[18px] w-[18px]" />
               </span>
               <span class="font-body text-sm text-ink">{a.texto}</span>
             </div>

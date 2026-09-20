@@ -10,23 +10,43 @@
   "capacidadMax": 4,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado y utensilios de cocina. También ofrece dos camas de plaza y cama matrimonial en cuarto principal. Se completa con baño con cuadro de ducha y balcón vista a The Coffee Store. Incluye también doble anafe a gas y heladera bajo mesada.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "aire",
     "cocina"
   ],
-  "fotos": [
-    "/departamentos/depto-17-av-callao-966/01.jpg",
-    "/departamentos/depto-17-av-callao-966/02.jpg",
-    "/departamentos/depto-17-av-callao-966/03.jpg",
-    "/departamentos/depto-17-av-callao-966/04.jpg",
-    "/departamentos/depto-17-av-callao-966/05.jpg",
-    "/departamentos/depto-17-av-callao-966/06.jpg",
-    "/departamentos/depto-17-av-callao-966/07.jpg",
-    "/departamentos/depto-17-av-callao-966/08.jpg",
-    "/departamentos/depto-17-av-callao-966/09.jpg",
-    "/departamentos/depto-17-av-callao-966/10.jpg"
-  ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-17-av-callao-966/10.jpg"
+    }
+  ]
 }

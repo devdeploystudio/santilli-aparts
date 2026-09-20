@@ -10,22 +10,42 @@
   "capacidadMax": 5,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
   "servicios": [
-    "ropaBlanca",
+    "ropablanca",
     "wifi",
     "tv",
     "cocina"
   ],
-  "fotos": [
-    "/departamentos/depto-09-av-santa-fe-1955/01.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/02.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/03.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/04.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/05.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/06.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/07.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/08.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/09.jpg",
-    "/departamentos/depto-09-av-santa-fe-1955/10.jpg"
-  ],
-  "esPlaceholder": false
+  "esPlaceholder": false,
+  "media": [
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/01.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/02.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/03.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/04.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/05.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/06.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/07.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/08.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/09.jpg"
+    },
+    {
+      "archivo": "/departamentos/depto-09-av-santa-fe-1955/10.jpg"
+    }
+  ]
 }

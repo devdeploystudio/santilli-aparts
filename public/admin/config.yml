@@ -7,19 +7,20 @@ backend:
   # el dominio de este sitio a ALLOWED_DOMAINS en esa única instancia.
   base_url: https://sveltia-cms-auth.contact-deploystudio.workers.dev
 
-# Permite probar el panel en local (npm run dev) sin pasar por GitHub:
-# corriendo `npx decap-server` en otra terminal, escribe directo a los
-# archivos locales. No se usa en el sitio publicado (ahí manda `backend`).
-local_backend: true
+# Nota: `local_backend: true` (la forma de Decap CMS de probar en local sin
+# loguearse) NO existe en Sveltia - la propia consola avisa "not supported,
+# will be ignored" si se lo deja puesto. Sveltia trae su modo local propio
+# ("Trabajar con un repositorio local" en la pantalla de login) sin
+# necesitar ningún flag acá - no hace falta (ni sirve) declararlo.
 
 media_folder: "src/assets"
 public_folder: "src/assets"
 
-# Sin esto, Sveltia muestra un panel de vista previa en vivo al lado del
-# formulario y los campos de texto quedan comprimidos a la mitad del ancho
-# de la pantalla. Ninguna colección de este panel usa esa vista previa (no
-# hay una plantilla configurada que la aproveche), así que solo restaba
-# espacio - desactivada global para que el formulario ocupe todo el ancho.
+# Preview apagado por default (formulario a todo el ancho, ver Paso 2 de la
+# guía) - prendido puntualmente con `editor: { preview: true }` en las
+# colecciones que SÍ tienen su propio template en preview.js. Sin esto,
+# Sveltia muestra un panel de vista previa en vivo al lado del formulario y
+# los campos de texto quedan comprimidos a la mitad del ancho de la pantalla.
 editor:
   preview: false
 
@@ -30,18 +31,15 @@ editor:
 # encontrar cada sección en el mismo orden en el panel, sin tener que
 # adivinar dónde quedó cada cosa.
 collections:
-  # El bloque "Inicio" (home) está partido en varias carpetitas chicas,
-  # una por cada parte de la pantalla - así editar el título de la
-  # portada nunca mezcla en la misma pantalla las fotos, ni con "Ayuda a
-  # elegir" o el resto. Todas comparten el prefijo "🏠 Inicio →" para
-  # que se vean agrupadas una al lado de la otra en la lista de la
-  # izquierda (Sveltia no soporta carpetas anidadas de verdad, así que
-  # esto es lo más parecido). Ninguna usa la palabra técnica "Hero": para
-  # el cliente esto es "la portada", la primera pantalla que se ve al
-  # entrar al sitio.
+  # TODO lo de la home usa el prefijo "🏠 Inicio →", aunque cada bloque
+  # sea su propia colección de Sveltia (no soporta carpetas anidadas de
+  # verdad) - así se ven agrupados uno al lado del otro en la lista de la
+  # izquierda, y le queda clarísimo al cliente que todo esto es "la
+  # página de Inicio". Ninguna usa la palabra técnica "Hero": para el
+  # cliente esto es "la portada", la primera pantalla que se ve al entrar.
   - name: "config-inicio-portada-texto"
     label: "🏠 Inicio → Portada (texto)"
-    description: "El título grande y el párrafo de abajo, en la primera pantalla de la home."
+    description: "El título grande, el párrafo de abajo y los 2 botones, en la primera pantalla de la home. El párrafo se arma en 7 partes en el orden en que aparecen abajo, para que las 3 frases resaltadas queden siempre subrayadas con la animación."
     editor: { preview: true }
     files:
       - name: "inicio-hero"
@@ -54,11 +52,6 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "inicio-hero" }
               - { label: "Título principal", name: "heroTitulo", widget: "text" }
-              - label: "Párrafo de abajo del título"
-                name: "parrafo_nota"
-                widget: "hidden"
-                default: true
-                hint: "El párrafo se arma en 7 partes, en este orden exacto, para que las 3 frases resaltadas queden siempre subrayadas con la animación."
               - { label: "1. Texto inicial", name: "heroPre", widget: "string", hint: "Ej: \"Contamos con\"" }
               - label: "2. Frase resaltada"
                 name: "heroDestacado1"
@@ -69,6 +62,8 @@ collections:
               - { label: "5. Texto siguiente", name: "heroEntre2", widget: "string", hint: "Ej: \"y no pedimos seña:\"" }
               - { label: "6. Frase resaltada", name: "heroDestacado3", widget: "string", hint: "Ej: \"abonás al ingresar\"" }
               - { label: "7. Resto del párrafo", name: "heroFinal", widget: "text" }
+              - { label: "Botón 1: texto", name: "botonWhatsappTexto", widget: "string", hint: "Este botón siempre lleva a WhatsApp - acá solo se edita el texto que dice, no el destino." }
+              - { label: "Botón 2: texto", name: "botonDeptosTexto", widget: "string", hint: "Este botón siempre lleva al listado de departamentos - acá solo se edita el texto que dice, no el destino." }
 
   - name: "config-inicio-portada-fotos"
     label: "🏠 Inicio → Portada (fotos)"
@@ -135,15 +130,16 @@ collections:
                 widget: "list"
                 hint: "Se pueden agregar, borrar y reordenar arrastrando."
                 summary: "{{fields.texto}}"
-                field: { label: "Punto", name: "texto", widget: "string" }
+                fields:
+                  - { label: "Punto", name: "texto", widget: "string" }
 
-  - name: "config-diferenciales"
-    label: "✨ Diferenciales"
-    description: "El bloque \"Sin seña\", las tarjetas secundarias y el aviso sobre asignación de departamentos (aparecen en la home). Las tarjetas se pueden agregar, borrar y reordenar arrastrando."
+  - name: "config-inicio-diferenciales"
+    label: "🏠 Inicio → Diferenciales"
+    description: "El bloque \"Sin seña\", las tarjetas secundarias y el aviso sobre asignación de departamentos, en la home. Las tarjetas se pueden agregar, borrar y reordenar arrastrando."
     editor: { preview: true }
     files:
       - name: "diferenciales"
-        label: "Textos de Diferenciales"
+        label: "Diferenciales"
         file: "src/content/config/diferenciales.yaml"
         fields:
           - label: "Diferenciales"
@@ -165,13 +161,13 @@ collections:
               - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
               - { label: "Texto del aviso de asignación", name: "importanteTexto", widget: "text" }
 
-  - name: "config-zonas"
-    label: "📍 Zonas"
+  - name: "config-inicio-zonas"
+    label: "🏠 Inicio → Zonas"
     description: "El bloque de zonas (Recoleta/Palermo) y los accesos, en la home. Las tarjetas de zona y los accesos se pueden agregar, borrar y reordenar arrastrando, cada lista por separado."
     editor: { preview: true }
     files:
       - name: "zonas"
-        label: "Textos de Zonas"
+        label: "Zonas"
         file: "src/content/config/zonas.yaml"
         fields:
           - label: "Zonas"
@@ -190,20 +186,22 @@ collections:
                   - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
                   - { label: "Subtítulo", name: "subtitulo", widget: "string" }
                   - { label: "Texto", name: "texto", widget: "text" }
-              - label: "Accesos (la lista de 4 con ícono, abajo de todo)"
+              - label: "Accesos (la lista de abajo de todo, con ícono)"
                 name: "accesos"
                 widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada acceso es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                hint: "Se pueden agregar, borrar y reordenar arrastrando."
                 summary: "{{fields.texto}}"
-                field: { label: "Texto", name: "texto", widget: "string" }
+                fields:
+                  - { label: "Ícono", name: "icono", widget: "icon-picker" }
+                  - { label: "Texto", name: "texto", widget: "string" }
 
-  - name: "config-que-incluye"
-    label: "🧺 Qué incluye"
+  - name: "config-inicio-que-incluye"
+    label: "🏠 Inicio → Qué incluye"
     description: "Los servicios que se muestran en la home. Se pueden agregar, borrar y reordenar arrastrando."
     editor: { preview: true }
     files:
       - name: "que-incluye"
-        label: "Textos de Qué incluye"
+        label: "Qué incluye"
         file: "src/content/config/que-incluye.yaml"
         fields:
           - label: "Qué incluye"
@@ -220,31 +218,17 @@ collections:
                 hint: "Se pueden agregar, borrar y reordenar arrastrando."
                 summary: "{{fields.titulo}}"
                 fields:
-                  - label: "Ícono"
-                    name: "icono"
-                    widget: "select"
-                    hint: "Elegí de la lista, así el dibujo siempre queda prolijo (no se puede escribir cualquier cosa acá)."
-                    options:
-                      - { label: "WiFi", value: "wifi" }
-                      - { label: "Cocina", value: "cocina" }
-                      - { label: "Ropa blanca", value: "ropaBlanca" }
-                      - { label: "TV", value: "tv" }
-                      - { label: "Aire acondicionado", value: "aire" }
-                      - { label: "Calefacción", value: "calefaccion" }
-                      - { label: "Ascensor", value: "ascensor" }
-                      - { label: "Cochera", value: "cochera" }
-                      - { label: "Amenities (pileta, solarium, etc.)", value: "amenities" }
-                      - { label: "Seguridad", value: "seguridad" }
+                  - { label: "Ícono", name: "icono", widget: "icon-picker" }
                   - { label: "Título", name: "titulo", widget: "string" }
                   - { label: "Texto", name: "texto", widget: "text" }
 
-  - name: "config-como-trabajamos"
-    label: "🔁 Cómo se reserva"
+  - name: "config-inicio-como-se-reserva"
+    label: "🏠 Inicio → Cómo se reserva"
     description: "Los pasos del proceso, en la home (mismo bloque al que apunta \"Cómo se reserva\" del menú del sitio). Los pasos se pueden agregar, borrar y reordenar arrastrando; se numeran solos."
     editor: { preview: true }
     files:
       - name: "como-trabajamos"
-        label: "Textos de Cómo se reserva"
+        label: "Cómo se reserva"
         file: "src/content/config/como-trabajamos.yaml"
         fields:
           - label: "Cómo se reserva"
@@ -265,8 +249,8 @@ collections:
               - { label: "Título del cartel \"¿Cómo se reserva?\"", name: "reservaTitulo", widget: "string" }
               - { label: "Texto del cartel \"¿Cómo se reserva?\"", name: "reservaTexto", widget: "text" }
 
-  - name: "resenas"
-    label: "⭐ Reseñas"
+  - name: "config-inicio-resenas"
+    label: "🏠 Inicio → Reseñas"
     label_singular: "Reseña"
     description: "Las reseñas de huéspedes que aparecen en la home. Agregá, borrá o reordená las que quieras."
     folder: "src/content/resenas"
@@ -283,7 +267,7 @@ collections:
 
   - name: "config-inicio-final"
     label: "🏠 Inicio → Bloque final"
-    description: "El último cartel de la home (\"¿Ya sabés qué fechas necesitás?\"), con su foto de fondo."
+    description: "El último cartel de la home (\"¿Ya sabés qué fechas necesitás?\"), con su foto de fondo y su botón."
     editor: { preview: true }
     files:
       - name: "inicio-cta"
@@ -298,10 +282,11 @@ collections:
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Imagen de fondo", name: "foto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
+              - { label: "Botón: texto", name: "botonTexto", widget: "string", hint: "Este botón siempre lleva al listado de departamentos - acá solo se edita el texto que dice, no el destino." }
 
   - name: "config-nosotros"
     label: "👨‍👩‍👦 Nosotros"
-    description: "La foto de familia, el título, los párrafos y los 3 puntos de la página \"Nosotros\"."
+    description: "La foto de familia, el título, los párrafos y los puntos de la página \"Nosotros\". Los puntos se pueden agregar, borrar y reordenar arrastrando."
     editor: { preview: true }
     files:
       - name: "nosotros"
@@ -317,12 +302,46 @@ collections:
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Primer párrafo", name: "texto1", widget: "text" }
               - { label: "Segundo párrafo", name: "texto2", widget: "text" }
-              - { label: "Título del punto 1", name: "punto1Titulo", widget: "string" }
-              - { label: "Texto del punto 1", name: "punto1Texto", widget: "text" }
-              - { label: "Título del punto 2", name: "punto2Titulo", widget: "string" }
-              - { label: "Texto del punto 2", name: "punto2Texto", widget: "text" }
-              - { label: "Título del punto 3", name: "punto3Titulo", widget: "string" }
-              - { label: "Texto del punto 3", name: "punto3Texto", widget: "text" }
+              - label: "Puntos"
+                name: "puntos"
+                widget: "list"
+                summary: "{{fields.titulo}}"
+                fields:
+                  - { label: "Ícono", name: "icono", widget: "icon-picker" }
+                  - { label: "Título", name: "titulo", widget: "string" }
+                  - { label: "Texto", name: "texto", widget: "text" }
+
+  # Catálogos chicos de referencia para Departamentos (ver el widget
+  # "relation" en la colección de acá abajo): agregar una entrada nueva
+  # ahí la deja disponible como opción para elegir en cualquier
+  # departamento, sin tocar código. Van justo antes de "Departamentos"
+  # porque solo existen para alimentarla.
+  - name: "zonas-disponibles"
+    label: "🏢 Departamentos → Zonas disponibles"
+    label_singular: "Zona"
+    description: "Las zonas que se pueden elegir al cargar un departamento. Agregá una acá para que aparezca como opción nueva."
+    folder: "src/data/zonas-disponibles"
+    create: true
+    delete: true
+    extension: "json"
+    format: "json"
+    identifier_field: nombre
+    fields:
+      - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
+
+  - name: "servicios-disponibles"
+    label: "🏢 Departamentos → Servicios disponibles"
+    label_singular: "Servicio"
+    description: "Los servicios que se pueden marcar al cargar un departamento (y sus íconos). Agregá uno acá para que aparezca como opción nueva."
+    folder: "src/data/servicios-disponibles"
+    create: true
+    delete: true
+    extension: "json"
+    format: "json"
+    identifier_field: nombre
+    fields:
+      - { label: "Ícono", name: "icono", widget: "icon-picker" }
+      - { label: "Nombre (ej: \"WiFi incluido\")", name: "nombre", widget: "string" }
 
   - name: "departamentos"
     label: "🏢 Departamentos"
@@ -338,8 +357,12 @@ collections:
       - { label: "Nombre", name: "nombre", widget: "string" }
       - label: "Zona"
         name: "zona"
-        widget: "select"
-        options: [{ label: "Recoleta", value: "Recoleta" }, { label: "Palermo", value: "Palermo" }, { label: "Balvanera", value: "Balvanera" }]
+        widget: "relation"
+        collection: "zonas-disponibles"
+        search_fields: ["nombre"]
+        display_fields: ["{{nombre}}"]
+        value_field: "nombre"
+        hint: "Si la zona que buscás no está en la lista, agregala primero en \"Departamentos → Zonas disponibles\" y volvé acá - va a aparecer en el próximo departamento que edites o crees."
       - { label: "Dirección", name: "direccion", widget: "string" }
       - label: "Ubicación en el mapa"
         name: "coords"
@@ -352,40 +375,30 @@ collections:
       - { label: "Descripción", name: "descripcionBreve", widget: "text" }
       - label: "Servicios incluidos"
         name: "servicios"
-        widget: "select"
+        widget: "relation"
+        collection: "servicios-disponibles"
+        search_fields: ["nombre"]
+        display_fields: ["{{nombre}}"]
+        value_field: "{{slug}}"
         multiple: true
-        options:
-          - { label: "WiFi incluido", value: "wifi" }
-          - { label: "Cocina equipada", value: "cocina" }
-          - { label: "Ropa blanca", value: "ropaBlanca" }
-          - { label: "TV", value: "tv" }
-          - { label: "Aire acondicionado", value: "aire" }
-          - { label: "Calefacción", value: "calefaccion" }
-          - { label: "Ascensor", value: "ascensor" }
-          - { label: "Cochera", value: "cochera" }
-          - { label: "Amenities", value: "amenities" }
-          - { label: "Seguridad", value: "seguridad" }
-      - label: "Fotos"
-        name: "fotos"
+        hint: "Si el servicio que buscás no está en la lista, agregalo primero en \"Departamentos → Servicios disponibles\" (con su ícono) y volvé acá - va a aparecer en el próximo departamento que edites o crees."
+      - label: "Fotos y videos"
+        name: "media"
         widget: "list"
-        field: { label: "Foto", name: "foto", widget: "image", media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
-      - label: "Video corto (opcional, se suma como una foto más al final de la galería)"
-        name: "video"
-        widget: "file"
-        required: false
-        media_folder: "/public/departamentos/{{slug}}"
-        public_folder: "/departamentos/{{slug}}"
-      - label: "Imagen de portada del video (opcional)"
-        name: "videoPoster"
-        widget: "image"
-        required: false
-        media_folder: "/public/departamentos/{{slug}}"
-        public_folder: "/departamentos/{{slug}}"
+        hint: "Se pueden agregar, borrar y reordenar arrastrando - las fotos y los videos van todos en la misma lista, en el orden que quieras (podés poner un video primero, al final, o entre dos fotos)."
+        summary: "{{archivo}}"
+        field:
+          label: "Elemento"
+          name: "elemento"
+          widget: "object"
+          fields:
+            - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
+            - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
       - label: "Portada de la tarjeta (opcional)"
         name: "portada"
         widget: "file"
         required: false
-        hint: "Se usa en el carrusel de la home y en el listado de departamentos. Admite foto o video. Si se deja vacío, se usa la primera foto de arriba (o el video, solo si el depto no tiene ninguna foto todavía)."
+        hint: "Se usa en el carrusel de la home y en el listado de departamentos. Admite foto o video. Si se deja vacío, se usa el primer elemento de \"Fotos y videos\" de arriba."
         media_folder: "/public/departamentos/{{slug}}"
         public_folder: "/departamentos/{{slug}}"
 
