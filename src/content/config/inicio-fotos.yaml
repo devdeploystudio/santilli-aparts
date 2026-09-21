@@ -1,7 +1,7 @@
 inicioFotos:
   id: "inicio-fotos"
   heroSlides:
-    - archivo: "/hero/obelisco-1.jpg"
+    - archivo: "/hero/obelisco-1-recorte.jpg"
     - archivo: "/hero/video-av-callao.mp4"
       poster: "/hero/video-av-callao-poster.jpg"
     - archivo: "/hero/av-callao.jpg"

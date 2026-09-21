@@ -15,50 +15,53 @@ const heroSlidesConTamaño = await Promise.all(
 );
 ---
 
-<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] overflow-hidden" data-no-reveal>
-  <div class="relative mx-auto grid w-full max-w-[90rem] lg:grid-cols-[1fr_1.1fr]">
-    <div class="flex flex-col justify-center px-7 py-16 sm:px-10 sm:py-20 lg:order-2 lg:pl-12 xl:pl-20">
-      <div class="max-w-2xl">
-        {/* clamp en vez de breakpoints fijos (sm:text-6xl lg:text-7xl): con un
-        salto fijo justo en el breakpoint donde arranca el layout de 2
-        columnas (1024px), esta columna se queda con menos ancho de golpe y
-        el título pasaba a ocupar 3-4 líneas en vez de 2 en pantallas de
-        notebook, empujando el hero mucho más alto que una pantalla en esos
-        anchos puntuales aunque se viera bien en un monitor más ancho. El
-        clamp escala el tamaño de forma continua con el ancho, sin ese salto. */}
-        <h1 class="font-display text-[clamp(2.75rem,4vw+1rem,4.5rem)] leading-[1.05] text-ink">
-          {inicio.heroTitulo}
-        </h1>
+<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden" data-no-reveal>
+  {/* PRUEBA (sep 2026): fotos/video como fondo completo del Hero, con una
+     capa oscura encima para que el texto blanco se lea bien. Versión
+     anterior (2 columnas, texto a la derecha / vidriera a la izquierda)
+     respaldada en Hero.astro.backup por si no convence. */}
+  <div class="absolute inset-0">
+    <HeroShowcase client:visible slides={heroSlidesConTamaño} />
+    <div class="absolute inset-0 bg-ink/55" />
+  </div>
 
-        <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-muted sm:text-xl">
-          {inicio.heroPre} <span class="ink-underline font-semibold text-ink" style="--delay:825ms">{inicio.heroDestacado1}</span>{" "}
-          {inicio.heroEntre1} <span class="ink-underline font-semibold text-ink" style="--delay:1050ms">{inicio.heroDestacado2}</span>,{" "}
-          {inicio.heroEntre2} <span class="ink-underline font-semibold text-ink" style="--delay:1275ms">{inicio.heroDestacado3}</span>.{" "}
-          {inicio.heroFinal}
-        </p>
+  <div class="relative mx-auto w-full max-w-[90rem] px-7 py-20 sm:px-10 sm:py-24">
+    <div class="max-w-2xl">
+      {/* clamp en vez de breakpoints fijos (sm:text-6xl lg:text-7xl): con un
+      salto fijo justo en el breakpoint donde arranca el layout de 2
+      columnas (1024px), esta columna se queda con menos ancho de golpe y
+      el título pasaba a ocupar 3-4 líneas en vez de 2 en pantallas de
+      notebook, empujando el hero mucho más alto que una pantalla en esos
+      anchos puntuales aunque se viera bien en un monitor más ancho. El
+      clamp escala el tamaño de forma continua con el ancho, sin ese salto. */}
+      <h1 class="font-display text-[clamp(2.75rem,4vw+1rem,4.5rem)] leading-[1.05] text-canvas">
+        {inicio.heroTitulo}
+      </h1>
 
-        <div class="mt-9 flex flex-wrap gap-4">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-ubicacion="hero"
-            class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink shadow-[0_8px_24px_-8px_rgb(204_160_56/0.6)] hover:bg-gold-active"
-          >
-            {inicio.botonWhatsappTexto}
-          </a>
-          <a
-            href="/departamentos/"
-            class="btn-press rounded-full border border-hairline bg-surface px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
-          >
-            {inicio.botonDeptosTexto}
-          </a>
-        </div>
+      <p class="mt-7 max-w-xl font-body text-lg leading-relaxed text-canvas/85 sm:text-xl">
+        {inicio.heroPre} <span class="ink-underline font-semibold text-canvas" style="--delay:825ms">{inicio.heroDestacado1}</span>{" "}
+        {inicio.heroEntre1} <span class="ink-underline font-semibold text-canvas" style="--delay:1050ms">{inicio.heroDestacado2}</span>,{" "}
+        {inicio.heroEntre2} <span class="ink-underline font-semibold text-canvas" style="--delay:1275ms">{inicio.heroDestacado3}</span>.{" "}
+        {inicio.heroFinal}
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-ubicacion="hero"
+          class="btn-press rounded-full bg-gold px-6 py-3.5 font-body text-sm font-semibold text-ink shadow-[0_8px_24px_-8px_rgb(204_160_56/0.6)] hover:bg-gold-active"
+        >
+          {inicio.botonWhatsappTexto}
+        </a>
+        <a
+          href="/departamentos/"
+          class="btn-press rounded-full border border-hairline bg-surface px-6 py-3.5 font-body text-sm font-semibold text-ink hover:border-gold-active hover:text-gold-active"
+        >
+          {inicio.botonDeptosTexto}
+        </a>
       </div>
-    </div>
-
-    <div class="order-first h-64 sm:h-96 lg:order-1 lg:h-auto lg:ml-[min(0px,calc((90rem-100vw)/2))]">
-      <HeroShowcase client:visible slides={heroSlidesConTamaño} />
     </div>
   </div>
 </section>
