@@ -15,7 +15,10 @@ const heroSlidesConTamaño = await Promise.all(
 );
 ---
 
-<section id="hero" class="relative flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden" data-no-reveal>
+{/* --header-h la fija Header.astro (ResizeObserver, alto real medido) -
+   el 4.5rem acá es solo el fallback antes de que ese script corra, para
+   no dejar un salto visual en el primer paint. */}
+<section id="hero" class="relative flex min-h-[calc(100svh-var(--header-h,4.5rem))] items-center overflow-hidden" data-no-reveal>
   {/* PRUEBA (sep 2026): fotos/video como fondo completo del Hero, con una
      capa oscura encima para que el texto blanco se lea bien. Versión
      anterior (2 columnas, texto a la derecha / vidriera a la izquierda)

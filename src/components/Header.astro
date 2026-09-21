@@ -91,4 +91,21 @@ const waLink = buildConsultaGeneralLink(WHATSAPP_NUMBER);
     toggle.classList.toggle("is-open", isOpen);
     toggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
   });
+
+  // Alto real del navbar como variable CSS, para que el Hero (u otra
+  // sección) pueda calcular "el resto de la pantalla" exacto (100svh menos
+  // esto) sin adivinar un número fijo a mano - antes el Hero asumía 4.5rem
+  // (72px) hardcodeado, pero el navbar real mide ~64.7px, dejando un
+  // sobrante y el conjunto navbar+Hero sin llenar la pantalla justo.
+  // ResizeObserver (no solo un listener de "resize" de window) porque el
+  // alto del propio header puede cambiar por otros motivos además del
+  // ancho de ventana - un salto de fuente al cargar, por ejemplo.
+  const header = document.querySelector("header");
+  if (header && "ResizeObserver" in window) {
+    const actualizarAltoNavbar = () => {
+      document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`);
+    };
+    actualizarAltoNavbar();
+    new ResizeObserver(actualizarAltoNavbar).observe(header);
+  }
 </script>
