@@ -103,7 +103,7 @@ const serviciosInfo = servicios
 
     <div class="mt-10 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-stretch">
       <div class="flex flex-col">
-        <div class="h-80 flex-1 overflow-hidden rounded-2xl bg-canvas lg:h-auto">
+        <div class="h-80 overflow-hidden rounded-2xl bg-canvas lg:h-auto lg:flex-1">
           <MapView client:only="preact" pines={[{ nombre, lat: coords.lat, lng: coords.lng }]} zoom={15} className="h-full w-full" />
         </div>
       </div>
