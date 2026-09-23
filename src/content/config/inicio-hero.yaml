@@ -1,12 +1,12 @@
 inicioHero:
-  id: "inicio-hero"
-  heroTitulo: "Departamentos listos para disfrutar Buenos Aires."
-  heroPre: "Contamos con"
-  heroDestacado1: "más de 60 departamentos"
-  heroEntre1: "en Recoleta y Palermo, para"
-  heroDestacado2: "1 a 5 personas"
-  heroEntre2: "y no pedimos seña:"
-  heroDestacado3: "abonás al ingresar"
-  heroFinal: "Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia."
-  botonWhatsappTexto: "Consultar por WhatsApp"
-  botonDeptosTexto: "Ver departamentos"
+  id: inicio-hero
+  heroTitulo: Departamentos listos para disfrutar Buenos Aires
+  heroPre: Contamos con
+  heroDestacado1: más de 60 departamentos
+  heroEntre1: en Recoleta y Palermo, para
+  heroDestacado2: 1 a 5 personas
+  heroEntre2: 'y no pedimos seña:'
+  heroDestacado3: abonás al ingresar
+  heroFinal: Te asesoramos de manera personalizada según fechas, zona y cantidad de huéspedes, y siempre te atiende la misma familia.
+  botonWhatsappTexto: Consultar por WhatsApp
+  botonDeptosTexto: Ver departamentos
