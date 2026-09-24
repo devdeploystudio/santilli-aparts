@@ -8,6 +8,7 @@
   },
   "capacidadMin": 3,
   "capacidadMax": 4,
+  "orden": 10,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallas/toallones. Además, cuenta con utensilios de cocina y heladera bajo mesada. También ofrece microondas y doble anafe a gas. Se completa con WiFi y Tv con cable y balconcito vista al contrafrente (luminoso). Incluye también baño con cuadro de ducha.",
   "servicios": [
     "ropablanca",

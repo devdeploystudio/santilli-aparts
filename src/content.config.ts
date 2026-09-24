@@ -84,6 +84,9 @@ const departamentos = defineCollection({
     }),
     capacidadMin: z.number().int().min(1),
     capacidadMax: z.number().int().min(1),
+    // El orden se arrastra en el panel (reorder: { key: orden }, mismo
+    // patrón que Reseñas) - nunca se escribe a mano.
+    orden: z.number(),
     descripcionBreve: z.string(),
     // Ídem zona: antes un enum fijo, ahora texto libre que en el panel se
     // elige (multiple) de la colección "Servicios disponibles" (relation).
@@ -102,6 +105,11 @@ const departamentos = defineCollection({
       z.object({
         archivo: z.string(),
         poster: sinVacios(z.string()),
+        // Descripción para SEO/lectores de pantalla (alt de la foto, o de
+        // qué se ve en el video). Vacío por ahora en los datos existentes
+        // no rompe nada (fallback a un texto genérico en el componente),
+        // pero conviene completarlo.
+        alt: sinVacios(z.string()),
       }),
     ),
     // Portada de la TARJETA (carrusel de la home, listado de deptos) -
@@ -185,6 +193,9 @@ const configInicioFotos = defineCollection({
       z.object({
         archivo: z.string(),
         poster: sinVacios(z.string()),
+        // Descripción para SEO/lectores de pantalla (qué se ve en la foto
+        // o el video) - ver mismo criterio en "media" de departamentos.
+        alt: sinVacios(z.string()),
       }),
     ),
   }),
@@ -225,6 +236,7 @@ const configInicioCta = defineCollection({
     // runtime — se rompía en el deploy aunque local funcionara bien. Mismo
     // criterio que las fotos de departamentos: archivo plano ya comprimido.
     foto: z.string(),
+    fotoAlt: sinVacios(z.string()),
     // Destino fijo en el componente (listado de departamentos), solo el
     // texto es editable.
     botonTexto: z.string(),
@@ -238,6 +250,7 @@ const configNosotros = defineCollection({
     // Ver comentario en ctaFoto (configInicio) sobre por qué es un path a
     // /public y no astro:assets.
     foto: z.string(),
+    fotoAlt: sinVacios(z.string()),
     titulo: z.string(),
     texto1: z.string(),
     texto2: z.string(),
@@ -255,16 +268,14 @@ const configDiferenciales = defineCollection({
     // Foto de fondo de toda la sección (path a /public, mismo criterio que
     // foto/configInicioCta: ver comentario ahí).
     fotoFondo: z.string(),
+    fotoFondoAlt: sinVacios(z.string()),
     titulo: z.string(),
     texto: z.string(),
     // Lista dinámica (agregar/borrar/reordenar) en vez de 3 campos fijos
-    // (secundario1/2/3 antes). El ícono de cada tarjeta rota entre un set
-    // fijo de dibujos (ver ICONOS_CARDS en el componente) según la
-    // posición, no es elegible desde el panel - son decorativos, no hay
-    // uno "correcto" por tarjeta como sí pasa en Qué incluye (ahí el
-    // ícono SÍ importa, es wifi/cocina/etc., y por eso ahí es un campo
-    // elegible).
-    cards: z.array(z.object({ titulo: z.string(), texto: z.string() })),
+    // (secundario1/2/3 antes). El ícono ahora SÍ es elegible (antes rotaba
+    // decorativo, sin selector) - el cliente prefirió poder elegirlo
+    // siempre, igual que en Qué incluye/Zonas/Nosotros.
+    cards: z.array(z.object({ icono: IconKey, titulo: z.string(), texto: z.string() })),
     importanteTitulo: z.string(),
     importanteTexto: z.string(),
   }),
@@ -321,6 +332,21 @@ const configZonas = defineCollection({
   }),
 });
 
+// Colección chica y APARTE (no un campo más de configZonas) a pedido del
+// cliente: qué departamentos se ven como pin en el mapa de la sección
+// Zonas de la home. Antes el mapa mostraba TODOS los departamentos
+// siempre - con 40+ quedaba saturado de pines. En el panel real
+// (Sveltia) es su propia colección, pero en el menú /editor se muestra
+// pegada a "Zonas" (mismo prefijo de nombre) para que quede claro que es
+// parte de ese mismo bloque de la página.
+const configZonasMapa = defineCollection({
+  loader: file("./src/content/config/zonas-mapa.yaml"),
+  schema: z.object({
+    id: z.string(),
+    deptos: z.array(z.string()),
+  }),
+});
+
 export const collections = {
   departamentos,
   zonasDisponibles,
@@ -337,4 +363,5 @@ export const collections = {
   configQueIncluye,
   configComoTrabajamos,
   configZonas,
+  configZonasMapa,
 };

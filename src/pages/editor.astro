@@ -10,21 +10,65 @@ import Layout from "../layouts/Layout.astro";
 // Mismo orden en que estos bloques aparecen scrolleando la página real
 // (home de arriba a abajo, después las páginas aparte, General al final).
 const grupos = [
+  // Antes era una sola tarjeta "🏠 Inicio" con los 10 links apilados
+  // adentro - el cliente pidió que cada bloque de Inicio sea su propia
+  // tarjetita separada (misma pinta que Nosotros/Departamentos/General),
+  // no una lista larga metida en una sola. Quedan una al lado de la otra
+  // por compartir el mismo emoji y el prefijo "Inicio →" en el título.
   {
     emoji: "🏠",
-    nombre: "Inicio",
-    items: [
-      { label: "Portada: texto", coleccion: "config-inicio-portada-texto" },
-      { label: "Portada: fotos", coleccion: "config-inicio-portada-fotos" },
-      { label: "Nuestros departamentos", coleccion: "config-inicio-deptos" },
-      { label: "Ayuda a elegir", coleccion: "config-inicio-ayuda" },
-      { label: "Diferenciales", coleccion: "config-inicio-diferenciales" },
-      { label: "Zonas", coleccion: "config-inicio-zonas" },
-      { label: "Qué incluye", coleccion: "config-inicio-que-incluye" },
-      { label: "Cómo se reserva", coleccion: "config-inicio-como-se-reserva" },
-      { label: "Reseñas", coleccion: "config-inicio-resenas" },
-      { label: "Bloque final", coleccion: "config-inicio-final" },
-    ],
+    nombre: "Inicio → Portada (texto)",
+    items: [{ label: "Título, párrafo y botones", coleccion: "config-inicio-portada-texto" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Portada (fotos)",
+    items: [{ label: "Fotos y videos que van pasando", coleccion: "config-inicio-portada-fotos" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Nuestros departamentos",
+    items: [{ label: "Título y párrafos", coleccion: "config-inicio-deptos" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Ayuda a elegir",
+    items: [{ label: "Título, texto y puntos", coleccion: "config-inicio-ayuda" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Diferenciales",
+    items: [{ label: "Textos y tarjetas", coleccion: "config-inicio-diferenciales" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Zonas",
+    items: [{ label: "Tarjetas de zona y accesos", coleccion: "config-inicio-zonas" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Zonas: mapa",
+    items: [{ label: "Qué departamentos se ven como pin", coleccion: "config-inicio-zonas-mapa" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Qué incluye",
+    items: [{ label: "Servicios (título, texto e ícono)", coleccion: "config-inicio-que-incluye" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Cómo se reserva",
+    items: [{ label: "Los pasos del proceso", coleccion: "config-inicio-como-se-reserva" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Reseñas",
+    items: [{ label: "Agregar, borrar y reordenar reseñas", coleccion: "config-inicio-resenas" }],
+  },
+  {
+    emoji: "🏠",
+    nombre: "Inicio → Bloque final",
+    items: [{ label: "Título, texto, foto y botón", coleccion: "config-inicio-final" }],
   },
   {
     emoji: "👨‍👩‍👦",

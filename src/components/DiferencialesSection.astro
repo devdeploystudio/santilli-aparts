@@ -1,28 +1,17 @@
 ---
 import { getEntry } from "astro:content";
 import MarginLines from "./MarginLines.astro";
+import Icon from "./Icon.astro";
 import { imageSize } from "../lib/imageSize";
 
 const d = (await getEntry("configDiferenciales", "diferenciales"))!.data;
 const fotoFondoSize = await imageSize(d.fotoFondo);
-
-// Los íconos son decorativos (no representan algo puntual como en Qué
-// incluye), así que quedan fijos en código y rotan según la posición de
-// la tarjeta en la lista - si el cliente agrega una 4ta card desde el
-// panel, vuelve a usar el primer ícono, y así. Título/texto de cada
-// tarjeta (y cuántas hay) se editan desde /admin.
-const ICONOS_CARDS = [
-  "M4 21V9a2 2 0 0 1 2-2h3V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v12 M4 21h16 M9 21v-5h6v5",
-  "M2 6a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6z M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z M5 9v.01 M19 15v.01",
-  "M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2 M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M21 20v-2a4 4 0 0 0-3-3.87 M15.5 4.13a4 4 0 0 1 0 7.75",
-];
-const secundarios = d.cards.map((card, i) => ({ ...card, path: ICONOS_CARDS[i % ICONOS_CARDS.length] }));
 ---
 
 <section class="relative overflow-hidden border-y border-hairline">
   <img
     src={d.fotoFondo}
-    alt=""
+    alt={d.fotoFondoAlt ?? ""}
     draggable="false"
     loading="lazy"
     width={fotoFondoSize?.width}
@@ -43,15 +32,13 @@ const secundarios = d.cards.map((card, i) => ({ ...card, path: ICONOS_CARDS[i % 
 
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       {
-        secundarios.map((d) => (
+        d.cards.map((card) => (
           <div class="rounded-2xl border border-hairline bg-surface/90 p-6 shadow-lg shadow-ink/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-active hover:bg-surface hover:shadow-xl">
             <span class="flex h-11 w-11 items-center justify-center rounded-full bg-canvas text-gold-active">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d={d.path} />
-              </svg>
+              <Icon icono={card.icono} class="h-5 w-5" />
             </span>
-            <h3 class="mt-4 font-display text-lg text-ink">{d.titulo}</h3>
-            <p class="mt-2 font-body text-sm leading-relaxed text-muted">{d.texto}</p>
+            <h3 class="mt-4 font-display text-lg text-ink">{card.titulo}</h3>
+            <p class="mt-2 font-body text-sm leading-relaxed text-muted">{card.texto}</p>
           </div>
         ))
       }

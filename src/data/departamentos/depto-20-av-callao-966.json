@@ -8,6 +8,7 @@
   },
   "capacidadMin": 5,
   "capacidadMax": 5,
+  "orden": 200,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable (living y cuarto principal). Además, cuenta con 3 camas de plaza y cama matrimonial en cuarto principal. También ofrece heladera grande y doble anafe a gas. Se completa con baño con cuadro de ducha y balcón privado a la calle en cuarto principal. Incluye también balcón a la calle en living y aire acondicionado en living. Y suma aire acondicionado en cuarto principal.",
   "servicios": [
     "ropablanca",

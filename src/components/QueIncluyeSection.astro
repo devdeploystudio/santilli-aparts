@@ -11,7 +11,7 @@ const fotoFondoSize = await imageSize(q.fotoFondo);
 <section class="relative overflow-hidden border-y border-hairline">
   <img
     src={q.fotoFondo}
-    alt=""
+    alt={q.fotoFondoAlt ?? ""}
     draggable="false"
     loading="lazy"
     width={fotoFondoSize?.width}

@@ -10,6 +10,7 @@ interface FotoTamaño {
 interface MediaItem {
   archivo: string;
   poster?: string;
+  alt?: string;
   tamaño?: FotoTamaño | null;
 }
 
@@ -176,7 +177,7 @@ export default function Gallery({ media, esPlaceholder, nombre }: Props) {
                 onClick={() => setLightboxIndex(fotos.findIndex((f) => f.archivo === item.archivo))}
                 aria-label={`Ampliar foto de ${nombre}`}
               >
-                <FotoSlide src={item.archivo} placeholder={esPlaceholder} alt={`Foto de ${nombre}`} eager={i === 0} size={item.tamaño} />
+                <FotoSlide src={item.archivo} placeholder={esPlaceholder} alt={item.alt || `Foto de ${nombre}`} eager={i === 0} size={item.tamaño} />
               </button>
             ),
           )}
@@ -273,7 +274,7 @@ export default function Gallery({ media, esPlaceholder, nombre }: Props) {
               // objetivo es ver la foto entera, no una versión recortada.
               <img
                 src={fotos[lightboxIndex].archivo}
-                alt={`Foto ampliada de ${nombre}`}
+                alt={fotos[lightboxIndex].alt || `Foto ampliada de ${nombre}`}
                 draggable={false}
                 width={fotos[lightboxIndex].tamaño?.width}
                 height={fotos[lightboxIndex].tamaño?.height}

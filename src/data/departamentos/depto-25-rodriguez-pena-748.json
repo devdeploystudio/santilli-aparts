@@ -8,6 +8,7 @@
   },
   "capacidadMin": 1,
   "capacidadMax": 2,
+  "orden": 250,
   "descripcionBreve": "Departamento para 1 y 2 personas con patio interno, las camas se pueden unir.",
   "servicios": [
     "ropablanca",

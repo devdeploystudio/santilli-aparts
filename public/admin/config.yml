@@ -90,6 +90,7 @@ collections:
                   fields:
                     - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/hero", public_folder: "/hero" }
                     - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/hero", public_folder: "/hero" }
+                    - { label: "Descripción (para Google y lectores de pantalla)", name: "alt", widget: "string", required: false, hint: "Ej: \"Vista aérea del Obelisco en Av. 9 de Julio\"." }
 
   - name: "config-inicio-deptos"
     label: "🏠 Inicio → Nuestros departamentos"
@@ -148,14 +149,16 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "diferenciales" }
               - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
+              - { label: "Descripción de la foto de fondo (para Google y lectores de pantalla)", name: "fotoFondoAlt", widget: "string", required: false }
               - { label: "Título principal", name: "titulo", widget: "string" }
               - { label: "Texto principal", name: "texto", widget: "text" }
               - label: "Tarjetas secundarias"
                 name: "cards"
                 widget: "list"
-                hint: "Se pueden agregar, borrar y reordenar arrastrando. El dibujo de cada tarjeta es decorativo y lo pone el diseño solo (rota según el orden), no se elige acá."
+                hint: "Se pueden agregar, borrar y reordenar arrastrando."
                 summary: "{{fields.titulo}}"
                 fields:
+                  - { label: "Ícono", name: "icono", widget: "icon-picker" }
                   - { label: "Título", name: "titulo", widget: "string" }
                   - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Título del aviso de asignación", name: "importanteTitulo", widget: "string" }
@@ -183,7 +186,14 @@ collections:
                 hint: "Se pueden agregar, borrar y reordenar arrastrando (ej: sumar una tarjeta de Balvanera más adelante)."
                 summary: "{{fields.nombre}}"
                 fields:
-                  - { label: "Nombre (ej: \"Recoleta\")", name: "nombre", widget: "string" }
+                  - label: "Nombre"
+                    name: "nombre"
+                    widget: "relation"
+                    collection: "zonas-disponibles"
+                    search_fields: ["nombre"]
+                    display_fields: ["{{nombre}}"]
+                    value_field: "nombre"
+                    hint: "Se elige de la misma lista de \"Departamentos → Zonas disponibles\" - así el botón \"Ver departamentos en...\" de esta tarjeta siempre lleva a un filtro que sí trae resultados."
                   - { label: "Subtítulo", name: "subtitulo", widget: "string" }
                   - { label: "Texto", name: "texto", widget: "text" }
               - label: "Accesos (la lista de abajo de todo, con ícono)"
@@ -194,6 +204,32 @@ collections:
                 fields:
                   - { label: "Ícono", name: "icono", widget: "icon-picker" }
                   - { label: "Texto", name: "texto", widget: "string" }
+
+  # Colección aparte (no un campo más de "Zonas") a pedido del cliente,
+  # pero pegada acá en el archivo y con el mismo prefijo de nombre para
+  # que se vea junto a "Zonas" en la lista de la izquierda y en /editor.
+  - name: "config-inicio-zonas-mapa"
+    label: "🏠 Inicio → Zonas: mapa"
+    description: "Qué departamentos se ven como pin en el mapa de la sección Zonas de la home. Sin esto se verían TODOS los departamentos (queda saturado con muchos) - acá se elige una selección más chica y prolija."
+    files:
+      - name: "zonas-mapa"
+        label: "Departamentos en el mapa"
+        file: "src/content/config/zonas-mapa.yaml"
+        fields:
+          - label: "Mapa"
+            name: "zonasMapa"
+            widget: "object"
+            fields:
+              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas-mapa" }
+              - label: "Departamentos a mostrar como pin"
+                name: "deptos"
+                widget: "relation"
+                collection: "departamentos"
+                search_fields: ["nombre"]
+                display_fields: ["{{nombre}}"]
+                value_field: "{{slug}}"
+                multiple: true
+                hint: "Se pueden agregar o sacar departamentos de la lista. El orden acá no importa (el mapa los muestra a todos igual, no hay un pin \"primero\")."
 
   - name: "config-inicio-que-incluye"
     label: "🏠 Inicio → Qué incluye"
@@ -210,6 +246,7 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "que-incluye" }
               - { label: "Foto de fondo del bloque", name: "fotoFondo", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio", hint: "Ocupa todo el fondo de la sección, con un velo oscuro atrás del texto." }
+              - { label: "Descripción de la foto de fondo (para Google y lectores de pantalla)", name: "fotoFondoAlt", widget: "string", required: false }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Bajada", name: "texto", widget: "text" }
               - label: "Servicios"
@@ -282,6 +319,7 @@ collections:
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Texto", name: "texto", widget: "text" }
               - { label: "Imagen de fondo", name: "foto", widget: "image", media_folder: "/public/inicio", public_folder: "/inicio" }
+              - { label: "Descripción de la imagen (para Google y lectores de pantalla)", name: "fotoAlt", widget: "string", required: false }
               - { label: "Botón: texto", name: "botonTexto", widget: "string", hint: "Este botón siempre lleva al listado de departamentos - acá solo se edita el texto que dice, no el destino." }
 
   - name: "config-nosotros"
@@ -299,6 +337,7 @@ collections:
             fields:
               - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "nosotros" }
               - { label: "Foto de familia", name: "foto", widget: "image", media_folder: "/public/nosotros", public_folder: "/nosotros" }
+              - { label: "Descripción de la foto (para Google y lectores de pantalla)", name: "fotoAlt", widget: "string", required: false }
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Primer párrafo", name: "texto1", widget: "text" }
               - { label: "Segundo párrafo", name: "texto2", widget: "text" }
@@ -346,13 +385,14 @@ collections:
   - name: "departamentos"
     label: "🏢 Departamentos"
     label_singular: "Departamento"
-    description: "Los departamentos que aparecen en el listado, el carrusel de la home y su propia ficha."
+    description: "Los departamentos que aparecen en el listado, el carrusel de la home y su propia ficha. Se pueden agregar, borrar y reordenar arrastrando (el orden acá es el mismo en que aparecen en el sitio)."
     folder: "src/data/departamentos"
     create: true
     delete: true
     extension: "json"
     format: "json"
     identifier_field: nombre
+    reorder: { key: orden }
     fields:
       - { label: "Nombre", name: "nombre", widget: "string" }
       - label: "Zona"
@@ -394,6 +434,7 @@ collections:
           fields:
             - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
             - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
+            - { label: "Descripción de la foto/video (para Google y lectores de pantalla)", name: "alt", widget: "string", required: false, hint: "Ej: \"Living luminoso con balcón\". Ayuda a que la foto aparezca en Google Imágenes y a que las personas con lector de pantalla sepan qué muestra." }
       - label: "Portada de la tarjeta (opcional)"
         name: "portada"
         widget: "file"

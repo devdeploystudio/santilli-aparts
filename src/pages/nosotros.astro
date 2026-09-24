@@ -23,7 +23,7 @@ const puntos = n.puntos;
     <div data-cursor-dark class="group h-72 overflow-hidden sm:h-96 lg:h-auto lg:order-1">
       <img
         src={n.foto}
-        alt="La familia Santilli, dueños y responsables de Santilli Aparts"
+        alt={n.fotoAlt || "La familia Santilli, dueños y responsables de Santilli Aparts"}
         loading="lazy"
         width={fotoSize?.width}
         height={fotoSize?.height}

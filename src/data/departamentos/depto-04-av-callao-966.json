@@ -8,6 +8,7 @@
   },
   "capacidadMin": 2,
   "capacidadMax": 3,
+  "orden": 40,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable y balcón al contrafrente. También ofrece heladerita bajo mesada y aire acondicionado. Se completa con calefacción a gas y utensilios de cocina.",
   "servicios": [
     "ropablanca",

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 export interface HeroSlideData {
   archivo: string;
   poster?: string;
+  alt?: string;
   width?: number;
   height?: number;
 }
@@ -48,13 +49,17 @@ export default function HeroShowcase({ slides }: Props) {
   if (slides.length === 0) return null;
 
   return (
-    <div class="relative h-full w-full overflow-hidden bg-canvas">
+    // aria-hidden en el contenedor entero: desde que es el fondo del Hero
+    // (título/párrafo van encima, ver Hero.astro), es 100% decorativo para
+    // quien usa lector de pantalla - el alt de cada foto igual queda
+    // completo en el HTML para que Google Imágenes lo indexe, aria-hidden
+    // no le afecta eso a los buscadores, solo a los lectores de pantalla.
+    <div class="relative h-full w-full overflow-hidden bg-canvas" aria-hidden="true">
       {slides.map((slide, i) => (
         <div
           key={slide.archivo}
           class="absolute inset-0 transition-opacity duration-1000 ease-out"
           style={{ opacity: i === activo ? 1 : 0 }}
-          aria-hidden={i !== activo}
         >
           {esVideo(slide.archivo) ? (
             <video
@@ -69,7 +74,7 @@ export default function HeroShowcase({ slides }: Props) {
           ) : (
             <img
               src={slide.archivo}
-              alt=""
+              alt={slide.alt ?? ""}
               draggable={false}
               width={slide.width}
               height={slide.height}

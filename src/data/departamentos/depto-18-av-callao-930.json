@@ -8,6 +8,7 @@
   },
   "capacidadMin": 2,
   "capacidadMax": 3,
+  "orden": 180,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con utensilios de cocina y vista a la piscina. También ofrece cama matrimonial y sillón cama muy cómodo. Se completa con doble anafe eléctrico y baño completo con bañadera. Incluye también calefacción central y aire acondicionado.",
   "servicios": [
     "ropablanca",

@@ -8,6 +8,7 @@
   },
   "capacidadMin": 1,
   "capacidadMax": 2,
+  "orden": 400,
   "descripcionBreve": "Este departamento incluye ropa de cama, toallas y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado F/C y cocina con horno. También ofrece heladera grande y utensilios de cocina. Se completa con baño completo con bañera y balcón con vista al frente. Está a una cuadra del shopping Alto Palermo.",
   "servicios": [
     "ropablanca",

@@ -8,6 +8,7 @@
   },
   "capacidadMin": 4,
   "capacidadMax": 5,
+  "orden": 90,
   "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
   "servicios": [
     "ropablanca",

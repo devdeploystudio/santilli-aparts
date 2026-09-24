@@ -8,6 +8,7 @@
   },
   "capacidadMin": 1,
   "capacidadMax": 2,
+  "orden": 150,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece calefacción central y heladera bajo mesada. Se completa con baño completo c/bañera y doble anafe eléctrico. Incluye también seguridad las 24 hs y pileta en el edificio.",
   "servicios": [
     "ropablanca",

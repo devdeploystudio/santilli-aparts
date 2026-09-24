@@ -14,17 +14,27 @@ import AyudaElegirForm from "../components/AyudaElegirForm.tsx";
 import { WHATSAPP_NUMBER } from "../config/site";
 import { resolverPortada } from "../lib/portada";
 
-const departamentos = await getCollection("departamentos");
+// El orden se arrastra en el panel (reorder: { key: orden }, ver colección
+// "departamentos" en config.yml) - el loader glob() no garantiza ningún
+// orden propio, así que hay que ordenar acá siempre que se lean todos.
+const departamentos = (await getCollection("departamentos")).sort((a, b) => a.data.orden - b.data.orden);
 const deptos = (await getEntry("configInicioDeptos", "inicioDeptos"))!.data;
 const ayuda = (await getEntry("configInicioAyuda", "inicioAyuda"))!.data;
 const cta = (await getEntry("configInicioCta", "inicioCta"))!.data;
 
-const pines = departamentos.map((d) => ({
-  nombre: d.data.nombre,
-  slug: d.id,
-  lat: d.data.coords.lat,
-  lng: d.data.coords.lng,
-}));
+// Qué departamentos se ven como pin en el mapa de Zonas: antes eran TODOS
+// siempre, ahora es una selección curada aparte (colección chica
+// "configZonasMapa", relation múltiple a departamentos) para que el mapa
+// no quede saturado con 40+ pines.
+const zonasMapa = (await getEntry("configZonasMapa", "zonasMapa"))!.data;
+const pines = departamentos
+  .filter((d) => zonasMapa.deptos.includes(d.id))
+  .map((d) => ({
+    nombre: d.data.nombre,
+    slug: d.id,
+    lat: d.data.coords.lat,
+    lng: d.data.coords.lng,
+  }));
 
 // Muestra para el carrusel del home (no los 44, matching la copy "una
 // muestra de lo que tenemos disponible").
@@ -77,5 +87,5 @@ const muestra = departamentos.slice(0, 12).map((d) => ({
   <QueIncluyeSection />
   <ComoTrabajamos />
   <Reviews />
-  <CtaBanner titulo={cta.titulo} texto={cta.texto} foto={cta.foto} botonTexto={cta.botonTexto} />
+  <CtaBanner titulo={cta.titulo} texto={cta.texto} foto={cta.foto} fotoAlt={cta.fotoAlt} botonTexto={cta.botonTexto} />
 </Layout>

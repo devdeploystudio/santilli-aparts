@@ -8,6 +8,7 @@
   },
   "capacidadMin": 1,
   "capacidadMax": 2,
+  "orden": 60,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con vista a la piscina (luminoso) y aire acondicionado. También ofrece utensilios de cocina y doble anafe eléctrico. Se completa con baño completo c/bañera.",
   "servicios": [
     "ropablanca",

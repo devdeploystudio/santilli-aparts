@@ -8,6 +8,7 @@
   },
   "capacidadMin": 1,
   "capacidadMax": 2,
+  "orden": 160,
   "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable Flow y utensilios de cocina. También ofrece cocina c/horno y heladera bajo mesada. Se completa con baño completo c/bañera y aire acondicionado frío/calor. Está a media cuadra del Recoleta Mall y cerca del centro cultural de Recoleta, en una zona hermosa y segura.",
   "servicios": [
     "ropablanca",

@@ -5,7 +5,9 @@ import DepartamentosExplorer, { type DeptoResumen } from "../../components/Depar
 import { resolverPortada } from "../../lib/portada";
 import { imageSize } from "../../lib/imageSize";
 
-const departamentos = await getCollection("departamentos");
+// El orden se arrastra en el panel (reorder: { key: orden }) - el loader
+// glob() no garantiza ningún orden propio.
+const departamentos = (await getCollection("departamentos")).sort((a, b) => a.data.orden - b.data.orden);
 
 const resumen: DeptoResumen[] = await Promise.all(
   departamentos.map(async (d) => {
