@@ -69,6 +69,12 @@ const serviciosDisponibles = defineCollection({
 
 const departamentos = defineCollection({
   loader: glob({ pattern: "**/*.json", base: "./src/data/departamentos" }),
+  // El orden de los campos de acá abajo (y del `config.yml` del panel)
+  // es a propósito el mismo orden en que aparecen en la ficha del
+  // departamento (`src/pages/departamentos/[slug].astro`): nombre, zona,
+  // galería, descripción, dirección, capacidad, servicios y recién
+  // después el mapa - así el cliente encuentra cada campo en el mismo
+  // orden en que ve el resultado en la página real.
   schema: z.object({
     nombre: z.string(),
     // Antes un enum fijo (Recoleta/Palermo/Balvanera en código) - ahora
@@ -77,22 +83,6 @@ const departamentos = defineCollection({
     // una zona nueva ahí y que quede disponible para elegir en el próximo
     // departamento, sin que nadie tenga que tocar el schema.
     zona: z.string(),
-    direccion: z.string(),
-    coords: z.object({
-      lat: z.number(),
-      lng: z.number(),
-    }),
-    capacidadMin: z.number().int().min(1),
-    capacidadMax: z.number().int().min(1),
-    // El orden se arrastra en el panel (reorder: { key: orden }, mismo
-    // patrón que Reseñas) - nunca se escribe a mano.
-    orden: z.number(),
-    descripcionBreve: z.string(),
-    // Ídem zona: antes un enum fijo, ahora texto libre que en el panel se
-    // elige (multiple) de la colección "Servicios disponibles" (relation).
-    // Agregar un servicio nuevo ahí (con su ícono) lo deja disponible para
-    // marcar en cualquier depto, sin tocar código.
-    servicios: z.array(z.string()),
     // Fotos y videos en UNA sola lista ordenable (mismo patrón que
     // heroSlides de la Portada): antes "fotos" (lista de imágenes) y un
     // único "video"/"videoPoster" sueltos, que SIEMPRE quedaban al final
@@ -112,11 +102,28 @@ const departamentos = defineCollection({
         alt: sinVacios(z.string()),
       }),
     ),
-    // Portada de la TARJETA (carrusel de la home, listado de deptos) -
-    // sin esto, la tarjeta usa el primer ítem de "media" por default. Se
-    // usa este campo para forzar algo puntual (ej. que la tarjeta
-    // muestre un video en vez de una foto). Admite foto o video (se
-    // detecta por la extensión del archivo al mostrarla).
+    descripcionBreve: z.string(),
+    direccion: z.string(),
+    capacidadMin: z.number().int().min(1),
+    capacidadMax: z.number().int().min(1),
+    // Ídem zona: antes un enum fijo, ahora texto libre que en el panel se
+    // elige (multiple) de la colección "Servicios disponibles" (relation).
+    // Agregar un servicio nuevo ahí (con su ícono) lo deja disponible para
+    // marcar en cualquier depto, sin tocar código.
+    servicios: z.array(z.string()),
+    coords: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }),
+    // El orden se arrastra en el panel (reorder: { key: orden }, mismo
+    // patrón que Reseñas) - nunca se escribe a mano.
+    orden: z.number(),
+    // Portada de la TARJETA (carrusel de la home, listado de deptos) - no
+    // aparece en la ficha del depto en sí (por eso queda al final, fuera
+    // del orden de arriba). Sin esto, la tarjeta usa el primer ítem de
+    // "media" por default. Se usa este campo para forzar algo puntual
+    // (ej. que la tarjeta muestre un video en vez de una foto). Admite
+    // foto o video (se detecta por la extensión del archivo al mostrarla).
     portada: sinVacios(z.string()),
     esPlaceholder: z.boolean().default(false),
   }),

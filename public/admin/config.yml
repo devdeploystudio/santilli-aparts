@@ -210,7 +210,7 @@ collections:
   # que se vea junto a "Zonas" en la lista de la izquierda y en /editor.
   - name: "config-inicio-zonas-mapa"
     label: "🏠 Inicio → Zonas: mapa"
-    description: "Qué departamentos se ven como pin en el mapa de la sección Zonas de la home. Sin esto se verían TODOS los departamentos (queda saturado con muchos) - acá se elige una selección más chica y prolija."
+    description: "Qué departamentos se ven como pin en el mapa de la sección Zonas de la home. Sin esto se verían TODOS los departamentos (queda saturado con muchos) - acá se elige una selección más chica y prolija. Este bloque es solo para ELEGIR entre los departamentos que ya existen. Si necesitás agregar un departamento nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
     files:
       - name: "zonas-mapa"
         label: "Departamentos en el mapa"
@@ -393,6 +393,11 @@ collections:
     format: "json"
     identifier_field: nombre
     reorder: { key: orden }
+    # El orden de los campos de acá abajo es a propósito el mismo en que
+    # aparecen en la ficha real del departamento (nombre, zona, fotos,
+    # descripción, dirección, capacidad, servicios y recién después el
+    # mapa) - "Portada de la tarjeta" queda al final porque no se ve en
+    # la ficha en sí, solo en el listado/carrusel.
     fields:
       - { label: "Nombre", name: "nombre", widget: "string" }
       - label: "Zona"
@@ -403,25 +408,6 @@ collections:
         display_fields: ["{{nombre}}"]
         value_field: "nombre"
         hint: "Si la zona que buscás no está en la lista, agregala primero en \"Departamentos → Zonas disponibles\" y volvé acá - va a aparecer en el próximo departamento que edites o crees."
-      - { label: "Dirección", name: "direccion", widget: "string" }
-      - label: "Ubicación en el mapa"
-        name: "coords"
-        widget: "object"
-        fields:
-          - { label: "Latitud", name: "lat", widget: "number", value_type: "float" }
-          - { label: "Longitud", name: "lng", widget: "number", value_type: "float" }
-      - { label: "Capacidad mínima (personas)", name: "capacidadMin", widget: "number", value_type: "int" }
-      - { label: "Capacidad máxima (personas)", name: "capacidadMax", widget: "number", value_type: "int" }
-      - { label: "Descripción", name: "descripcionBreve", widget: "text" }
-      - label: "Servicios incluidos"
-        name: "servicios"
-        widget: "relation"
-        collection: "servicios-disponibles"
-        search_fields: ["nombre"]
-        display_fields: ["{{nombre}}"]
-        value_field: "{{slug}}"
-        multiple: true
-        hint: "Si el servicio que buscás no está en la lista, agregalo primero en \"Departamentos → Servicios disponibles\" (con su ícono) y volvé acá - va a aparecer en el próximo departamento que edites o crees."
       - label: "Fotos y videos"
         name: "media"
         widget: "list"
@@ -435,6 +421,25 @@ collections:
             - { label: "Foto o video", name: "archivo", widget: "file", media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
             - { label: "Portada del video (opcional, solo si es un video)", name: "poster", widget: "image", required: false, media_folder: "/public/departamentos/{{slug}}", public_folder: "/departamentos/{{slug}}" }
             - { label: "Descripción de la foto/video (para Google y lectores de pantalla)", name: "alt", widget: "string", required: false, hint: "Ej: \"Living luminoso con balcón\". Ayuda a que la foto aparezca en Google Imágenes y a que las personas con lector de pantalla sepan qué muestra." }
+      - { label: "Descripción", name: "descripcionBreve", widget: "text" }
+      - { label: "Dirección", name: "direccion", widget: "string" }
+      - { label: "Capacidad mínima (personas)", name: "capacidadMin", widget: "number", value_type: "int" }
+      - { label: "Capacidad máxima (personas)", name: "capacidadMax", widget: "number", value_type: "int" }
+      - label: "Servicios incluidos"
+        name: "servicios"
+        widget: "relation"
+        collection: "servicios-disponibles"
+        search_fields: ["nombre"]
+        display_fields: ["{{nombre}}"]
+        value_field: "{{slug}}"
+        multiple: true
+        hint: "Si el servicio que buscás no está en la lista, agregalo primero en \"Departamentos → Servicios disponibles\" (con su ícono) y volvé acá - va a aparecer en el próximo departamento que edites o crees."
+      - label: "Ubicación en el mapa"
+        name: "coords"
+        widget: "object"
+        fields:
+          - { label: "Latitud", name: "lat", widget: "number", value_type: "float" }
+          - { label: "Longitud", name: "lng", widget: "number", value_type: "float" }
       - label: "Portada de la tarjeta (opcional)"
         name: "portada"
         widget: "file"
