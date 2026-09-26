@@ -296,6 +296,9 @@ collections:
     format: "yaml"
     identifier_field: zona
     reorder: { key: orden }
+    sortable_fields:
+      fields: ["orden"]
+      default: { field: "orden", direction: "ascending" }
     fields:
       - { label: "Captura de WhatsApp", name: "imagen", widget: "image", media_folder: "/public/resenas", public_folder: "/resenas", hint: "Recorte de la conversación real con el huésped. Se muestra tal cual (no se edita el color), enmarcada con los colores del sitio." }
       - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
@@ -392,6 +395,14 @@ collections:
     format: "json"
     identifier_field: nombre
     reorder: { key: orden }
+    # Sin esto, Sveltia abre la lista ordenada alfabéticamente por
+    # "nombre" (el identifier_field) - un orden distinto al que realmente
+    # usa el sitio (el de "orden"), aunque el drag-and-drop de arriba
+    # siga funcionando igual. Con esto, la lista abre YA ordenada como en
+    # el sitio, sin que el cliente tenga que buscar/cambiar el sort a mano.
+    sortable_fields:
+      fields: ["orden"]
+      default: { field: "orden", direction: "ascending" }
     # El orden de los campos de acá abajo es a propósito el mismo en que
     # aparecen en la ficha real del departamento (nombre, zona, fotos,
     # descripción, dirección, capacidad, servicios y recién después el
