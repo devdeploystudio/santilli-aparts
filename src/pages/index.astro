@@ -36,9 +36,20 @@ const pines = departamentos
     lng: d.data.coords.lng,
   }));
 
-// Muestra para el carrusel del home (no los 44, matching la copy "una
-// muestra de lo que tenemos disponible").
-const muestra = departamentos.slice(0, 12).map((d) => ({
+// Carrusel del home: si el cliente eligió a mano cuáles mostrar (y en qué
+// orden) en "Inicio → Nuestros departamentos", se respeta esa selección
+// tal cual; si todavía no eligió ninguno, se muestran TODOS los
+// departamentos, en el mismo orden que tengan en "Departamentos" - mejor
+// no ocultar nada por default hasta que el cliente arme su propia
+// selección curada.
+const seleccionCarrusel =
+  deptos.deptosDestacados.length > 0
+    ? deptos.deptosDestacados
+        .map((id) => departamentos.find((d) => d.id === id))
+        .filter((d): d is NonNullable<typeof d> => Boolean(d))
+    : departamentos;
+
+const muestra = seleccionCarrusel.map((d) => ({
   slug: d.id,
   nombre: d.data.nombre,
   zona: d.data.zona,

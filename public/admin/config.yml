@@ -109,6 +109,16 @@ collections:
               - { label: "Título", name: "titulo", widget: "string" }
               - { label: "Primer párrafo", name: "texto1", widget: "text" }
               - { label: "Segundo párrafo", name: "texto2", widget: "text" }
+              - label: "Departamentos destacados en el carrusel"
+                name: "deptosDestacados"
+                widget: "relation"
+                collection: "departamentos"
+                search_fields: ["nombre"]
+                display_fields: ["{{nombre}}"]
+                value_field: "{{slug}}"
+                multiple: true
+                required: false
+                hint: "Elegí cuáles aparecen en el carrusel de esta sección y en qué orden - podés arrastrarlos (o usar las flechas) para reordenarlos una vez elegidos. Si no elegís ninguno, se muestran TODOS los departamentos, en el mismo orden que tengan en \"🏢 Departamentos\". Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
 
   - name: "config-inicio-ayuda"
     label: "🏠 Inicio → Ayuda a elegir"

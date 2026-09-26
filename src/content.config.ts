@@ -215,6 +215,13 @@ const configInicioDeptos = defineCollection({
     titulo: z.string(),
     texto1: z.string(),
     texto2: z.string(),
+    // Selección manual + orden (relation múltiple, arrastrable en el
+    // panel) de qué deptos aparecen en el carrusel de esta sección. Vacío
+    // por default a propósito: si el cliente todavía no eligió ninguno,
+    // index.astro cae al comportamiento de siempre (los primeros 12 según
+    // el orden de "Departamentos"), sin romper nada en el primer deploy
+    // de este campo.
+    deptosDestacados: z.array(z.string()).default([]),
   }),
 });
 
