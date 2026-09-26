@@ -303,6 +303,10 @@ collections:
       - { label: "Captura de WhatsApp", name: "imagen", widget: "image", media_folder: "/public/resenas", public_folder: "/resenas", hint: "Recorte de la conversación real con el huésped. Se muestra tal cual (no se edita el color), enmarcada con los colores del sitio." }
       - { label: "Quién la dejó (ej: \"Huésped en Recoleta\")", name: "zona", widget: "string" }
       - { label: "Texto (para lectores de pantalla, no se ve)", name: "texto", widget: "text", hint: "Escribí lo mismo que dice la captura: no se muestra en la tarjeta, pero lo necesitan los lectores de pantalla." }
+      # Oculto: el valor lo escribe solo "reorder" (arrastrar arriba en el
+      # listado), nunca a mano. Declararlo acá (aunque oculto) es
+      # obligatorio para que "sortable_fields" pueda usarlo.
+      - { label: "Orden (no tocar, se arrastra en el listado)", name: "orden", widget: "hidden" }
 
   - name: "config-inicio-final"
     label: "🏠 Inicio → Bloque final"
@@ -457,6 +461,10 @@ collections:
         hint: "Se usa en el carrusel de la home y en el listado de departamentos. Admite foto o video. Si se deja vacío, se usa el primer elemento de \"Fotos y videos\" de arriba."
         media_folder: "/public/departamentos/{{slug}}"
         public_folder: "/departamentos/{{slug}}"
+      # Oculto: el valor lo escribe solo "reorder" (arrastrar arriba en el
+      # listado), nunca a mano. Declararlo acá (aunque oculto) es
+      # obligatorio para que "sortable_fields" pueda usarlo.
+      - { label: "Orden (no tocar, se arrastra en el listado)", name: "orden", widget: "hidden" }
 
   - name: "config"
     label: "⚙️ General"
