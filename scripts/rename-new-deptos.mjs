@@ -15,7 +15,7 @@
  * número libre (mirando tanto los activos como los archivados, para no
  * repetir un número ya usado antes), y renombra el JSON + su carpeta de
  * fotos en public/departamentos, actualizando las referencias adentro
- * del JSON (fotos[], video, videoPoster).
+ * del JSON (media[].archivo, media[].poster, portada).
  *
  * Un depto ya creado a mano por Deploy con el nombre "depto-NN-..." de
  * entrada queda intacto (el script lo detecta y lo saltea).
@@ -117,9 +117,15 @@ function run() {
     const numero = siguienteNumero();
     const newSlug = `depto-${String(numero).padStart(2, "0")}-${base}`;
 
-    data.fotos = (data.fotos || []).map((f) => f.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`));
-    if (data.video) data.video = data.video.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`);
-    if (data.videoPoster) data.videoPoster = data.videoPoster.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`);
+    // "media" (fotos y videos en una sola lista, ver content.config.ts)
+    // reemplazó a los campos sueltos "fotos"/"video"/"videoPoster" - cada
+    // ítem puede traer "archivo" y, si es video, "poster".
+    data.media = (data.media || []).map((item) => ({
+      ...item,
+      archivo: item.archivo?.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`),
+      ...(item.poster ? { poster: item.poster.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`) } : {}),
+    }));
+    if (data.portada) data.portada = data.portada.replace(`/departamentos/${oldSlug}/`, `/departamentos/${newSlug}/`);
 
     const newJsonPath = join(dirname(jsonPath), `${newSlug}.json`);
     writeFileSync(newJsonPath, JSON.stringify(data, null, 2) + "\n");

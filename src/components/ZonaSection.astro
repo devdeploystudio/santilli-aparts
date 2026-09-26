@@ -1,16 +1,27 @@
 ---
-import { getEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import MapView, { type MapPin } from "./MapView.tsx";
 import MarginLines from "./MarginLines.astro";
 import Icon from "./Icon.astro";
 
-interface Props {
-  pines: MapPin[];
-}
-
-const { pines } = Astro.props;
-
 const z = (await getEntry("configZonas", "zonas"))!.data;
+
+// Qué departamentos se ven como pin: vacío por default = TODOS (así un
+// depto nuevo aparece solo en el mapa sin que el cliente tenga que
+// acordarse de sumarlo a mano); si el cliente curó una selección
+// puntual en el panel, se respeta esa lista tal cual. El orden acá no
+// importa (el mapa los muestra a todos igual, no hay un pin "primero").
+const departamentos = await getCollection("departamentos");
+const deptosParaElMapa =
+  z.deptosMapa.length > 0
+    ? z.deptosMapa.map((id) => departamentos.find((d) => d.id === id)).filter((d): d is NonNullable<typeof d> => Boolean(d))
+    : departamentos;
+const pines: MapPin[] = deptosParaElMapa.map((d) => ({
+  nombre: d.data.nombre,
+  slug: d.id,
+  lat: d.data.coords.lat,
+  lng: d.data.coords.lng,
+}));
 
 // Tarjetas de zona destacada (nombre, subtítulo y texto) y los accesos de
 // abajo son listas editables desde /admin: se pueden agregar, sacar y

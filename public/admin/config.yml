@@ -118,7 +118,7 @@ collections:
                 value_field: "{{slug}}"
                 multiple: true
                 required: false
-                hint: "Elegí cuáles aparecen en el carrusel de esta sección y en qué orden - podés arrastrarlos (o usar las flechas) para reordenarlos una vez elegidos. Si no elegís ninguno, se muestran TODOS los departamentos, en el mismo orden que tengan en \"🏢 Departamentos\". Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
+                hint: "Elegí cuáles aparecen en el carrusel de esta sección y en qué orden - podés arrastrarlos para reordenarlos una vez elegidos. Si no elegís ninguno, se muestran TODOS los departamentos, en el mismo orden que tengan en \"🏢 Departamentos\". Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
 
   - name: "config-inicio-ayuda"
     label: "🏠 Inicio → Ayuda a elegir"
@@ -176,7 +176,7 @@ collections:
 
   - name: "config-inicio-zonas"
     label: "🏠 Inicio → Zonas"
-    description: "El bloque de zonas (Recoleta/Palermo) y los accesos, en la home. Las tarjetas de zona y los accesos se pueden agregar, borrar y reordenar arrastrando, cada lista por separado."
+    description: "El bloque de zonas (Recoleta/Palermo), los accesos y qué departamentos se ven como pin en el mapa, en la home. Las tarjetas de zona y los accesos se pueden agregar, borrar y reordenar arrastrando, cada lista por separado."
     editor: { preview: true }
     files:
       - name: "zonas"
@@ -214,32 +214,16 @@ collections:
                 fields:
                   - { label: "Ícono", name: "icono", widget: "icon-picker" }
                   - { label: "Texto", name: "texto", widget: "string" }
-
-  # Colección aparte (no un campo más de "Zonas") a pedido del cliente,
-  # pero pegada acá en el archivo y con el mismo prefijo de nombre para
-  # que se vea junto a "Zonas" en la lista de la izquierda y en /editor.
-  - name: "config-inicio-zonas-mapa"
-    label: "🏠 Inicio → Zonas: mapa"
-    description: "Qué departamentos se ven como pin en el mapa de la sección Zonas de la home. Sin esto se verían TODOS los departamentos (queda saturado con muchos) - acá se elige una selección más chica y prolija. Este bloque es solo para ELEGIR entre los departamentos que ya existen. Si necesitás agregar un departamento nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
-    files:
-      - name: "zonas-mapa"
-        label: "Departamentos en el mapa"
-        file: "src/content/config/zonas-mapa.yaml"
-        fields:
-          - label: "Mapa"
-            name: "zonasMapa"
-            widget: "object"
-            fields:
-              - { label: "ID (no tocar)", name: "id", widget: "hidden", default: "zonas-mapa" }
-              - label: "Departamentos a mostrar como pin"
-                name: "deptos"
+              - label: "Departamentos a mostrar como pin en el mapa"
+                name: "deptosMapa"
                 widget: "relation"
                 collection: "departamentos"
                 search_fields: ["nombre"]
                 display_fields: ["{{nombre}}"]
                 value_field: "{{slug}}"
                 multiple: true
-                hint: "Se pueden agregar o sacar departamentos de la lista. El orden acá no importa (el mapa los muestra a todos igual, no hay un pin \"primero\")."
+                required: false
+                hint: "Si no elegís ninguno, se muestran TODOS los departamentos como pin (y un departamento nuevo aparece solo, sin tener que agregarlo acá). Si elegís algunos, se muestran solo esos - el orden acá no importa, el mapa los muestra a todos igual. Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
 
   - name: "config-inicio-que-incluye"
     label: "🏠 Inicio → Qué incluye"

@@ -22,20 +22,6 @@ const deptos = (await getEntry("configInicioDeptos", "inicioDeptos"))!.data;
 const ayuda = (await getEntry("configInicioAyuda", "inicioAyuda"))!.data;
 const cta = (await getEntry("configInicioCta", "inicioCta"))!.data;
 
-// Qué departamentos se ven como pin en el mapa de Zonas: antes eran TODOS
-// siempre, ahora es una selección curada aparte (colección chica
-// "configZonasMapa", relation múltiple a departamentos) para que el mapa
-// no quede saturado con 40+ pines.
-const zonasMapa = (await getEntry("configZonasMapa", "zonasMapa"))!.data;
-const pines = departamentos
-  .filter((d) => zonasMapa.deptos.includes(d.id))
-  .map((d) => ({
-    nombre: d.data.nombre,
-    slug: d.id,
-    lat: d.data.coords.lat,
-    lng: d.data.coords.lng,
-  }));
-
 // Carrusel del home: si el cliente eligió a mano cuáles mostrar (y en qué
 // orden) en "Inicio → Nuestros departamentos", se respeta esa selección
 // tal cual; si todavía no eligió ninguno, se muestran TODOS los
@@ -94,7 +80,7 @@ const muestra = seleccionCarrusel.map((d) => ({
   </section>
 
   <DiferencialesSection />
-  <ZonaSection pines={pines} />
+  <ZonaSection />
   <QueIncluyeSection />
   <ComoTrabajamos />
   <Reviews />

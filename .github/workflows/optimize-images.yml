@@ -44,7 +44,7 @@ jobs:
           node-version: 20
 
       - name: Instalar dependencias de los scripts
-        run: npm install sharp glob
+        run: npm install sharp glob js-yaml
 
       - name: Renombrar y versionar reemplazos
         run: node scripts/rename-uploads.mjs
@@ -58,6 +58,11 @@ jobs:
 
       - name: Numerar y renombrar deptos nuevos
         run: node scripts/rename-new-deptos.mjs
+        env:
+          DIFF_BASE: ${{ github.event.before }}
+
+      - name: Sumar deptos nuevos a las listas curadas (carrusel, mapa)
+        run: node scripts/sync-nuevos-deptos-en-listas-curadas.mjs
         env:
           DIFF_BASE: ${{ github.event.before }}
 

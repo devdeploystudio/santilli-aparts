@@ -343,21 +343,16 @@ const configZonas = defineCollection({
     // (subte, salud, seguridad, etc.), así que usa la biblioteca
     // compartida con un selector visual en el panel.
     accesos: z.array(z.object({ icono: IconKey, texto: z.string() })),
-  }),
-});
-
-// Colección chica y APARTE (no un campo más de configZonas) a pedido del
-// cliente: qué departamentos se ven como pin en el mapa de la sección
-// Zonas de la home. Antes el mapa mostraba TODOS los departamentos
-// siempre - con 40+ quedaba saturado de pines. En el panel real
-// (Sveltia) es su propia colección, pero en el menú /editor se muestra
-// pegada a "Zonas" (mismo prefijo de nombre) para que quede claro que es
-// parte de ese mismo bloque de la página.
-const configZonasMapa = defineCollection({
-  loader: file("./src/content/config/zonas-mapa.yaml"),
-  schema: z.object({
-    id: z.string(),
-    deptos: z.array(z.string()),
+    // Qué departamentos se ven como pin en el mapa de esta misma sección.
+    // Mismo patrón/fallback que "deptosDestacados" del carrusel de Inicio
+    // → Nuestros departamentos: vacío por default = se muestran TODOS
+    // (así un depto nuevo aparece solo en el mapa sin que el cliente
+    // tenga que acordarse de sumarlo a mano); si el cliente cura una
+    // selección puntual, se respeta esa lista tal cual. Antes era una
+    // colección separada (configZonasMapa) - se unificó acá porque, a
+    // diferencia de un catálogo real, es un campo más de este mismo
+    // bloque, no un dato de otro lado.
+    deptosMapa: z.array(z.string()).default([]),
   }),
 });
 
@@ -377,5 +372,4 @@ export const collections = {
   configQueIncluye,
   configComoTrabajamos,
   configZonas,
-  configZonasMapa,
 };
