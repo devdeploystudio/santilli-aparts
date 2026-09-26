@@ -215,13 +215,23 @@ const configInicioDeptos = defineCollection({
     titulo: z.string(),
     texto1: z.string(),
     texto2: z.string(),
-    // Selección manual + orden (relation múltiple, arrastrable en el
-    // panel) de qué deptos aparecen en el carrusel de esta sección. Vacío
-    // por default a propósito: si el cliente todavía no eligió ninguno,
-    // index.astro cae al comportamiento de siempre (los primeros 12 según
-    // el orden de "Departamentos"), sin romper nada en el primer deploy
-    // de este campo.
+    // Selección manual (relation múltiple, arrastrable en el panel) de
+    // qué deptos aparecen en el carrusel de esta sección. Vacío por
+    // default a propósito: si el cliente todavía no eligió ninguno,
+    // index.astro muestra TODOS los departamentos.
     deptosDestacados: z.array(z.string()).default([]),
+    // El orden que se ve en el carrusel puede venir de DOS lugares
+    // distintos, y este campo decide cuál manda:
+    // - true (default): ignora el orden en que están arrastrados los
+    //   ítems de "deptosDestacados" y siempre usa el orden EN VIVO de
+    //   "orden" (el mismo que ordena /departamentos) - si el cliente
+    //   reordena ahí, el carrusel se actualiza solo en el próximo build,
+    //   sin que nadie tenga que tocar nada acá.
+    // - false: respeta tal cual el orden en que están arrastrados los
+    //   ítems de "deptosDestacados" (un orden propio del carrusel,
+    //   independiente de "Departamentos" - útil para forzar "que el 17
+    //   se vea primero" sin afectar el listado completo de la página).
+    seguirOrdenDepartamentos: z.boolean().default(true),
   }),
 });
 

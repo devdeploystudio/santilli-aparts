@@ -118,7 +118,12 @@ collections:
                 value_field: "{{slug}}"
                 multiple: true
                 required: false
-                hint: "Elegí cuáles aparecen en el carrusel de esta sección y en qué orden - podés arrastrarlos para reordenarlos una vez elegidos. Si no elegís ninguno, se muestran TODOS los departamentos, en el mismo orden que tengan en \"🏢 Departamentos\". Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
+                hint: "Elegí cuáles aparecen en el carrusel de esta sección. Si no elegís ninguno, se muestran TODOS los departamentos. Este campo es solo para ELEGIR entre los departamentos que ya existen: si necesitás agregar uno nuevo, hacelo siempre desde \"🏢 Departamentos\", no desde acá."
+              - label: "Seguir el mismo orden que en \"Departamentos\""
+                name: "seguirOrdenDepartamentos"
+                widget: "boolean"
+                default: true
+                hint: "Tildado (recomendado): el carrusel siempre respeta el orden de \"🏢 Departamentos\" - si reordenás ahí, el carrusel se actualiza solo. Destildado: se respeta tal cual el orden en que arrastraste los departamentos de arriba (útil para forzar que uno puntual se vea primero, sin tocar el orden del listado completo)."
 
   - name: "config-inicio-ayuda"
     label: "🏠 Inicio → Ayuda a elegir"
