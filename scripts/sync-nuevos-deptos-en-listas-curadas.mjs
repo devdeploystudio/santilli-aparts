@@ -47,7 +47,13 @@
 import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path/posix";
-import yaml from "js-yaml";
+// Named imports, no default: la build ESM de js-yaml (dist/js-yaml.mjs,
+// la que resuelve Node cuando el paquete se instala fresco, como en este
+// workflow) no tiene "export default" - solo exporta funciones sueltas.
+// "import yaml from 'js-yaml'" rompe en CI con "does not provide an
+// export named 'default'" aunque funcione en local con una instalación
+// vieja/distinta del paquete (confirmado en `santilli-aparts`, sep 2026).
+import { load, dump } from "js-yaml";
 
 const DATA_DIR = "src/data/departamentos";
 const EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
@@ -147,7 +153,7 @@ function insertarSegunOrden(lista, nuevoId, ordenPorId) {
 }
 
 function sincronizarListaCurada({ archivo, campo, campoOrdenEnVivo }, nuevos, ordenPorId) {
-  const doc = yaml.load(readFileSync(archivo, "utf8"));
+  const doc = load(readFileSync(archivo, "utf8"));
   const claveRaiz = Object.keys(doc)[0];
   const raiz = doc[claveRaiz];
   const lista = raiz[campo];
@@ -176,7 +182,7 @@ function sincronizarListaCurada({ archivo, campo, campoOrdenEnVivo }, nuevos, or
   }
 
   if (JSON.stringify(lista) === antes) return;
-  writeFileSync(archivo, yaml.dump(doc, { lineWidth: -1 }));
+  writeFileSync(archivo, dump(doc, { lineWidth: -1 }));
   const detalle = faltantes.length ? `nuevos: [${faltantes.join(", ")}]` : "resincronizado por orden en vivo";
   console.log(`sync-nuevos-deptos: actualicé "${campo}" en ${archivo} (${detalle})`);
 }
