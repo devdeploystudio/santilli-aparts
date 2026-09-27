@@ -46,4 +46,4 @@ inicioDeptos:
     - depto-40-av-callao-966
     - depto-41-av-callao-966
     - depto-46-av-santa-fe-3395
-  seguirOrdenDepartamentos: false
+  seguirOrdenDepartamentos: true
