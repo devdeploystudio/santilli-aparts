@@ -1,22 +1,7 @@
 {
+  "orden": 28,
   "nombre": "Depto para 1 y 2 personas, Viamonte 1815",
   "zona": "Balvanera",
-  "direccion": "Viamonte 1815, CABA",
-  "coords": {
-    "lat": -34.6008,
-    "lng": -58.3931
-  },
-  "capacidadMin": 1,
-  "capacidadMax": 2,
-  "orden": 260,
-  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "cocina"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-26-viamonte-1815/01.jpg"
@@ -48,5 +33,20 @@
     {
       "archivo": "/departamentos/depto-26-viamonte-1815/10.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "direccion": "Viamonte 1815, CABA",
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
+  "coords": {
+    "lat": -34.6008,
+    "lng": -58.3931
+  },
+  "esPlaceholder": false
 }

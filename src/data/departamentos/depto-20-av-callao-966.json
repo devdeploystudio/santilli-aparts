@@ -1,24 +1,7 @@
 {
+  "orden": 22,
   "nombre": "Depto para 5 personas, Av. Callao 966",
   "zona": "Recoleta",
-  "direccion": "Av. Callao 966, CABA",
-  "coords": {
-    "lat": -34.5978,
-    "lng": -58.3933
-  },
-  "capacidadMin": 5,
-  "capacidadMax": 5,
-  "orden": 200,
-  "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable (living y cuarto principal). Además, cuenta con 3 camas de plaza y cama matrimonial en cuarto principal. También ofrece heladera grande y doble anafe a gas. Se completa con baño con cuadro de ducha y balcón privado a la calle en cuarto principal. Incluye también balcón a la calle en living y aire acondicionado en living. Y suma aire acondicionado en cuarto principal.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "aire",
-    "cocina"
-  ],
-  "portada": "/departamentos/depto-20-av-callao-966/preview.mp4",
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-20-av-callao-966/01.jpg"
@@ -78,5 +61,22 @@
       "archivo": "/departamentos/depto-20-av-callao-966/preview.mp4",
       "poster": "/departamentos/depto-20-av-callao-966/preview-poster.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable (living y cuarto principal). Además, cuenta con 3 camas de plaza y cama matrimonial en cuarto principal. También ofrece heladera grande y doble anafe a gas. Se completa con baño con cuadro de ducha y balcón privado a la calle en cuarto principal. Incluye también balcón a la calle en living y aire acondicionado en living. Y suma aire acondicionado en cuarto principal.",
+  "direccion": "Av. Callao 966, CABA",
+  "capacidadMin": 5,
+  "capacidadMax": 5,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "aire",
+    "cocina"
+  ],
+  "coords": {
+    "lat": -34.5978,
+    "lng": -58.3933
+  },
+  "portada": "/departamentos/depto-20-av-callao-966/preview.mp4",
+  "esPlaceholder": false
 }

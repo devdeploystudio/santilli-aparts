@@ -1,23 +1,7 @@
 {
+  "orden": 21,
   "nombre": "Depto para 2 y 3 personas, Av. Santa Fe 1886",
   "zona": "Recoleta",
-  "direccion": "Av. Santa Fe 1886, CABA",
-  "coords": {
-    "lat": -34.5885,
-    "lng": -58.3939
-  },
-  "capacidadMin": 2,
-  "capacidadMax": 3,
-  "orden": 190,
-  "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado y utensilios de cocina. También ofrece cocina completa con horno y heladera grande. Se completa con baño completo con bañadera.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "aire",
-    "cocina"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-19-av-santa-fe-1886/01.jpg"
@@ -49,5 +33,21 @@
     {
       "archivo": "/departamentos/depto-19-av-santa-fe-1886/10.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallones y WiFi y Tv con cable. Además, cuenta con aire acondicionado y utensilios de cocina. También ofrece cocina completa con horno y heladera grande. Se completa con baño completo con bañadera.",
+  "direccion": "Av. Santa Fe 1886, CABA",
+  "capacidadMin": 2,
+  "capacidadMax": 3,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "aire",
+    "cocina"
+  ],
+  "coords": {
+    "lat": -34.5885,
+    "lng": -58.3939
+  },
+  "esPlaceholder": false
 }

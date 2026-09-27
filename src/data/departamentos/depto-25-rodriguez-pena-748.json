@@ -1,22 +1,7 @@
 {
+  "orden": 27,
   "nombre": "Depto para 1 y 2 personas, Rodríguez Peña 748",
   "zona": "Recoleta",
-  "direccion": "Rodríguez Peña 748, CABA",
-  "coords": {
-    "lat": -34.5895,
-    "lng": -58.3927
-  },
-  "capacidadMin": 1,
-  "capacidadMax": 2,
-  "orden": 250,
-  "descripcionBreve": "Departamento para 1 y 2 personas con patio interno, las camas se pueden unir.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "cocina"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-25-rodriguez-pena-748/01.jpg"
@@ -48,5 +33,20 @@
     {
       "archivo": "/departamentos/depto-25-rodriguez-pena-748/10.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Departamento para 1 y 2 personas con patio interno, las camas se pueden unir.",
+  "direccion": "Rodríguez Peña 748, CABA",
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
+  "coords": {
+    "lat": -34.5895,
+    "lng": -58.3927
+  },
+  "esPlaceholder": false
 }

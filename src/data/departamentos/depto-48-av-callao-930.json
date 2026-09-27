@@ -1,26 +1,7 @@
 {
+  "orden": 1,
   "nombre": "Depto para 1 y 2 personas, Av. Callao 930",
   "zona": "Recoleta",
-  "direccion": "Av. Callao 930, CABA",
-  "coords": {
-    "lat": -34.5975,
-    "lng": -58.3935
-  },
-  "capacidadMin": 1,
-  "capacidadMax": 2,
-  "orden": 420,
-  "descripcionBreve": "Este departamento incluye ropa de cama, toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece calefacción central, doble anafe eléctrico y heladera grande. Se completa con baño completo con bañera y vista al jardín, muy luminoso. El edificio cuenta con seguridad las 24 hs, pileta y gimnasio.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "aire",
-    "calefaccion",
-    "cocina",
-    "seguridad",
-    "amenities"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-48-av-callao-930/01.jpg"
@@ -56,5 +37,24 @@
       "archivo": "/departamentos/_compartido/pileta-callao-930.mp4",
       "poster": "/departamentos/_compartido/pileta-callao-930-poster.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Este departamento incluye ropa de cama, toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece calefacción central, doble anafe eléctrico y heladera grande. Se completa con baño completo con bañera y vista al jardín, muy luminoso. El edificio cuenta con seguridad las 24 hs, pileta y gimnasio.",
+  "direccion": "Av. Callao 930, CABA",
+  "capacidadMin": 1,
+  "capacidadMax": 2,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "aire",
+    "calefaccion",
+    "cocina",
+    "seguridad",
+    "amenities"
+  ],
+  "coords": {
+    "lat": -34.5975,
+    "lng": -58.3935
+  },
+  "esPlaceholder": false
 }
