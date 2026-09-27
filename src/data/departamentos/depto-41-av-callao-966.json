@@ -1,22 +1,7 @@
 {
+  "orden": 40,
   "nombre": "Depto para 3 y 4 personas, Av. Callao 966",
   "zona": "Recoleta",
-  "direccion": "Av. Callao 966, CABA",
-  "coords": {
-    "lat": -34.5978,
-    "lng": -58.3933
-  },
-  "capacidadMin": 3,
-  "capacidadMax": 4,
-  "orden": 390,
-  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "cocina"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-41-av-callao-966/01.jpg"
@@ -39,5 +24,20 @@
     {
       "archivo": "/departamentos/depto-41-av-callao-966/07.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Descripción pendiente de carga. Consultar por WhatsApp.",
+  "direccion": "Av. Callao 966, CABA",
+  "capacidadMin": 3,
+  "capacidadMax": 4,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "cocina"
+  ],
+  "coords": {
+    "lat": -34.5978,
+    "lng": -58.3933
+  },
+  "esPlaceholder": false
 }

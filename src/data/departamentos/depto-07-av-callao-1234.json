@@ -1,24 +1,7 @@
 {
+  "orden": 8,
   "nombre": "Depto para 2 y 3 personas, Av. Callao 1234",
   "zona": "Recoleta",
-  "direccion": "Av. Callao 1234, CABA",
-  "coords": {
-    "lat": -34.5992,
-    "lng": -58.393
-  },
-  "capacidadMin": 2,
-  "capacidadMax": 3,
-  "orden": 70,
-  "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece vista hacia Av. Callao y utensilios de cocina. Se completa con heladera bajo mesada y baño completo c/bañera. Incluye también gimnasio y pileta.",
-  "servicios": [
-    "ropablanca",
-    "wifi",
-    "tv",
-    "aire",
-    "cocina",
-    "amenities"
-  ],
-  "esPlaceholder": false,
   "media": [
     {
       "archivo": "/departamentos/depto-07-av-callao-1234/01.jpg"
@@ -50,5 +33,22 @@
     {
       "archivo": "/departamentos/depto-07-av-callao-1234/10.jpg"
     }
-  ]
+  ],
+  "descripcionBreve": "Este departamento incluye ropa de cama y toallas y toallones. Además, cuenta con WiFi y Tv con cable y aire acondicionado. También ofrece vista hacia Av. Callao y utensilios de cocina. Se completa con heladera bajo mesada y baño completo c/bañera. Incluye también gimnasio y pileta.",
+  "direccion": "Av. Callao 1234, CABA",
+  "capacidadMin": 2,
+  "capacidadMax": 3,
+  "servicios": [
+    "ropablanca",
+    "wifi",
+    "tv",
+    "aire",
+    "cocina",
+    "amenities"
+  ],
+  "coords": {
+    "lat": -34.5992,
+    "lng": -58.393
+  },
+  "esPlaceholder": false
 }
