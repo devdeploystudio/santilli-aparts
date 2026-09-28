@@ -134,7 +134,15 @@ async function run() {
       console.log(`compress-images: ${file} ya no existe (probablemente eliminado en este mismo push), se salteó.`);
       continue;
     }
-    await compressOne(resolved);
+    // Un archivo puntual que sharp no pueda procesar (corrupto, un
+    // formato raro que se coló, etc.) no debe cortar TODO el job - sin
+    // este try/catch, un solo archivo problemático hacía que ninguna
+    // otra foto de ese mismo push se comprimiera.
+    try {
+      await compressOne(resolved);
+    } catch (err) {
+      console.log(`compress-images: no se pudo comprimir ${resolved} (${err.message}), se dejó tal cual.`);
+    }
   }
 }
 

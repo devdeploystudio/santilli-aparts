@@ -56,6 +56,13 @@ jobs:
         env:
           DIFF_BASE: ${{ github.event.before }}
 
+      - name: Comprimir videos
+        # ffmpeg/ffprobe ya vienen preinstalados en el runner ubuntu-latest
+        # de GitHub Actions - no hace falta instalarlos.
+        run: node scripts/compress-videos.mjs
+        env:
+          DIFF_BASE: ${{ github.event.before }}
+
       - name: Numerar y renombrar deptos nuevos
         run: node scripts/rename-new-deptos.mjs
         env:
@@ -66,6 +73,13 @@ jobs:
         env:
           DIFF_BASE: ${{ github.event.before }}
 
+      - name: Borrar media sin usar
+        # Corre al final de todo el procesamiento (necesita que las
+        # referencias ya estén en su forma final) - revisa TODO el
+        # contenido, no solo lo que cambió en este push, así que no
+        # necesita DIFF_BASE.
+        run: node scripts/delete-orphaned-media.mjs
+
       - name: Commitear cambios (si hubo)
         run: |
           git config user.name "deploy-bot"
@@ -73,7 +87,31 @@ jobs:
           git add public/departamentos src/data/departamentos public/hero public/inicio public/nosotros public/resenas src/content
           if ! git diff --cached --quiet; then
             git commit -m "chore: organizar y optimizar contenido subido desde el panel [skip ci]"
-            git push
+            # Reintenta el push si "main" avanzó mientras corría este job
+            # (ej. alguien de la agencia pusheó al mismo tiempo que el
+            # cliente subía algo desde el panel) - sin esto, el commit del
+            # bot se pierde entero (nunca llega a GitHub) y hay que volver
+            # a correr el workflow a mano. git pull --rebase trae el/los
+            # commit(s) nuevos y reaplica el del bot arriba; si hay un
+            # conflicto real (mismo archivo, mismas líneas), se corta acá
+            # con un error claro en vez de dejar el repo a medio rebasear.
+            for intento in 1 2 3 4 5; do
+              if git push; then
+                echo "Push del bot exitoso (intento $intento)."
+                break
+              fi
+              if [ "$intento" -eq 5 ]; then
+                echo "::error::No se pudo pushear el commit del bot después de 5 intentos."
+                exit 1
+              fi
+              echo "Push rechazado (probablemente alguien pusheó mientras corría este job) - reintentando ($intento/5)..."
+              git fetch origin main
+              if ! git rebase origin/main; then
+                echo "::error::Conflicto real al rebasar - no se puede resolver solo. Requiere revisión manual."
+                git rebase --abort
+                exit 1
+              fi
+            done
           else
             echo "Sin cambios para commitear."
           fi

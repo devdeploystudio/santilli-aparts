@@ -46,10 +46,18 @@ const ASSETS_ROOTS = ['public/departamentos', 'public/hero', 'public/inicio', 'p
 // Se deja también src/content/**/*.yaml por si en el futuro se suma algún
 // campo imagen ahí (no hace daño, simplemente no encuentra nada que tocar).
 const CONTENT_GLOBS = ['src/data/departamentos/**/*.json', 'src/content/**/*.yaml'];
-// Incluye mp4: el campo "video" de cada depto también puede reemplazarse
-// manteniendo el nombre de archivo. compress-images.mjs sigue sin tocar
-// video (necesita ffmpeg, no sharp) - esto solo es el renombrado.
-const VERSIONABLE_EXT = /\.(jpe?g|png|webp|avif|gif|svg|mp4)$/i;
+// Lista amplia a propósito, no solo mp4/mov/webm (los 3 que el sitio
+// sabe MOSTRAR, ver esVideo() en Gallery.tsx/HeroShowcase.tsx): el
+// cliente puede subir cualquier formato desde el celular/cámara sin que
+// nadie se lo impida (el widget "file" del panel no restringe
+// extensión), así que el renombrado/versionado tiene que reconocerlo
+// igual aunque el sitio todavía no sepa reproducirlo - es mejor que quede
+// versionado y prolijo (y, si hace falta, se convierte después a un
+// formato soportado) a que quede afuera de este chequeo en silencio.
+// compress-images.mjs sigue sin tocar ningún video (necesita ffmpeg, no
+// sharp) - esto solo es el renombrado/versionado.
+const VERSIONABLE_EXT =
+  /\.(jpe?g|png|webp|avif|gif|svg|bmp|tiff?|heic|heif|mp4|mov|webm|avi|mkv|m4v|ogv|3gp|wmv|flv|mpe?g)$/i;
 // Hash fijo de git para "el árbol vacío" - se usa como base del diff
 // cuando no hay commit anterior real (primer push a una rama nueva).
 const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
