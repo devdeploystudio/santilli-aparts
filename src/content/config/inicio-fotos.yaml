@@ -4,7 +4,7 @@ inicioFotos:
     - archivo: /hero/obelisco-1-recorte.jpg
       poster: ''
       alt: Vista aérea del Obelisco en Av. 9 de Julio, Buenos Aires
-    - archivo: /hero/IMG_9904.MOV
+    - archivo: /hero/IMG_9904.mp4
       poster: /hero/video-av-callao-poster.jpg
       alt: Recorrido por Av. Callao (Recoleta)
     - archivo: /hero/av-callao.jpg
