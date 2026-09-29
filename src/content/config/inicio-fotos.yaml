@@ -5,11 +5,8 @@ inicioFotos:
       poster: ''
       alt: Vista aérea del Obelisco en Av. 9 de Julio, Buenos Aires
     - archivo: /hero/IMG_9904.mp4
-      poster: /hero/video-av-callao-poster.jpg
+      poster: /hero/av-callao.jpg
       alt: Recorrido por Av. Callao (Recoleta)
-    - archivo: /hero/av-callao.jpg
-      poster: ''
-      alt: Av. Callao, en Recoleta
     - archivo: /hero/rodriguez-pena-2.jpg
       poster: ''
       alt: Calle Rodríguez Peña, en Recoleta
