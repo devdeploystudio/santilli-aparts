@@ -22,6 +22,18 @@
  * un archivo roto ni empeora uno ya optimizado. Un video puntual que
  * falle (formato raro, corrupto) no corta el resto del job.
  *
+ * ⚠️ Límite duro de la plataforma, no algo que se pueda "ajustar mejor":
+ * este sitio se despliega como Cloudflare Worker (`@astrojs/cloudflare`,
+ * `wrangler deploy`), que rechaza CUALQUIER asset de más de 25 MiB -
+ * "Error: Asset too large" y el deploy entero falla (no solo ese
+ * archivo). Encontrado en producción (`santilli-aparts`, sep 2026): un
+ * video de 72 segundos comprimido "a mano" con el CRF por default dio
+ * 29.2 MiB, tiró abajo el deploy en silencio (sin que nadie se enterara
+ * hasta revisar los logs de Cloudflare) durante varios pushes seguidos.
+ * Por eso este script reintenta con más compresión hasta entrar bajo el
+ * límite, en vez de aceptar el primer resultado que dé "más chico que el
+ * original" sin más.
+ *
  * Requiere: node >=18, "ffmpeg"/"ffprobe" en el PATH. Los runners de
  * GitHub Actions (ubuntu-latest) los traen preinstalados - no hace falta
  * sumarlos al step de "Instalar dependencias".
@@ -39,6 +51,19 @@ const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 // amplia a propósito, el cliente puede subir cualquier cosa desde el
 // celular/cámara.
 const VIDEO_EXT = /\.(mp4|mov|webm|avi|mkv|m4v|ogv|3gp|wmv|flv|mpe?g)$/i;
+// 25 MiB es el límite real de Cloudflare Workers - se apunta a 24 MiB
+// (un poco menos) para dejar margen, nunca al límite justo.
+const MAX_SIZE_BYTES = 24 * 1024 * 1024;
+// Escalera de intentos: primero solo sube el CRF (más compresión, mismo
+// ancho); si ni con el CRF más agresivo entra, el último intento además
+// baja el ancho máximo. Cada paso es progresivamente más agresivo -
+// nunca se usa uno más agresivo de lo necesario para entrar bajo el límite.
+const INTENTOS = [
+  { crf: 28, ancho: 1920 },
+  { crf: 32, ancho: 1920 },
+  { crf: 36, ancho: 1920 },
+  { crf: 36, ancho: 1280 },
+];
 
 function diffBase() {
   const fromEnv = process.env.DIFF_BASE;
@@ -157,49 +182,89 @@ function esVideoValido(path) {
   }
 }
 
+function encodeIntento(path, tmpOut, { crf, ancho }) {
+  execFileSync(
+    'ffmpeg',
+    [
+      '-y',
+      '-i', path,
+      '-c:v', 'libx264',
+      '-crf', String(crf),
+      '-preset', 'medium',
+      '-vf', `scale='min(${ancho},iw)':-2`, // nunca agranda, solo limita al ancho de este intento
+      '-movflags', '+faststart',
+      '-c:a', 'aac',
+      '-b:a', '128k',
+      tmpOut,
+    ],
+    { stdio: ['ignore', 'ignore', 'pipe'] },
+  );
+}
+
+// Prueba la escalera de INTENTOS en orden hasta conseguir un resultado
+// válido y por debajo de MAX_SIZE_BYTES. Devuelve la ruta temporal del
+// que sirvió, o null si ni el intento más agresivo entró bajo el límite
+// (caso raro - un video muy largo a máxima duración) o ffmpeg falló.
+function comprimirBajoElLimite(path, dir, baseName) {
+  const tmpOut = join(dir, `.${baseName}.compress-tmp.mp4`);
+  let ultimoTamaño = null;
+
+  for (const intento of INTENTOS) {
+    try {
+      encodeIntento(path, tmpOut, intento);
+    } catch (err) {
+      if (existsSync(tmpOut)) unlinkSync(tmpOut);
+      throw new Error(`ffmpeg falló: ${err.stderr?.toString().slice(-500) || err.message}`);
+    }
+
+    if (!existsSync(tmpOut) || !esVideoValido(tmpOut)) {
+      if (existsSync(tmpOut)) unlinkSync(tmpOut);
+      return { tmpOut: null, ultimoTamaño };
+    }
+
+    ultimoTamaño = statSync(tmpOut).size;
+    if (ultimoTamaño <= MAX_SIZE_BYTES) {
+      return { tmpOut, ultimoTamaño };
+    }
+    // Todavía pesa de más: se descarta este intento y se prueba el
+    // siguiente escalón, más agresivo.
+    unlinkSync(tmpOut);
+  }
+
+  return { tmpOut: null, ultimoTamaño };
+}
+
 async function compressOne(path) {
   const originalSize = statSync(path).size;
   const dir = dirname(path);
   const ext = extname(path);
   const baseName = basename(path, ext);
   const yaEsMp4 = ext.toLowerCase() === '.mp4';
-  const tmpOut = join(dir, `.${baseName}.compress-tmp.mp4`);
 
-  try {
-    execFileSync(
-      'ffmpeg',
-      [
-        '-y',
-        '-i', path,
-        '-c:v', 'libx264',
-        '-crf', '28',
-        '-preset', 'medium',
-        '-vf', 'scale=\'min(1920,iw)\':-2', // nunca agranda, solo limita a 1920px de ancho
-        '-movflags', '+faststart',
-        '-c:a', 'aac',
-        '-b:a', '128k',
-        tmpOut,
-      ],
-      { stdio: ['ignore', 'ignore', 'pipe'] },
+  const { tmpOut, ultimoTamaño } = comprimirBajoElLimite(path, dir, baseName);
+
+  if (!tmpOut) {
+    // Ni el intento más agresivo entró bajo el límite (o el resultado no
+    // era un video válido) - NUNCA reemplazar el original con algo que
+    // rompería el deploy. Esto se loguea bien visible porque significa
+    // que el video necesita intervención manual (acortar duración,
+    // recortar más el ancho a mano) - silenciarlo sería repetir
+    // exactamente el error que motivó este chequeo.
+    console.log(
+      `::error::compress-videos: ${path} sigue pesando más de ${(MAX_SIZE_BYTES / 1024 / 1024).toFixed(0)}MiB` +
+        (ultimoTamaño ? ` (${(ultimoTamaño / 1024 / 1024).toFixed(1)}MiB con la compresión más agresiva)` : '') +
+        ` incluso con el intento más agresivo - Cloudflare Workers rechaza cualquier asset de más de 25MiB y el deploy fallaría. Se dejó el original sin tocar, requiere achicarlo a mano (menos duración o menos resolución).`,
     );
-  } catch (err) {
-    if (existsSync(tmpOut)) unlinkSync(tmpOut);
-    throw new Error(`ffmpeg falló: ${err.stderr?.toString().slice(-500) || err.message}`);
-  }
-
-  if (!existsSync(tmpOut) || !esVideoValido(tmpOut)) {
-    if (existsSync(tmpOut)) unlinkSync(tmpOut);
-    console.log(`compress-videos: ${path} - el resultado de ffmpeg no es un video válido, se dejó el original.`);
     return;
   }
 
-  const newSize = statSync(tmpOut).size;
-  if (newSize >= originalSize) {
+  if (ultimoTamaño >= originalSize) {
     unlinkSync(tmpOut);
     console.log(`compress-videos: ${path} ya está óptimo (comprimir no lo achica), sin cambios.`);
     return;
   }
 
+  const newSize = ultimoTamaño;
   if (yaEsMp4) {
     // Mismo nombre/extensión: se reemplaza en el lugar, no hace falta
     // tocar ninguna referencia.

@@ -58,7 +58,7 @@
       "archivo": "/departamentos/depto-20-av-callao-966/18.jpg"
     },
     {
-      "archivo": "/departamentos/depto-20-av-callao-966/preview_v02.mp4",
+      "archivo": "/departamentos/depto-20-av-callao-966/preview_v03.mp4",
       "poster": "/departamentos/depto-20-av-callao-966/preview_v02-poster.jpg"
     }
   ],
@@ -77,6 +77,6 @@
     "lat": -34.5978,
     "lng": -58.3933
   },
-  "portada": "/departamentos/depto-20-av-callao-966/preview_v02.mp4",
+  "portada": "/departamentos/depto-20-av-callao-966/preview_v03.mp4",
   "esPlaceholder": false
 }
