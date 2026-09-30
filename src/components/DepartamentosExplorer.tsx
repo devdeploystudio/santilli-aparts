@@ -4,6 +4,7 @@ export interface DeptoResumen {
   slug: string;
   nombre: string;
   zona: string;
+  numero: number | null;
   capacidadMax: number;
   esPlaceholder: boolean;
   foto: string;
@@ -41,18 +42,53 @@ export default function DepartamentosExplorer({ deptos }: Props) {
   const [zona, setZona] = useState<(typeof ZONAS)[number]>(zonaDesdeUrl);
   const [capacidadMin, setCapacidadMin] = useState(1);
   const [filtroAbierto, setFiltroAbierto] = useState(() => zonaDesdeUrl() !== "Todas");
+  const [busqueda, setBusqueda] = useState("");
 
   const filtrados = useMemo(() => {
+    // Búsqueda: por número exacto (ej. "12" encuentra el depto N° 12,
+    // sin confundirlo con el 120 o el 21) o por nombre/dirección si
+    // escribe texto en vez de un número.
+    const query = busqueda.trim().toLowerCase();
     return deptos.filter((d) => {
       if (zona !== "Todas" && d.zona !== zona) return false;
       if (d.capacidadMax < capacidadMin) return false;
+      if (query) {
+        const esNumero = /^\d+$/.test(query);
+        const matcheaNumero = esNumero && d.numero === Number(query);
+        const matcheaTexto = !esNumero && d.nombre.toLowerCase().includes(query);
+        if (!matcheaNumero && !matcheaTexto) return false;
+      }
       return true;
     });
-  }, [deptos, zona, capacidadMin]);
+  }, [deptos, zona, capacidadMin, busqueda]);
 
   return (
     <div>
-      <div class="rounded-2xl border border-hairline bg-surface p-5">
+      <div class="relative">
+        <svg
+          class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          type="search"
+          value={busqueda}
+          onInput={(e) => setBusqueda((e.target as HTMLInputElement).value)}
+          placeholder="Buscá por número de depto o nombre (ej: 12)"
+          aria-label="Buscar departamento por número o nombre"
+          class="w-full rounded-full border border-hairline bg-surface py-3 pl-11 pr-4 font-body text-sm text-ink outline-none placeholder:text-muted focus:border-gold-active"
+        />
+      </div>
+
+      <div class="mt-4 rounded-2xl border border-hairline bg-surface p-5">
         <button
           type="button"
           onClick={() => setFiltroAbierto((v) => !v)}
@@ -158,6 +194,11 @@ export default function DepartamentosExplorer({ deptos }: Props) {
               <span class="absolute left-3 top-3 rounded-full bg-surface/90 px-3 py-1 font-body text-xs font-semibold text-ink backdrop-blur-sm">
                 {d.zona}
               </span>
+              {d.numero && (
+                <span class="absolute right-3 top-3 rounded-full bg-surface/90 px-3 py-1 font-body text-xs font-semibold text-ink backdrop-blur-sm">
+                  N° {d.numero}
+                </span>
+              )}
             </div>
             <div class="flex items-start justify-between gap-3 p-5">
               <h3 class="font-display text-lg text-ink">{d.nombre}</h3>

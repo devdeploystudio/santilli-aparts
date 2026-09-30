@@ -8,6 +8,8 @@ import BookingForm from "../../components/BookingForm.tsx";
 import { resaltarServicios } from "../../lib/highlight";
 import { WHATSAPP_NUMBER } from "../../config/site";
 import { imageSize } from "../../lib/imageSize";
+import { numeroDepto } from "../../lib/numeroDepto";
+import { resolverPortada } from "../../lib/portada";
 
 export async function getStaticPaths() {
   const departamentos = await getCollection("departamentos");
@@ -52,9 +54,27 @@ const catalogoServicios = await getCollection("serviciosDisponibles");
 const serviciosInfo = servicios
   .map((slug) => catalogoServicios.find((s) => s.id === slug)?.data)
   .filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+// Número identificador (ver src/lib/numeroDepto.ts): se suma solo al
+// mensaje de WhatsApp, no al nombre visible en la página - así la familia
+// sabe exactamente qué unidad le están consultando sin ambigüedad, aunque
+// dos deptos compartan la misma dirección.
+const numero = numeroDepto(depto.id);
+const nombreParaWhatsapp = numero ? `${nombre} (depto ${numero})` : nombre;
+
+// Foto para cuando se comparte el link de esta ficha puntual (WhatsApp,
+// Instagram, etc.) - sin esto, cualquier link de depto mostraba la misma
+// foto genérica del sitio en vez de una foto real de ESE departamento.
+// Prioridad: portada elegida a mano (si es foto, no video) > primera foto
+// de la galería > sin imagen puntual (Layout cae solo a la genérica del
+// sitio). Se resuelve automáticamente para cualquier depto nuevo, sin
+// tocar código - lee lo que ya cargó el cliente en el panel.
+const { foto: fotoPortada } = resolverPortada(depto.data);
+const primeraFotoGaleria = media.find((m) => !/\.(mp4|mov|webm)$/i.test(m.archivo))?.archivo;
+const imagenParaCompartir = fotoPortada || primeraFotoGaleria;
 ---
 
-<Layout title={nombre} description={descripcionBreve}>
+<Layout title={nombre} description={descripcionBreve} image={imagenParaCompartir}>
   <section class="mx-auto max-w-[90rem] px-7 py-12 sm:px-10">
     <a href="/departamentos/" class="font-body text-sm text-muted hover:text-gold-active">← Volver a departamentos</a>
 
@@ -109,7 +129,7 @@ const serviciosInfo = servicios
       </div>
 
       <div>
-        <BookingForm client:visible nombreDepto={nombre} whatsappNumero={WHATSAPP_NUMBER} />
+        <BookingForm client:visible nombreDepto={nombreParaWhatsapp} whatsappNumero={WHATSAPP_NUMBER} />
       </div>
     </div>
   </section>

@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import DepartamentosExplorer, { type DeptoResumen } from "../../components/DepartamentosExplorer.tsx";
 import { resolverPortada } from "../../lib/portada";
 import { imageSize } from "../../lib/imageSize";
+import { numeroDepto } from "../../lib/numeroDepto";
 
 // El orden se arrastra en el panel (reorder: { key: orden }) - el loader
 // glob() no garantiza ningún orden propio.
@@ -17,6 +18,7 @@ const resumen: DeptoResumen[] = await Promise.all(
       slug: d.id,
       nombre: d.data.nombre,
       zona: d.data.zona,
+      numero: numeroDepto(d.id),
       capacidadMax: d.data.capacidadMax,
       esPlaceholder: d.data.esPlaceholder,
       ...portada,

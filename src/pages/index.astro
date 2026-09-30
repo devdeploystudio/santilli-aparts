@@ -13,6 +13,7 @@ import MarginLines from "../components/MarginLines.astro";
 import AyudaElegirForm from "../components/AyudaElegirForm.tsx";
 import { WHATSAPP_NUMBER } from "../config/site";
 import { resolverPortada } from "../lib/portada";
+import { numeroDepto } from "../lib/numeroDepto";
 
 // El orden se arrastra en el panel (reorder: { key: orden }, ver colección
 // "departamentos" en config.yml) - el loader glob() no garantiza ningún
@@ -48,6 +49,7 @@ const muestra = seleccionCarrusel.map((d) => ({
   slug: d.id,
   nombre: d.data.nombre,
   zona: d.data.zona,
+  numero: numeroDepto(d.id),
   esPlaceholder: d.data.esPlaceholder,
   ...resolverPortada(d.data),
 }));

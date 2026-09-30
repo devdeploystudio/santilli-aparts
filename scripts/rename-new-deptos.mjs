@@ -61,22 +61,29 @@ function getNewDeptoFiles() {
     .map((f) => f.path);
 }
 
-// Siguiente número = el más alto usado + 1 (activo O archivado), NO el
-// primer hueco libre. Con deptos archivados (que dejan huecos en la
-// numeración a propósito, ver content.config.ts) rellenar el primer
-// hueco reasignaría un número que ya perteneció a otra unidad - confuso
-// para cualquiera que compare con un registro viejo (fotos, capturas,
-// esta misma conversación). Los números nuevos siempre avanzan.
+// Siguiente número = el hueco más bajo que NO esté en uso ahora mismo, ni
+// activo ni archivado. Un depto ARCHIVADO (se movió a
+// departamentos-archivados en vez de borrarse del todo, ver
+// content.config.ts) sigue reservando su número para siempre, a
+// propósito - por si algún día se reactiva, y porque puede haber un
+// mensaje/registro viejo de un cliente que TODAVÍA podría booking esa
+// unidad de nuevo. En cambio, un depto BORRADO del todo (ni activo ni
+// archivado, no queda rastro en ningún lado) libera su número: no hay
+// ninguna unidad activa con la que confundirse, así que reasignárselo a
+// un depto nuevo no genera ambigüedad real (decisión explícita del
+// cliente, sep 2026 - antes esta función nunca rellenaba huecos).
 function siguienteNumero() {
-  let max = 0;
+  const usados = new Set();
   for (const dir of [DATA_DIR, DATA_ARCHIVADOS_DIR]) {
     if (!existsSync(dir)) continue;
     for (const f of readdirSync(dir)) {
       const m = f.match(/^depto-(\d+)-/);
-      if (m) max = Math.max(max, parseInt(m[1], 10));
+      if (m) usados.add(parseInt(m[1], 10));
     }
   }
-  return max + 1;
+  let n = 1;
+  while (usados.has(n)) n++;
+  return n;
 }
 
 // Quita tildes, "Av."/"Av" -> "av", ", CABA" y similares, y deja solo
